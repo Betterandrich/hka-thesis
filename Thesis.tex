@@ -94,24 +94,28 @@
 
 \frontmatter
 
-		\setcounter{secnumdepth}{3}		% Numerierung bis subsubsection wird dadurch festgelegt
-		\setcounter{tocdepth}{3}		% Gliederung subsubsection wird in Inhaltsverzeichnis eingetragen
+  \setcounter{secnumdepth}{3} % Numerierung bis subsubsection wird dadurch festgelegt
+  \setcounter{tocdepth}{3}    % Gliederung subsubsection wird in Inhaltsverzeichnis eingetragen
 
-		\input{00_1_Titel}
-		\clearpage
-		\input{00_2_Erklaerung}
-		\clearpage
-		\input{00_3_Abstract}
-		\clearpage
+  % Passendes Deckblatt auswählen und anpassen
+  \input{00_1_Titel/MSc_Thesisdeckblatt.tex}
+  % \input{00_1_Titel/MSc_Thesisdeckblatt_EN.tex}
+  % \input{00_1_Titel/BSc_Thesisdeckblatt.tex}
+  % \input{00_1_Titel/BSc_Thesisdeckblatt_EN.tex}
+  \clearpage
+  \input{00_2_Erklaerung}
+  \clearpage
+  \input{00_3_Abstract}
+  \clearpage
 
-		\addtocontents{toc}{}  			% Inhaltsverzeichnis (wird automatisch aus den Chapters und Section erstellt)
-%		\addtocontents{toc}{\protect\thispagestyle{empty}} 		% Keine Kopf-/Fußzeile bei Inhaltsverzeichnis
-		\tableofcontents			% Inhaltsverzeichnis
+  \addtocontents{toc}{}   % Inhaltsverzeichnis (wird automatisch aus den Chapters und Section erstellt)
+  % \addtocontents{toc}{\protect\thispagestyle{empty}} % Keine Kopf-/Fußzeile bei Inhaltsverzeichnis
+  \tableofcontents        % Inhaltsverzeichnis
 
-		\newpage				% nötig um korrekte Seitenzahlen bei mehrseitigem Inhalts-/Abb.verzeichnis
-%		\pagenumbering{Roman}			% römische Seitenzahl für Abbildungsverzeichnis
-%		\setcounter{page}{1}			% Seitenzahlen werden ab Abbildungsverzeichnis durchnummeriert
-		\listoffigures				% Abbildungsverzeichnis
+  \newpage                % nötig um korrekte Seitenzahlen bei mehrseitigem Inhalts-/Abb.verzeichnis
+  \pagenumbering{Roman}   % römische Seitenzahl für Abbildungsverzeichnis
+  \setcounter{page}{1}    % Seitenzahlen werden ab Abbildungsverzeichnis durchnummeriert
+  \listoffigures          % Abbildungsverzeichnis
 
 \mainmatter
 
