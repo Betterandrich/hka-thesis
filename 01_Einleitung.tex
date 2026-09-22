@@ -6,15 +6,24 @@ Betriebliche Software entwickelt sich fortlaufend weiter, indem sie an veränder
 
 Diese Dynamik prägt insbesondere langlebige, unternehmenskritische Standardsoftware, für die Enterprise-Resource-Planning-Systeme (ERP-Systeme) ein typisches Beispiel bilden. Über viele Jahre werden solche Systeme betriebsspezifisch angepasst, wodurch ein gewachsenes Portfolio aus Customizing und Eigenentwicklungen entsteht, das einen wesentlichen Teil der unternehmensindividuellen Prozesslogik trägt. Customizing bezeichnet dabei die tabellengesteuerte Konfiguration der Standardlogik eines ERP-Systems [BELEG ERFORDERLICH]. Das Nachvollziehen bestehender Software beansprucht bereits im Regelfall einen erheblichen Anteil der Entwicklungs- und Wartungszeit \cite{xia_measuring_2018}, wobei individuell angepasste, vom Standard abweichende Systeme dieses Verstehen zusätzlich erschweren.
 
-\section{Problemstellung & Forschungsfrage}
+\section{Problemstellung und Forschungsfrage}
 
-Die im vorangegangenen Abschnitt beschriebene Schwierigkeit, gewachsene Systeme nachzuvollziehen, verschärft sich im Kontext von Transformationsprojekten, in deren Rahmen bestehende Systeme auf einen neuen Releasestand oder eine neue Zielarchitektur überführt werden. Eine belastbare Abweichungsanalyse (Gap-Analyse) zwischen dem gewachsenen System und dem Herstellerstandard bildet dabei eine zentrale Voraussetzung, erfolgt in der Praxis jedoch weitgehend manuell und erweist sich dadurch als zeit-, kosten- sowie fehleranfällig.
+Die im vorangegangenen Abschnitt beschriebene Schwierigkeit, gewachsene Systeme nachzuvollziehen, verschärft sich im Kontext von Transformationsprojekten, in deren Rahmen bestehende Systeme auf einen neuen Releasestand oder eine neue Zielarchitektur überführt werden. Eine Analyse des gewachsenen Systems bildet dabei eine zentrale Voraussetzung, erfolgt in der Praxis jedoch weitgehend manuell und erweist sich dadurch als zeit-, kosten- sowie fehleranfällig.
 
 Individuelle Anpassungen erhöhen den Wartungsaufwand und erschweren den Abgleich mit dem Standard, da sie die Prozesslogik zunehmend vom Herstellerstandard entkoppeln \cite{light_maintenance_2001}. Aktuelle branchenweite Befragungen weisen einen anhaltend hohen Anpassungsgrad als eine der größten Hürden derartiger Vorhaben aus \cite{reinicke_survey_nodate, noauthor_new_nodate}. Für eine belastbare Analyse genügt die rein technische Erfassung solcher Abweichungen allerdings nicht. Erforderlich ist darüber hinaus deren semantische Interpretation, da nur auf diese Weise gewährleistet wird, dass keine fachliche Prozesslogik verloren geht oder unreflektiert in das Zielsystem übernommen wird.
 
 Diese Anforderung stellt sich in besonderem Maße für externe Beratungsunternehmen, die den Zustand eines Kundensystems ohne den Erfahrungsvorsprung einer internen IT-Abteilung sowie unter Zeitdruck rekonstruieren müssen. Für Beratungsunternehmen wie die mmmake GmbH, in deren Kooperation die vorliegende Arbeit entsteht, resultiert hieraus ein unmittelbarer Bedarf an Verfahren, welche die Erfassung sowie die fachliche Einordnung gewachsener Systemzustände unterstützen.
 
-Vor diesem Hintergrund untersucht diese Arbeit die folgende Forschungsfrage: Inwieweit lassen sich Abweichungen vom SAP-Standard in Customizing und Eigenentwicklungen mithilfe eines MCP-basierten LLM-Agenten automatisiert identifizieren, semantisch interpretieren, sowie in eine fachlich belastbare, natürlichsprachliche Dokumentation überführen?
+%Alte formulierung: Vor diesem Hintergrund untersucht diese Arbeit die folgende Forschungsfrage:
+%Inwieweit lassen sich Abweichungen vom SAP-Standard in Customizing und
+%Eigenentwicklungen mithilfe eines MCP-basierten LLM-Agenten automatisiert
+%identifizieren, semantisch interpretieren, sowie in eine fachlich belastbare,
+%nat¨urlichsprachliche Dokumentation ¨uberf¨uhren?
+An diesen Bedarf knüpft die vorliegende Arbeit an, indem sie einen Ansatz untersucht, der das kundenindividuelle Customizing eines fremden Systems über natürlichsprachliche Anfragen erschließbar macht und dadurch die manuelle Exploration sowie die Rückfrage beim Fachbereich verringert. Daraus ergibt sich die folgende Forschungsfrage:
+
+„Inwieweit lässt sich das kundenindividuelle Customizing eines gewachsenen SAP-Systems durch einen agentenbasierten LLM-Ansatz automatisiert sowie dialogbasiert erschließen und in eine fachlich belastbare, natürlichsprachliche Ist-Dokumentation überführen, die Abweichungen vom Herstellerstandard nachvollziehbar ausweist?"
+
+Ein zunächst betrachteter Zugang besteht darin, den Beratenden eine dialogorientierte Schnittstelle bereitzustellen, über die einzelne Konfigurationsbereiche gezielt in natürlicher Sprache exploriert werden, ohne diese manuell im System nachzuverfolgen. Aufbauend darauf wird, soweit es der zeitliche Rahmen zulässt, untersucht, inwieweit sich der Ansatz von der Abweichung gegenüber dem Herstellerstandard auf den Vergleich zweier ursprünglich gleichartiger Systeminstanzen übertragen lässt, um Abweichungen zwischen einem Ausgangs- und einem abgeleiteten System aufzudecken.
 
 
 
@@ -81,9 +90,47 @@ Abschnitt~\ref{Ansatz} beschriebenen Lösungsansatz, der die strukturierte
 Extraktion mit einer semantischen Interpretation mittels Retrieval-Augmented
 Generation (RAG) über eine standardisierte Agentenschnittstelle verbindet.
 
-\section{Ansatz & Forschungsmethodik}
+\section{Ansatz und Forschungsmethodik}
+\label{sec:ansatz-methodik}
+ 
+% Vorabform (Einleitung): kompakter Ansatz-Überblick + Verortung der Methodik.
+% Die Vertiefung des Entwurfs erfolgt in Kap. 3, die Kapitelübersicht in 1.5.
+ 
+Zur Beantwortung der Forschungsfrage wird ein agentenbasiertes Analyseframework
+entworfen sowie prototypisch umgesetzt, das den funktionalen Ist-Zustand eines
+gewachsenen SAP-Systems ausgehend von natürlichsprachlichen Anfragen erschließt.
+Basierend auf einer Analyseanfrage greift ein agentenbasierter Orchestrator
+lesend auf die Struktur- sowie Metadatenebene des Zielsystems zu, erschließt die
+zusammenhängenden Customizing-Tabellen und überführt diese mittels eines großen Sprachmodells
+(Large Language Model, LLM) in eine semantische Interpretation. Diese
+Interpretation wird mittels Retrieval-Augmented Generation (RAG) an den
+abgerufenen Systemdaten abgesichert, sodass jede Aussage nachvollziehbar an ihre
+Quelle gebunden wird und bei nicht tragender Evidenz eine begründete Enthaltung
+erfolgt. Die Erschließung erfolgt dabei dialogbasiert, sodass einzelne
+Konfigurationsbereiche gezielt in natürlicher Sprache exploriert werden können,
+ohne diese manuell im System nachzuverfolgen. Das Ergebnis besteht aus einer
+natürlichsprachlichen Dokumentation, die den Beratenden einen belegten
+Überblick über den Konfigurationszustand eines ihnen zunächst unbekannten
+Systems ermöglicht. Die technische Anbindung des Systems erfolgt über eine
+standardisierte Werkzeugschnittstelle, deren Ausgestaltung als Bestandteil des
+Lösungsentwurfs in Kapitel~\ref{Ansatz} vertieft wird.
+
+
+Methodisch folgt die Arbeit dem Paradigma der gestaltungsorientierten Forschung
+(Design Science Research, DSR), das die Konstruktion sowie die Evaluation eines
+neuartigen Artefakts zur Lösung eines praktisch relevanten Problems in den
+Mittelpunkt stellt. % [BELEG ERFORDERLICH: DSR-Methodik]
+% Kandidaten: hevner_design_2004 (MIS Quarterly), peffers_design_2007 (JMIS)
+Das zu gestaltende Artefakt besteht in dem beschriebenen Analyseframework, dessen
+Nutzen sich an der Qualität der erzeugten Ist-Dokumentation bemisst. Die Wahl
+dieser Methodik liegt darin begründet, dass die Arbeit nicht auf die Bestätigung
+einer vorab formulierten Hypothese, sondern auf die Konzeption, die Umsetzung
+sowie die Bewertung eines Lösungsartefakts zielt.
+
+
 
 \section{Aufbau der Arbeit}
+TODO:
 Im folgenden Kapitel \ref{StandDerForschung} werden Grundlagen
 dargelegt und der Stand der Forschung diskutiert. In Kapitel
 \ref{Ansatz} wird der Ansatz genauer beleuchtet. Im Kapitel

@@ -31,12 +31,70 @@ entscheidungen im Detail begründet.
 
 % Brückenschluss Kap. 2 -> Kap. 3. Stellt den roten Faden explizit her:
 % welche Lücke des Forschungsstands begründet welche Anforderung.
-Die in Kapitel~\ref{Forschungsstand} herausgearbeitete Forschungslücke bildet
-den Ausgangspunkt für den Entwurf. Aus ihr werden in diesem Abschnitt die
-konkreten Anforderungen an das zu konzipierende System abgeleitet, wobei jede
-Anforderung auf die Erkenntnis zurückgeführt wird, aus der sie resultiert.
-Diese Rückführung stellt sicher, dass die nachfolgenden Entwurfsentscheidungen
-nicht gesetzt, sondern aus dem Stand der Forschung begründet erscheinen.
+Der Ansatz besteht in einem agentenbasierten Analyseframework, das den
+funktionalen Ist-Zustand eines SAP-Systems ausgehend von einer
+natürlichsprachlichen Analyseanfrage erschließt und die identifizierten
+Abweichungen vom Herstellerstandard in einer fachlich belastbaren,
+natürlichsprachlichen Dokumentation zusammenführt. Abbildung~\ref{fig:ansatz-ueberblick}
+zeigt den konzeptionellen Aufbau sowie den Datenfluss einer Anfrage von der
+Fragestellung bis zur belegten Antwort. Ausgehend von der Analyseanfrage greift
+ein agentenbasierter Orchestrator über eine standardisierte Schnittstelle des
+Model Context Protocol (MCP) lesend auf die Struktur- und Metadatenebene des
+Zielsystems zu, erschließt die zusammenhängenden Customizing-Tabellen und deren
+Abweichungen vom Standard und überführt diese mittels eines Sprachmodells in
+eine semantische Interpretation, die durch Retrieval-Augmented Generation (RAG)
+an den abgerufenen Systemdaten abgesichert wird. Das Ergebnis besteht in einem
+Dokument, das den Ist-Zustand mit den erkannten Abweichungen beschreibt.
+ 
+\begin{figure}[H]
+	\centering
+	% TODO: Diagramm "Lösung im Gesamtkontext" einfügen (Datenfluss
+	% Analyseanfrage -> MCP-Zugriff -> Retrieval -> Grounding -> Ist-Dokument).
+	% Grundlage: Abbildung 1 des Exposés bzw. Systemarchitektur-Folie.
+	% \includegraphics[width=\linewidth]{Grafiken/ansatz_ueberblick}
+	\caption{Konzeptioneller Aufbau des agentenbasierten Analyseframeworks
+	sowie der Datenfluss einer Analyseanfrage von der Fragestellung bis zur
+	belegten Antwort.}
+	\label{fig:ansatz-ueberblick}
+\end{figure}
+ 
+Der Verarbeitungsweg gliedert sich in drei aufeinander aufbauende Ebenen, die
+jeweils eine eigene Teilaufgabe erfüllen und daher je eigene Fehlerarten
+aufweisen. Zunächst erfolgt auf der Ebene des Retrievals das Schema-Linking, das
+aus einem sehr großen Datenkatalog die für eine Anfrage relevanten Tabellen
+bestimmt, da das vollständige Schema aus Gründen des Kontextfensters nicht als
+Eingabe dienen kann. Im Anschluss erfolgt auf der Ebene des Zugriffs die lesende
+Abfrage der ausgewählten Struktur- und Metadaten über die MCP-Schnittstelle.
+Abschließend erfolgt auf der Ebene des Groundings die Absicherung der erzeugten
+Aussagen, indem jede Aussage nachweisbar an die abgerufenen Quelldaten gebunden
+und bei nicht tragender Evidenz eine begründete Enthaltung ausgelöst wird. Diese
+begriffliche Trennung von Retrieval, Zugriff und Grounding bildet die
+Ordnungsstruktur, entlang derer die Entwurfsentscheidungen in
+Abschnitt~\ref{sec:entwurfsentscheidungen} behandelt werden.
+ 
+Ziel des Ansatzes ist es, Abweichungen vom SAP-Standard zu identifizieren,
+semantisch zu interpretieren sowie in eine fachlich belastbare,
+natürlichsprachliche Dokumentation zu überführen. Diese drei Teilziele
+entsprechen unmittelbar der in Abschnitt~\ref{sec:problem-ff} formulierten
+Forschungsfrage und strukturieren den gesamten Entwurf: Die Identifikation
+gewährleistet, dass vom Standard abweichende Konfigurationen überhaupt als
+solche erkannt werden; die semantische Interpretation stellt sicher, dass deren
+fachliche Bedeutung erschlossen und nicht allein die technische Abweichung
+erfasst wird; die Überführung in eine natürlichsprachliche Dokumentation
+gewährleistet schließlich, dass das Ergebnis für die fachliche Einordnung im
+Rahmen von Transformationsprojekten nutzbar wird. Die Absicherung dieser
+Aussagen gegen nicht gedeckte Interpretationen bildet dabei die entscheidende
+Abgrenzung des Ansatzes von einer generischen RAG-Lösung.
+ 
+Der Betrachtungsschwerpunkt liegt auf der Customizing-Ebene. Dies liegt darin
+begründet, dass die fachliche Bedeutung einer Customizing-Einstellung nicht aus
+einem einzelnen Artefakt hervorgeht, sondern aus dem Zusammenspiel der
+konfigurierten Werte mit der interpretierenden Standardlogik resultiert, und dass
+gerade diese semantische Interpretation der Customizing-Ebene nach dem in
+Kapitel~\ref{Forschungsstand} dargelegten Kenntnisstand unbesetzt verbleibt.
+Kundeneigener ABAP-Code wird kontextgebunden herangezogen, um
+Customizing-Abweichungen zu erklären, nicht jedoch als eigenständiges
+Analyseobjekt behandelt.
 
 	\subsection{Funktionale Anforderungen}
 	\label{subsec:anf-funktional}
