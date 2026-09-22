@@ -1,4 +1,4 @@
-\chapter{Stand der Forschung}
+\chapter{Grundlagen und Stand der Forschung}
 \label{StandDerForschung}
 Dieses Kapitel ist normalerweise in zwei Teile gegliedert: einen ersten Teil zu den Grundlagen und einen zweiten, wichtigeren Teil zum Stand der
 Forschung und Technik.
@@ -11,37 +11,120 @@ Zum Verständnis der in den folgenden Abschnitten betrachteten Arbeiten sowie de
 
 \subsection{Grundlagen zu Materialien}
 \textbf{Betriebliche Standardsoftware und ERP-Systeme}
-%Das kann man auch alles in Fachbüchern nachlesen. Aber zum besseren
-%Verständnis ist es hier auch noch mal von Alpha bis Omega
-%aufgeschrieben. Man gewinnt zwar keinerlei Blumentopf dadurch, aber es
-%schreibt sich halt so leicht.
 
-Betriebliche Standardsoftware bezeichnet vorgefertigte Anwendungssysteme, die nicht für ein einzelnes Unternehmen individuell entwickelt, sondern als generische Lösung für eine Vielzahl von Anwendern ausgeliefert werden. Ein zentrales Beispiel bilden Enterprise-Resource-Planning-Systeme (ERP-Systeme), die betriebswirtschaftliche Funktionsbereiche wie Rechnungswesen, Logistik sowie Personalwirtschaft in einem integrierten System zusammenführen und dabei auf einer gemeinsamen Datenbasis operieren \cite{klaus_what_2000}. Da ein solches System die Prozesse zahlreicher Unternehmen unterstützen soll, bildet es zunächst einen generischen Standard ab, der einen betriebswirtschaftlichen Referenzumfang bereitstellt. Dieser Umfang wird im Zuge der Einführung an die spezifischen Anforderungen des jeweiligen Unternehmens angepasst, wodurch sich betriebsindividuelle Ausprägungen des ursprünglich einheitlichen Standards ergeben.
+Betriebliche Standardsoftware bezeichnet vorgefertigte Anwendungssysteme, die
+nicht für ein einzelnes Unternehmen individuell entwickelt, sondern als
+generische Lösung für eine Vielzahl von Anwendern ausgeliefert werden. Ein
+zentrales Beispiel bilden Enterprise-Resource-Planning-Systeme (ERP-Systeme),
+die betriebswirtschaftliche Funktionsbereiche wie Rechnungswesen, Logistik sowie
+Personalwirtschaft in einem integrierten System zusammenführen und dabei auf
+einer gemeinsamen Datenbasis operieren \cite{klaus_what_2000}. Da ein solches
+System die Prozesse zahlreicher Unternehmen unterstützen soll, bildet es zunächst
+einen generischen Standard ab, der einen betriebswirtschaftlichen Referenzumfang
+bereitstellt. Dieser Umfang wird im Zuge der Einführung an die spezifischen
+Anforderungen des jeweiligen Unternehmens angepasst, wodurch sich
+betriebsindividuelle Ausprägungen des ursprünglich einheitlichen Standards
+ergeben.
 
-Diese Anpassung ist regelmäßig erforderlich, sie erhöht jedoch zugleich den Wartungsaufwand sowie die Komplexität des Systems, da sie die betriebliche Prozesslogik zunehmend vom Herstellerstandard entkoppelt \cite{light_maintenance_2001}. Über lange Betriebszeiträume hinweg verstärkt sich dieser Effekt, sodass ein gewachsenes, schwer nachvollziehbares Anpassungsportfolio entsteht, dessen unreflektierte Übernahme oder Beseitigung mit erheblichen Risiken verbunden ist \cite{mhaskey_identifying_2025}. Dies verdeutlicht, dass die Anpassung betrieblicher Standardsoftware ein grundlegendes Spannungsfeld zwischen fachlicher Passgenauigkeit und technischer Beherrschbarkeit begründet.
+Diese Anpassung ist regelmäßig erforderlich, sie erhöht jedoch zugleich den
+Wartungsaufwand sowie die Komplexität des Systems, da sie die betriebliche
+Prozesslogik zunehmend vom Herstellerstandard entkoppelt
+\cite{light_maintenance_2001}. Über lange Betriebszeiträume hinweg verstärkt sich
+dieser Effekt, sodass ein gewachsenes, schwer nachvollziehbares
+Anpassungsportfolio entsteht, dessen unreflektierte Übernahme oder Beseitigung
+mit erheblichen Risiken verbunden ist \cite{mhaskey_identifying_2025}. Dies
+verdeutlicht, dass die Anpassung betrieblicher Standardsoftware ein grundlegendes
+Spannungsfeld zwischen fachlicher Passgenauigkeit und technischer
+Beherrschbarkeit begründet.
 
 
 \textbf{Von der relationalen Datenbank zur In-Memory-Architektur}
 
-Die klassischen SAP-Systemgenerationen R/3 sowie deren Nachfolger SAP ERP Central Component (ECC) basieren auf einer dreischichtigen Client-Server-Architektur, die Präsentations-, Applikations- sowie Datenbankebene voneinander trennt \cite{buck-emden_technologie_1999}. Die Datenhaltung erfolgt dabei auf einer zeilenorientierten relationalen Datenbank eines Drittanbieters, wobei transaktionale Verarbeitung (OLTP) sowie analytische Auswertung (OLAP) aus performancebedingten Gründen auf getrennten Systemen erfolgen: Da eine zeilenorientierte Datenbank für lesende Aggregationen über große Datenmengen ungeeignet ist, werden für Berichtszwecke zusätzliche, redundant vorgehaltene Aggregatstabellen gepflegt \cite{plattner_common_2009}.
+Die klassischen SAP-Systemgenerationen R/3 sowie deren Nachfolger SAP ERP Central
+Component (ECC) basieren auf einer dreischichtigen Client-Server-Architektur, die
+Präsentations-, Applikations- sowie Datenbankebene voneinander trennt
+\cite{buck-emden_technologie_1999}. Die Datenhaltung erfolgt dabei auf einer
+zeilenorientierten relationalen Datenbank eines Drittanbieters, wobei
+transaktionale Verarbeitung (OLTP) sowie analytische Auswertung (OLAP) aus
+performancebedingten Gründen auf getrennten Systemen erfolgen: Da eine
+zeilenorientierte Datenbank für lesende Aggregationen über große Datenmengen
+ungeeignet ist, werden für Berichtszwecke zusätzliche, redundant vorgehaltene
+Aggregatstabellen gepflegt \cite{plattner_common_2009}.
 
-Mit SAP S/4HANA wird dieses Prinzip grundlegend verändert, indem die Anwendung ausschließlich auf der spaltenorientierten In-Memory-Datenbank SAP HANA aufsetzt.\cite{sap_se_sap_nodate} Die spaltenorientierte Speicherung sowie die vollständige Vorhaltung der Daten im Arbeitsspeicher ermöglichen es, transaktionale sowie analytische Workloads auf einer gemeinsamen Datenbasis zu verarbeiten, wodurch die zuvor erforderlichen redundanten Aggregatstabellen weitgehend entfallen \cite{plattner_common_2009, sikka_efficient_2012}. Dies führt zugleich zu einer Vereinfachung des zugrunde liegenden Datenmodells, da zahlreiche vormals zur Performancesteigerung notwendige Zusatzstrukturen im Zuge der Umstellung entfernt werden.
+Mit SAP S/4HANA wird dieses Prinzip grundlegend verändert, indem die Anwendung
+ausschließlich auf der spaltenorientierten In-Memory-Datenbank SAP HANA aufsetzt
+\cite{sap_se_sap_nodate}. Die spaltenorientierte Speicherung sowie die
+vollständige Vorhaltung der Daten im Arbeitsspeicher ermöglichen es,
+transaktionale sowie analytische Workloads auf einer gemeinsamen Datenbasis zu
+verarbeiten, wodurch die zuvor erforderlichen redundanten Aggregatstabellen
+weitgehend entfallen \cite{plattner_common_2009, sikka_efficient_2012}. Dies
+führt zugleich zu einer Vereinfachung des zugrunde liegenden Datenmodells, da
+zahlreiche vormals zur Performancesteigerung notwendige Zusatzstrukturen im Zuge
+der Umstellung entfernt werden.
+
 
 \textbf{SAP S/4HANA als betrachtetes ERP-System}
 
-Die vorliegende Arbeit betrachtet mit SAP S/4HANA das aktuell produktiv eingesetzte, auf dieser In-Memory-Architektur aufbauende ERP-System, das den Nachfolger der zuvor beschriebenen, auf relationalen Drittanbieter-Datenbanken basierenden Systemgenerationen darstellt. Die Anpassung eines SAP-Systems wird in der Literatur als Kontinuum unterschiedlich weitreichender Eingriffe beschrieben, das von der reinen Konfiguration bestehender Funktionalität bis zur vollständigen Programmierung zusätzlicher Anwendungslogik reicht \cite{brehm_tailoring_2001}. Erweiterungsprogrammierung wird dabei als Teilform eines weit gefassten Customizing-Begriffs verstanden, auf die zurückgegriffen wird, sobald Konfiguration und Parametrisierung allein nicht ausreichen \cite{mendling_wirtschaftsinformatik_2019}. Für die vorliegende Arbeit wird aus diesem Kontinuum eine operationale Zuspitzung auf zwei Pole vorgenommen, deren Unterscheidung für den weiteren Verlauf der Arbeit von zentraler Bedeutung ist: das Customizing i. e. S. als tabellengesteuerte Konfiguration ohne Eingriff in den Programmcode sowie die Eigenentwicklung als zusätzlich programmierte Anwendungslogik. Beide Ausprägungen tragen zur betriebsindividuellen Ausprägung des Systems bei, unterscheiden sich jedoch in ihrer technischen Realisierung.
+Aufbauend auf dieser Betrachtung wird mit SAP S/4HANA das konkrete Produkt
+beschrieben, in dessen Umfeld die Arbeit angesiedelt ist. Bei SAP S/4HANA handelt
+es sich um das ERP-Kernprodukt der SAP~SE, das die zuvor beschriebenen, auf
+relationalen Drittanbieter-Datenbanken basierenden Systemgenerationen ablöst
+\cite{gerard_sap_2017}. Für die vorliegende Arbeit sind zwei Eigenschaften der
+Anwendungsschicht besonders relevant. Zum einen werden sämtliche Datenstrukturen
+zentral im Data Dictionary (DDIC) verwaltet, das die Definitionen aller Tabellen,
+Felder und Datentypen systemweit vorhält und damit die Grundlage für eine
+metadatenbasierte Analyse bildet. Zum anderen ist ein SAP-System
+mandantenfähig, das heißt, es kann mehrere voneinander abgeschottete
+Datenbestände (Mandanten) innerhalb einer Installation führen, was bei der
+Auswahl und Interpretation von Customizing-Daten zu berücksichtigen ist.
+
+Die Anpassung eines solchen Systems reicht von der reinen Konfiguration
+bestehender Funktionalität bis zur Programmierung zusätzlicher Anwendungslogik
+\cite{brehm_tailoring_2001}. Für die vorliegende Arbeit wird diese
+Bandbreite auf zwei Pole zugespitzt, deren Unterscheidung für den weiteren
+Verlauf zentral ist: das Customizing im engeren Sinne als tabellengesteuerte
+Konfiguration sowie die Eigenentwicklung als zusätzlich programmierte Anwendungslogik.
+
+% --- Eigene Grafik zur Einordnung (nachgebaut, nicht übernommen) ---
+\input{Grafiken/s4hana architektur}
 
 
 \textbf{SAP-Standard, Abweichung und Standardnähe}
 
-Aus der Unterscheidung zwischen dem ausgelieferten Standard und der betriebsindividuellen Anpassung ergibt sich der für diese Arbeit zentrale Begriff der Abweichung vom SAP-Standard. Eine Abweichung bezeichnet jede Ausprägung eines Systems, die vom Auslieferungszustand des Herstellers abweicht, sei es durch veränderte Konfigurationswerte im Customizing oder durch zusätzliche Eigenentwicklungen. Das Ausmaß, in dem ein System dem Auslieferungszustand entspricht, wird als Standardnähe bezeichnet und lässt sich kennzahlenbasiert quantifizieren \cite{sekatzek_messung_2009}. Ein methodisch verwandter Zugang besteht darin, aus einem produktiv eingesetzten System ein Modell der tatsächlich genutzten sowie angepassten Elemente abzuleiten \cite{nuttgens_reverse_1999}. Beide Zugänge bestimmen jedoch primär das Vorhandensein sowie den Grad einer Abweichung, während deren fachliche Bedeutung unberücksichtigt bleibt; ebendiese Deutung bildet den Ausgangspunkt der vorliegenden Arbeit und wird im Stand der Forschung vertieft betrachtet.
+Aus der Unterscheidung zwischen dem ausgelieferten Standard und der
+betriebsindividuellen Anpassung ergibt sich der für diese Arbeit zentrale Begriff
+der Abweichung vom SAP-Standard. Eine Abweichung bezeichnet jede Ausprägung eines
+Systems, die vom Auslieferungszustand des Herstellers abweicht, sei es durch
+veränderte Konfigurationswerte im Customizing oder durch zusätzliche
+Eigenentwicklungen. Das Ausmaß, in dem ein System dem Auslieferungszustand
+entspricht, wird als Standardnähe bezeichnet und lässt sich kennzahlenbasiert
+quantifizieren \cite{sekatzek_messung_2009}. Ein methodisch verwandter Zugang
+besteht darin, aus einem produktiv eingesetzten System ein Modell der tatsächlich
+genutzten sowie angepassten Elemente abzuleiten \cite{nuttgens_reverse_1999}.
+Beide Zugänge bestimmen jedoch primär das Vorhandensein sowie den Grad einer
+Abweichung, während deren fachliche Bedeutung unberücksichtigt bleibt; ebendiese
+Deutung bildet den Ausgangspunkt der vorliegenden Arbeit und wird im Stand der
+Forschung vertieft betrachtet.
 
 
 \textbf{Technischer Zugang über das ABAP Data Dictionary}
 
-Die Analyse einer solchen Abweichung setzt einen technischen Zugang zu den beschriebenen Materialien voraus. Die technische Beschreibung sämtlicher Tabellen, Datenelemente sowie Strukturen eines SAP-Systems wird zentral im ABAP Data Dictionary (DDIC) verwaltet, das somit die Metadaten sowohl der Standard- als auch der kundeneigenen Objekte enthält. Der lesende Zugriff auf Quelltexte, Tabelleninhalte sowie Objektmetadaten ist über die ABAP Development Tools (ADT) möglich, die hierfür eine auf dem HTTP-Protokoll basierende Schnittstelle bereitstellen. Diese Schnittstelle bildet die technische Grundlage, über die der in dieser Arbeit entwickelte Ansatz die relevanten Systeminformationen erschließt. Die in diesem Abschnitt eingeführten Materialien bilden damit den Gegenstand der Untersuchung; im folgenden Abschnitt werden die Verfahren dargelegt, mit denen diese Materialien erschlossen, interpretiert sowie gegen den Systemzustand abgesichert werden.
+Die Analyse einer solchen Abweichung setzt einen technischen Zugang zu den
+beschriebenen Materialien voraus. Das bereits eingeführte Data Dictionary (DDIC)
+enthält die Metadaten sowohl der Standard- als auch der kundeneigenen Objekte und
+bildet damit den zentralen Ansatzpunkt dieses Zugangs. Der lesende Zugriff auf
+Quelltexte, Tabelleninhalte sowie Objektmetadaten ist über die ABAP Development
+Tools (ADT) möglich, die hierfür eine auf dem HTTP-Protokoll basierende
+Schnittstelle bereitstellen. Diese Schnittstelle bildet die technische Grundlage,
+über die der in dieser Arbeit entwickelte Ansatz die relevanten
+Systeminformationen erschließt. 
 
-\subsection{Grundlagen zu Verfahren}
+Die in diesem Abschnitt eingeführten Materialien
+bilden damit den Gegenstand der Untersuchung; im folgenden Abschnitt werden die
+Verfahren dargelegt, mit denen diese Materialien erschlossen, interpretiert sowie
+gegen den Systemzustand abgesichert werden.
+
+\subsection{Stand der Forschung}
 
 Aufbauend auf den zuvor eingeführten Materialien werden im Folgenden die Verfahren dargelegt, die das methodische Fundament des verfolgten Ansatzes bilden. Diese reichen von den Sprachmodellen als interpretierende Instanz über deren Verankerung an überprüfbaren Quellen bis zu der Schnittstelle, über die ein modellgesteuerter Agent selbstständig auf das System zugreift. Ergänzt durch Verfahren, mit denen die erzeugten Aussagen gegen den tatsächlichen Systemzustand abgesichert werden. Ein Teil dieser Verfahren stammt aus der Forschung zur Übersetzung natürlicher Sprache in Datenbankabfragen und liefert damit zentrale Konzepte für die Übertragung natürlichsprachlicher Anfragen auf strukturierter Unternehmensdaten.
 
@@ -124,22 +207,28 @@ Ergänzend ist zu berücksichtigen, dass die Größe der indexierten Einheit die
  
 \textbf{Grenzen dichter Repräsentationen}
  
-Der Rückgriff auf Vektorähnlichkeit ist mit einer Einschränkung verbunden, die für die Gestaltung des Ansatzes bedeutsam ist. Untersuchungen zur Geometrie gelernter Repräsentationsräume berichten, dass die erzeugten Vektoren nicht gleichmäßig über den Raum verteilt sind, sondern einen engen Kegel besetzen, sodass bereits zufällig gewählte Textpaare deutlich von null verschiedene Kosinuswerte aufweisen \cite{ethayarajh_how_2019}. Trifft diese Beobachtung zu, so wäre ein absoluter Ähnlichkeitswert für sich genommen kein belastbarer Beleg semantischer Nähe, und ein festgelegter Schwellenwert verlöre seine Aussagekraft.
+Der Rückgriff auf Vektorähnlichkeit ist mit einer Einschränkung verbunden, die für die Gestaltung des Ansatzes bedeutsam ist. Untersuchungen zur Geometrie gelernter Repräsentationsräume berichten, dass die erzeugten Vektoren nicht gleichmäßig über den Raum verteilt sind, sondern einen engen Kegel besetzen, sodass bereits zufällig gewählte Textpaare deutlich von null verschiedene Kosinuswerte aufweisen \cite{ethayarajh_how_2019}. Trifft diese Beobachtung zu, so wäre ein absoluter Ähnlichkeitswert für sich genommen kein belastbarer Beleg semantischer Nähe, und ein festgelegter Schwellenwert verliert seine Aussagekraft.
  
 Diese Eigenschaft wird als der Transformer-Architektur inhärent beschrieben \cite{godey_anisotropy_2024}, ihre praktische Tragweite ist jedoch als Hypothese und nicht als gesicherter Befund zu behandeln, da Befunde vorliegen, denen zufolge kontrastiv trainierte Verfahren die Verteilung der Repräsentationen von sich aus vergleichmäßigen \cite{gao_simcse_2022}. Hinzu kommt, dass die genannten Untersuchungen an offen zugänglichen Modellen durchgeführt wurden, während zum Trainingsverfahren des in dieser Arbeit eingesetzten Modells keine Angaben vorliegen. Eine Übertragung ist daher nicht abgesichert, sondern ausschließlich als Erklärungsangebot zu verstehen, das im weiteren Verlauf am eigenen Korpus zu prüfen ist.
  
 Unabhängig davon, welche Erklärung zutrifft, folgt aus der Eigenschaft des Verfahrens selbst eine Konsequenz für den Ansatz: Ein Ähnlichkeitsmaß ordnet Kandidaten nach Nähe, es entscheidet jedoch nicht über deren Richtigkeit. Der Abruf über dichte Repräsentationen kann somit die Menge der zu prüfenden Systemelemente wirksam eingrenzen, er kann die Verankerung einer Aussage jedoch nicht ersetzen. Ebendiese Lücke begründet die im Folgenden dargestellten Verfahren der Bezeichnerverankerung sowie der nachgelagerten Verifikation.
+
 \textbf{Agentenbasierte Sprachmodelle}
 Ein Sprachmodell allein kann ausschließlich auf die ihm im Kontext übergebenen Informationen zugreifen. Um ein Modell in die Lage zu versetzen, aktiv Informationen zu beschaffen sowie Aktionen auszuführen, wird es zu einem Agenten erweitert, der über definierte Werkzeuge (Tools) mit seiner Umgebung interagiert. Ein verbreitetes Steuerungsparadigma hierfür ist ReAct, bei dem das Modell abwechselnd Überlegungen formuliert sowie Werkzeugaufrufe auslöst und die Ergebnisse dieser Aufrufe in seine weitere Schlussfolgerung einbezieht \cite{yao_react_2023}. Auf diese Weise entsteht ein iterativer Ablauf, in dem der Agent eine übergeordnete Aufgabe schrittweise bearbeitet, indem er selbstständig entscheidet, welche Informationen er zu welchem Zeitpunkt benötigt. Dieses Vorgehen ähnelt dem explorativen Arbeiten einer Fachkraft, die ein unbekanntes Datenbanksystem nicht vollständig memoriert, sondern über gezielte Abfragen sowie Suchen schrittweise erschließt \cite{wang_autolink_2026}. Diese Fähigkeit zur eigenständigen Exploration ist die Voraussetzung dafür, dass ein System ohne vollständige Vorabkenntnis seiner Struktur zielgerichtet untersucht werden kann.
+
 \textbf{Model Context Protocol}
 Damit ein Agent auf externe Systeme zugreifen kann, ist eine standardisierte Schnittstelle zwischen dem Sprachmodell und den jeweiligen Werkzeugen erforderlich. Das Model Context Protocol (MCP) stellt einen solchen offenen Standard bereit, der die Anbindung von LLM-Agenten an externe Datenquellen sowie Werkzeuge einheitlich regelt \cite{noauthor_introducing_nodate}. Es folgt einer Client-Server-Architektur, in der ein Server bestimmte Werkzeuge sowie Ressourcen anbietet, die ein Client im Auftrag des Modells aufrufen kann, wodurch die andernfalls erforderlichen individuellen Integrationen entfallen \cite{ray_survey_2025}. Der praktische Nutzen dieser Standardisierung zeigt sich darin, dass eine Erweiterung des zugänglichen Datenbestands im Wesentlichen auf das Ein- oder Ausbinden eines Werkzeugs reduziert wird, ohne die übrige Architektur anzupassen \cite{theologitis_thucy_2026}.
 Da es sich um einen jungen Standard handelt, bestehen zu dessen Sicherheit sowie Reife weiterhin offene Fragen, die insbesondere die Absicherung der bereitgestellten Werkzeuge betreffen \cite{hou_model_2025}. Eine erste ökosystemweite Sicherheitsuntersuchung von 67.057 MCP-Servern verdeutlicht die Tragweite: Clients führen die vom Modell ausgewählten Werkzeuge sowie deren Parameter häufig ohne unabhängige Prüfung aus, sodass bereits manipulierte Werkzeugbeschreibungen ein Modell zu unbeabsichtigten Operationen verleiten können \cite{li_first_2026}. Diese offenen Fragen sind für die vorliegende Arbeit insofern relevant, als der Zugriff auf ein produktives ERP-System besondere Anforderungen an Berechtigungen sowie Kontrolle stellt und der lesende, klar begrenzte Werkzeugumfang des verfolgten Ansatzes auch unter diesem Gesichtspunkt zu begründen ist.
+
 \textbf{Schema- und Bezeichner-Grounding}
 Der zuvor beschriebene werkzeuggestützte Zugriff wirft die Frage auf, wie sichergestellt wird, dass die vom Modell erzeugten Werkzeugargumente auf tatsächlich vorhandene Systemelemente verweisen. In der Text-to-SQL-Forschung wird diese Teilaufgabe als Schema Linking bezeichnet und beschreibt die Zuordnung einer natürlichsprachlichen Anfrage zu denjenigen Datenbankelementen, also Tabellen sowie Spalten, die zur Beantwortung erforderlich sind \cite{katsogiannis-meimarakis_-depth_2026}. Der Nutzen dieses Zwischenschritts ist zweifach: Er entlastet das Modell von der Aufgabe, die relevanten Elemente selbst zu identifizieren, und reduziert die Menge der in den Prompt aufzunehmenden Struktur. Dies ist insbesondere bei umfangreichen Schemata relevant, da die vollständige Übergabe dieser Daten die Kontextgrenze überschreiten würde \cite{katsogiannis-meimarakis_-depth_2026}. Entscheidend ist dabei die Trefferquote (Recall), da eine fehlende Tabelle oder Spalte die korrekte Beantwortung unmöglich macht und somit die Obergrenze der erreichbaren Gesamtgenauigkeit bestimmt \cite{katsogiannis-meimarakis_-depth_2026}.
 Für die vorliegende Arbeit ist dieses Verfahren im Kern anwendbar, da das strukturelle Gegenstück zur halluzinierten Spalte hier der nicht existierende Tabellen- oder Feldname im Werkzeugaufruf ist.%% Hier Formulierung ändern
 Da ein Sprachmodell die Bezeichner grundsätzlich frei generiert und dabei nachweislich nicht existierende oder falsch geschriebene Elemente erzeugen kann, ist eine nachgelagerte Korrektur gegen die tatsächlich vorhandenen Bezeichner erforderlich, etwa über einen Abgleich mit dem nächstgelegenen gültigen Namen \cite{katsogiannis-meimarakis_-depth_2026}. Eine weitergehende Absicherung besteht darin, die Auswahl der Bezeichner von deren Erzeugung zu trennen und den Agenten iterativ aus den real vorhandenen Elementen wählen zu lassen, anstatt das gesamte Schema vorab zu übergeben. Ein solcher agentengesteuerter Ansatz erreicht auch auf sehr großen Schemata eine hohe Trefferquote, während vergleichende Verfahren dort deutlich abfallen: Bei mehr als 3.000 Spalten sinkt die Trefferquote der Vergleichsverfahren unter 40\% , während der agentengesteuerte Ansatz nahe 90\%  verbleibt \cite{wang_autolink_2026}. Diese Beobachtung ist für ein SAP-System, dessen Data Dictionary zehntausende Tabellen umfasst, von besonderer Bedeutung, auch wenn die genannten Werte auf allgemeinen Datenbank-Benchmarks und nicht auf SAP-Daten erhoben wurden.
 Eine zusätzliche Schwierigkeit ergibt sich daraus, dass die Bezeichner betrieblicher Standardsoftware häufig kryptisch sind und ihre fachliche Bedeutung nicht unmittelbar erkennen lassen. Untersuchungen belegen, dass abgekürzte Spaltennamen die Genauigkeit nachgelagerter Aufgaben deutlich mindern, für die Übersetzung natürlicher Sprache in SQL um rund 10 Prozentpunkte \cite{cai_columbo_2025}. Verfahren zur Rekonstruktion der Bezeichnersemantik begegnen diesem Problem, indem sie abgekürzte Spaltennamen anhand ihres Kontextes sowie ihrer Wertebereiche zu aussagekräftigen Beschreibungen erweitern \cite{cai_columbo_2025} oder synthetische Feldbeschreibungen erzeugen, die dem Modell als Interpretationshilfe dienen und dessen Genauigkeit nachweislich erhöhen \cite{wretblad_synthetic_2024}. Dies verdeutlicht, dass dem Modell neben den reinen Tabelleninhalten auch die zugehörigen Metadaten des Data Dictionary, etwa Datenelemente sowie Feldbeschreibungen, als Interpretationskontext bereitzustellen sind, um eine belastbare fachliche Deutung zu ermöglichen.
+
 \textbf{Nachgelagerte Verifikation und Absicherung}
 Die bisher dargestellten Verfahren binden die Modellausgabe an abgerufene Quellen, sie gewährleisten für sich genommen jedoch noch nicht, dass eine getroffene Aussage dem tatsächlichen Systemzustand entspricht. Diesem Zweck dient eine der Generierung nachgelagerte Verifikation, bei der eine erzeugte Aussage gegen die Quelle geprüft und im Widerspruchsfall verworfen oder korrigiert wird. Ein solcher Abgleich kann bereits vor der Ausführung einer Anfrage gegen die semantischen Vorgaben eines hinterlegten Modells erfolgen und inkonsistente Anfragen mit einer Begründung zurückweisen, was die Genauigkeit des Gesamtsystems in einer Untersuchung um 21,59 Prozentpunkte auf 65,63  erhöhte \cite{allemang_increasing_2025}. Eine ergänzende Form der Absicherung besteht darin, die Prüfung transparent zu machen, indem das System die konkrete, nachvollziehbare Belegabfrage mit ausgibt; da ein fachkundiger Nutzer diese Abfrage unmittelbar überprüfen kann, wird der Verdacht einer Halluzination ausgeräumt \cite{theologitis_thucy_2026}. Da die Wahrheitsquelle im Kontext der Arbeit geschlossen sowie vollständig vorliegt und eine Aussage über eine Customizing-Konfiguration somit exakt statt lediglich näherungsweise entschieden werden kann, verspricht dieses Verfahren eine erfolgreiche Verbesserung. %Ganz dringen neu formulieren bzw anders Schreiben.
 Zu einer vollständigen Absicherung gehört zudem der Umgang mit dem Fall, dass die verfügbare Evidenz für eine belastbare Aussage nicht ausreicht. In einem solchen Fall ist eine begründete Enthaltung von einer falschen Aussage vorzuziehen, weshalb sie nicht als Ausfall, sondern als eigenständige Systemleistung behandelt wird. Umgesetzt wird dies über einen selektiven Klassifikator, der eine Ausgabe nur oberhalb eines Konfidenzschwellenwerts zulässt und andernfalls zurückweist; ein solcher Mechanismus senkt das Risiko fehlerhafter Ausgaben erheblich \cite{somov_confidence_2025}. Ein für den vorliegenden Kontext aufschlussreicher Befund ist dabei, dass sich unbeantwortbare oder gegenstandslose Anfragen zuverlässiger erkennen lassen als inhaltlich falsche Generierungen, da die Modelle bei sachlich passenden, aber falsch beantworteten Fragen zu selbstsicher bleiben \cite{somov_confidence_2025}. Dies verdeutlicht, dass die Absicherung der Interpretation sowohl in der Bestätigung zutreffender als auch in der Zurückhaltung nicht hinreichend belegter Aussagen besteht.
+
+
 Die in diesem Abschnitt eingeführten Verfahren bilden gemeinsam das methodische Fundament des verfolgten Ansatzes: Das große Sprachmodell übernimmt die semantische Interpretation, der Abruf über dichte Textrepräsentationen grenzt die zu prüfenden Systemelemente ein, das Grounding sowie das Schema-Grounding verankern dessen Ausgaben an den tatsächlich vorhandenen Systemelementen, das Agentenprinzip in Verbindung mit dem Model Context Protocol erschließt die benötigten Informationen aktiv, und die nachgelagerte Verifikation sichert die getroffenen Aussagen gegen den Systemzustand ab. Aufbauend auf diesen Grundlagen wird im folgenden Abschnitt der Stand der Forschung betrachtet, indem untersucht wird, wie bestehende Arbeiten diese Verfahren zur strukturierten Erschließung sowie zur belegbaren Interpretation von Systemwissen verbinden und wo sich daraus die Forschungslücke der vorliegenden Arbeit ergibt.

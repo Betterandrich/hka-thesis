@@ -1,37 +1,209 @@
-\chapter{Ansatz}
+\chapter{Ansatz und Entwurf}
 \label{Ansatz}
 
-In diesem Kapitel wird gezeigt, WIE man das im letzten Kapitel
-ermittelten generellen Ziele realisieren bzw. wie man die allgemeine
-Fragestellung der Arbeit beantworten kann. Bei konzeptionellen
-Arbeiten erfolgt das in der Regel durch einen Software- oder
-Softwarearchitekturentwurf. Diese Kapitel ist der wichtigste Teil in
-der Arbeit – hier muss klar argumentiert werden und Alternativen
-bewertet. Es muss eine systematische Herangehensweise demonstriert
-werden. Entwurfsentscheidungen müssen begründet werden, so dass sie
-nachvollziehbar sind.
+% ---------------------------------------------------------------------------
+% Leitfaden des Betreuers (nicht Teil des Fließtextes, dient als Schreibhilfe):
+% In diesem Kapitel wird gezeigt, WIE die im letzten Kapitel ermittelten
+% generellen Ziele realisiert werden. Bei konzeptionellen Arbeiten erfolgt das
+% durch einen Software- oder Softwarearchitekturentwurf. Dieses Kapitel ist der
+% wichtigste Teil der Arbeit -- hier muss klar argumentiert und es müssen
+% Alternativen bewertet werden. Entwurfsentscheidungen müssen begründet werden,
+% sodass sie nachvollziehbar sind. Erst das WAS (Anforderungen als Verfeinerung
+% der Ziele vor dem Hintergrund bekannter Arbeiten), dann das WIE (top-down,
+% beginnend mit einem Architektur-/Systemdiagramm). Immer muss klar werden,
+% inwiefern der Gesamtentwurf und seine Einzelaspekte die Forschungsfrage lösen.
+% ---------------------------------------------------------------------------
 
-Teil des Entwurfs ist die Klärung, was genau die Zielsetzungen /
-Anforderungen an das zu erstellende oder konzipierende System bzw. die
-zu erstellenden Prozesse sind. Die Anforderungen sin deine
-Verfeinerung der generellen Ziele vor dem Hintergrund bekannter
-Arbeiten, die man im Kapitel zuvor behandelt hat. Wie beim
-Softwareengineering steht hier die Frage nach dem WAS im Mittelpunkt,
-bevor man das WIE realisiert.
+Aufbauend auf dem in Kapitel~\ref{StandDerForschung} dargestellten Stand der
+Forschung wird in diesem Kapitel der Entwurf des Analyseframeworks
+beschrieben. Ziel dieses Kapitels ist es, aus den zuvor identifizierten
+Zielen und Forschungslücken nachvollziehbare Anforderungen abzuleiten und
+darauf aufbauend eine Architektur zu entwickeln, deren Entwurfsentscheidungen
+jeweils gegen begründete Alternativen abgewogen werden. Die Darstellung folgt
+einem Top-Down-Vorgehen, das zunächst die Anforderungen klärt, anschließend
+einen Überblick über das Gesamtsystem gibt und die zentralen Entwurfs\-%
+entscheidungen im Detail begründet.
 
-In der Regel beschreibt man den Entwurf Top-Down; es empfiehlt sich
-oft, zunächst eine grundlegende Übersicht über das System zu
-geben. Oft hilft dabei ein Architektur- oder Systemdiagramm. Im Rest
-des Kapitels kann man Detailaspekte oder Use Cases beschreibt; wichtig
-ist dabei immer, dass klar wird, inwiefern der Gesamtentwurf und seine
-Einzelaspekte das gestellte Problem bzw. die gestellte Forschungsfrage
-löst.
+\section{Ansatz}
+\label{sec:ziele-anforderungen}
 
-\section{Mein Entwickeltes Verfahren 1}
-\label{Meins1}
+%Präsentation des Ansatzes dessen Ziele sind ein Teil davon
 
-Vorstellung und Beschreibung der Ansätze und Methoden, die im Rahmen
-dieser Arbeit entwickelt wurden.
+% Brückenschluss Kap. 2 -> Kap. 3. Stellt den roten Faden explizit her:
+% welche Lücke des Forschungsstands begründet welche Anforderung.
+Die in Kapitel~\ref{Forschungsstand} herausgearbeitete Forschungslücke bildet
+den Ausgangspunkt für den Entwurf. Aus ihr werden in diesem Abschnitt die
+konkreten Anforderungen an das zu konzipierende System abgeleitet, wobei jede
+Anforderung auf die Erkenntnis zurückgeführt wird, aus der sie resultiert.
+Diese Rückführung stellt sicher, dass die nachfolgenden Entwurfsentscheidungen
+nicht gesetzt, sondern aus dem Stand der Forschung begründet erscheinen.
 
-\section{Mein Entwickeltes Verfahren 2}
-\label{Meins2}
+	\subsection{Funktionale Anforderungen}
+	\label{subsec:anf-funktional}
+	% Was das System leisten muss.
+	Die funktionalen Anforderungen beschreiben, welche Leistungen das System
+	erbringen muss, um die Forschungsfrage zu beantworten. Sie umfassen die
+	strukturierte Extraktion von Customizing- und Metadaten, deren semantische
+	Interpretation, die nachweisbare Bindung jeder Aussage an die abgerufenen
+	Quelldaten sowie die begründete Enthaltung bei nicht tragender Evidenz.
+
+	\subsection{Nicht-funktionale Anforderungen und Randbedingungen}
+	\label{subsec:anf-nichtfunktional}
+	% Qualitätsmerkmale und vorgegebene Randbedingungen.
+	% HINWEIS: Die hier als gesetzt geführten Plattformstrukturen (SAP S/4HANA,
+	% BTP, Cloud Connector) setzen voraus, dass Kapitel 2 sie für fachfremde
+	% Informatiker eingeführt hat. -> siehe Notiz-Kommentar am Kapitelende.
+	Die nicht-funktionalen Anforderungen legen die Qualitätsmerkmale und
+	technischen Randbedingungen des Entwurfs fest. Hierzu zählen die
+	Skalierbarkeit gegenüber wachsenden Metadatenbeständen sowie die
+	Nachvollziehbarkeit der erzeugten Ergebnisse. Als vorgegebene Randbedingung
+	tritt die von mmmake bereitgestellte SAP Business Technology Platform (BTP)
+	hinzu, deren Konnektivitätsstrukturen -- insbesondere der Cloud Connector und
+	der Destination-Proxy -- den technischen Rahmen des Zugriffs auf das
+	Zielsystem festlegen und nicht Gegenstand einer eigenen Entwurfsentscheidung
+	sind.
+	% Die technische Ausführung dieser Randbedingung (.dest-Proxy, trust_env)
+	% wird in Kapitel 4 (Implementierung) beschrieben, nicht hier.
+
+\section{Architekturüberblick}
+\label{sec:architektur-ueberblick}
+% Top-down-Einstieg mit Systemdiagramm.
+Auf Grundlage der zuvor definierten Anforderungen wird in diesem Abschnitt ein
+Überblick über die Gesamtarchitektur des Analyseframeworks gegeben. Das System
+gliedert sich in einen agentenbasierten Orchestrator, einen über das Model
+Context Protocol (MCP) angebundenen Werkzeugserver sowie die Anbindung eines
+Large Language Models (LLM) und der Einbettungsverfahren über den SAP
+Generative AI Hub. Anhand eines Systemdiagramms wird der Datenfluss einer
+Anfrage von der Fragestellung bis zur belegten Antwort nachvollzogen, bevor die
+einzelnen Entwurfsentscheidungen in Abschnitt~\ref{sec:entwurfsentscheidungen}
+vertieft werden.
+
+	% \begin{figure}[H] ... Systemarchitektur-Diagramm (Folie) ... \end{figure}
+
+\section{Teilkomponenten des Ansatzes}
+\label{sec:entwurfsentscheidungen}
+%Hier auch die Entwurfsentscheidung je Komponente erklären
+
+% Argumentativer Kern. Achse = Verarbeitungspipeline. Jeder Unterabschnitt
+% folgt dem Muster: Problem aus Related Work -> Optionen -> begründete Wahl.
+Der folgende Abschnitt bildet den argumentativen Kern des Kapitels. Für jede
+zentrale Entwurfsentscheidung werden zunächst das zugrunde liegende Problem aus
+dem Stand der Forschung, anschließend die in Betracht kommenden Alternativen und
+schließlich die begründete Wahl dargestellt. Die Gliederung folgt dabei der
+Verarbeitungspipeline des Systems, sodass der Entwurf nicht als Sammlung
+isolierter Verfahren, sondern als zusammenhängender Lösungsweg erkennbar wird.
+
+	\subsection{Schema-Linking und Skalierung}
+	\label{subsec:schema-linking}
+	% Problem: relevante Tabellen finden ohne vollständiges Schema als Eingabe.
+	Die Bestimmung der für eine Anfrage relevanten Tabellen aus einem sehr
+	großen Datenkatalog stellt die erste Entwurfsentscheidung dar. Da das
+	vollständige Schema aus Gründen des Kontextfensters nicht als Eingabe
+	dienen kann, werden mehrere Verfahren des Schema-Linkings gegenübergestellt
+	und hinsichtlich ihrer Eignung für die angestrebte Skalierung bewertet.
+
+	\subsection{Verortung des Retrievals in der Architektur}
+	\label{subsec:retrieval-verortung}
+	% Entscheidung: Retrieval als MCP-Werkzeug hinter der Serverschnittstelle
+	% vs. Vorverarbeitung im Agenten.
+	Eine weitere Entwurfsentscheidung betrifft die architektonische Verortung
+	des semantischen Retrievals. Es wird begründet, weshalb das Retrieval als
+	eigenständiges Werkzeug hinter der MCP-Schnittstelle und nicht als
+	Vorverarbeitung im Agenten realisiert wird. Zugleich wird die Gegenposition
+	benannt, nach der das Retrieval konzeptionell Teil der Orchestrierung ist,
+	um die Entscheidung als bewusste Abwägung auszuweisen.
+
+	\subsection{Grounding und kalibrierte Enthaltung}
+	\label{subsec:grounding-enthaltung}
+	% Kernabgrenzung gegen "noch ein RAG-System".
+	Die Absicherung der erzeugten Aussagen gegen Halluzinationen bildet die
+	entscheidende Abgrenzung des Ansatzes von einer reinen
+	Retrieval-Augmented-Generation (RAG). Es wird dargelegt, weshalb die
+	Verifikation regelbasiert und die Belegpflicht im Programmcode statt im
+	Prompt verankert wird und in welchen Fällen sich das System begründet
+	enthält, anstatt eine nicht gedeckte Aussage zu erzeugen.
+
+	\subsection{Anbindung der Sprachmodelle}
+	\label{subsec:llm-anbindung}
+	% Naheliegende, aber begründungspflichtige Entscheidung. Alternative:
+	% direkter LLM-Zugriff. Gewählt: SAP Generative AI Hub.
+	% Kap. 4 beschreibt die technische Umsetzung (gen_ai_hub, AI-Core-Key).
+	Die Einbindung des Sprachmodells und der Einbettungsverfahren erfordert eine
+	Entscheidung über die genutzte Bereitstellungsplattform. Als Alternativen
+	stehen der direkte Zugriff auf ein Modell und die Nutzung des von SAP
+	bereitgestellten Generative AI Hub gegenüber. Es wird begründet, weshalb der
+	Generative AI Hub gewählt wird, da er sich konsistent in die vorgegebene
+	Plattform einfügt und der konkrete Modellzugriff zugleich hinter der
+	MCP-Schnittstelle gekapselt und damit austauschbar bleibt.
+
+	\subsection{Operationalisierung der Abweichung vom Standard}
+	\label{subsec:abweichungslogik}
+	% Zentrale, konzeptionell noch offene Entscheidung -> hier als Entwurf
+	% festzulegen, nicht als offene Frage stehen zu lassen.
+	Die Bestimmung dessen, was eine Abweichung vom SAP-Standard ausmacht,
+	stellt die konzeptionell anspruchsvollste Entwurfsentscheidung dar, da eine
+	Abweichung stets eine Referenz voraussetzt, gegen die sie definiert wird.
+	In diesem Abschnitt wird festgelegt, wie der Standard operationalisiert
+	wird, und es werden die hierfür in Frage kommenden Referenzquellen
+	gegeneinander abgewogen.
+	% TODO: Referenz für "Standard" fixieren (Auslieferungsklasse/Namensraum
+	% vs. SAP-Hilfe-Grounding vs. hybrid).
+
+	\subsection{Umgang mit kundeneigenem ABAP-Code}
+	\label{subsec:custom-code}
+	% Lesen vs. Generieren; Generierung als begründet verworfene Option.
+	Kundeneigener ABAP-Code wird kontextgebunden herangezogen, um
+	Customizing-Abweichungen zu erklären, nicht jedoch als eigenständiges
+	Analyseobjekt behandelt. Es wird begründet, weshalb der Code ausschließlich
+	gelesen und nicht zur Informationsgewinnung generiert wird, und die
+	Generierungsvariante wird als geprüfte und aus Gründen der Belegbarkeit
+	verworfene Option geführt.
+
+\section{Abgrenzung des Entwurfs}
+\label{sec:abgrenzung}
+% Was begründet NICHT gebaut wird -- gegen Nicht-Gebautes UND gegen den
+% Forschungsstand (Beitrag schärfen).
+Zur Schärfung des Beitrags wird in diesem Abschnitt dargelegt, welche
+naheliegenden Lösungswege bewusst nicht verfolgt werden und aus welchen Gründen.
+Behandelt werden insbesondere der Verzicht auf Constrained Decoding, die
+Nichteignung des SAP Document Grounding aufgrund abweichender Abrufsemantik
+sowie die Abgrenzung gegenüber bestehenden ADT-MCP-Servern, denen die für den
+Ansatz benötigten Fähigkeiten fehlen. Diese Abgrenzung macht zugleich deutlich,
+worin sich der Entwurf von einer generischen RAG-Lösung unterscheidet.
+
+\section{Zusammenfassung}
+\label{sec:ansatz-zusammenfassung}
+% Rückblick + expliziter Vorausblick auf Kap. 4.
+Die in diesem Kapitel vorgestellten Anforderungen und Entwurfsentscheidungen
+bilden die Grundlage für die prototypische Umsetzung des Analyseframeworks. Es
+wurde gezeigt, wie sich die aus dem Stand der Forschung abgeleiteten Ziele in
+eine begründete Architektur überführen lassen und an welchen Stellen bewusst
+zwischen Alternativen abgewogen wurde. Das folgende Kapitel~\ref{Implementierung}
+beschreibt die konkrete Implementierung dieses Entwurfs.
+
+% ===========================================================================
+% NOTIZ FÜR KAPITEL 2 (Forschungsstand / Grundlagen), nicht Teil des Kapitels:
+% Damit dieses Kapitel für fachfremde Informatiker tragfähig ist, müssen in
+% Kapitel 2 vorab eingeführt werden:
+%   - SAP S/4HANA und dessen grundlegender Aufbau (In-Memory, DDIC, Mandanten)
+%   - Customizing vs. Eigenentwicklung (Z-Objekte)
+%   - SAP BTP als Plattform sowie Cloud Connector und Destination-Proxy als
+%     Konnektivitätsstruktur zum On-Premise-/Zielsystem
+%   - SAP Generative AI Hub als Bereitstellungsschicht für LLM/Embeddings
+% Diese Grundlagen sind Voraussetzung für 3.1.2 (Randbedingung BTP) und
+% 3.3.6 (Anbindung der Sprachmodelle).
+%
+% NOTIZ ZUR PARALLELITÄT KAPITEL 3 <-> KAPITEL 4:
+% Kapitel 4 (Implementierung) ist analog zu 3.3 strukturiert. Jede
+% Entwurfsentscheidung hat dort ein technisches Gegenstück:
+%   3.2  Architekturüberblick      -> 4.1 Systemaufbau, Projektstruktur
+%   3.3.1 Schema-Linking           -> 4.x Korpusaufbau, FAISS-Index, search_schema
+%   3.3.2 Retrieval-Verortung      -> 4.x MCP-Server, Toolkatalog
+%   3.3.3 Grounding/Enthaltung     -> 4.x Verifikations-Loop
+%   3.3.4 (neu) LLM-Anbindung      -> 4.x Generative-AI-Hub-Anbindung, AI-Core
+%   3.3.5 Abweichungslogik         -> 4.x (abhängig von der offenen Entscheidung)
+%   3.3.6 Custom-Code lesen        -> 4.x read_source, Enhancement-Auflösung
+%   3.1.2 Randbedingung BTP        -> 4.x .dest-Proxy, Konnektivität
+% Eine Kapitel-4-Überschrift OHNE Gegenstück hier ist ein Hinweis auf eine
+% fehlende Entwurfsentscheidung.
+% ===========================================================================
