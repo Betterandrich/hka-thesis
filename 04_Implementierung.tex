@@ -1,37 +1,46 @@
-\chapter{Implementierung}
+\chapter{Prototypische Umsetzung}
 \label{Implementierung}
+% GEÄNDERT: Vorlagentext entfernt; Kapitel spiegelt die Teilaspekte aus Kap. 3 (Betreueranmerkung S4: gleiche Überschriften, keine Überraschungen, nur was die Evaluation benötigt)
 
-In der Konzeption wurden alle relevanten Entscheidungen getroffen, so
-dass es in diesem Kapitel typischerweise nur noch um technische
-Aspekte und Implementierungsdetails geht. Im Idealfall enthält dieses
-Kapitel also keine ``Überraschungen'' auf konzeptioneller Ebene,
-sondern beschreibt lediglich Besonderheiten der Implementierung, die
-etwa jemand, der das System nachbauen oder nachvollziehen möchte,
-wissen sollte. Zu beachten ist dabei, dass die Implementierung
-grundsätzlich nur ein Mittel zur Beantwortung und Validierung der
-Frage ist, und kein Selbstzweck. Sie dient – zumindest was die
-Bearbeitung der Thesis betrifft – nur einem einzigen Ziel: der
-Validierung (Kapitel \ref{Validierung}), ob der vorgestellte Entwurf
-(Kapitel \ref{Ansatz}) die Problemstellung (Kapitel \ref{Einleitung}
-tatsächlich erreicht.
+% NEU: Kapiteleinleitung
+Aufbauend auf dem in Kapitel~\ref{Ansatz} beschriebenen Zielentwurf beschreibt dieses Kapitel dessen prototypische Umsetzung. Die Implementierung dient dabei ausschließlich der Evaluation in Kapitel~\ref{Evaluation}, sodass nur jene technischen Details dargelegt werden, die zum Nachvollziehen der Ergebnisse sowie zum Nachbau des Verfahrens erforderlich sind. Die Gliederung folgt den Teilaspekten aus Abschnitt~\ref{sec:teilaspekte}, und für jeden Teilaspekt wird ausgewiesen, welche Bestandteile des Zielentwurfs umgesetzt sind und welche nicht.
 
-Es kann (muss aber nicht zwingend) sinnvoll sein, das Kapitel
-Implementierung analog zur Konzeption zu strukturieren. Hat man zum
-Beispiel verschiedene Teile eines Gesamtsystems entworfen (in Kapitel
-\ref{Ansatz}), kann man die Implementierung dieser Teile in analoger
-Struktur (Kapitel \ref{Implementierung}) vorstellen.
+\section{Systemumgebung und Datenbasis}
+\label{sec:impl-umgebung}
 
-% Hier kann quasi Kapitel 3 übernommen werden und dann hier genauer erklkärt wie die implementierung funktioniert
+% NEU (übernommen aus Textbaustein 21.09.2026, Abschnitt 4.1)
+Die prototypische Umsetzung erfolgt gegen ein SAP-System, auf das nicht unmittelbar, sondern über eine in der Entwicklungsumgebung hinterlegte Verbindungsbeschreibung zugegriffen wird. Der Zugriff auf die Metadatenebene erfolgt über die REST-Schnittstelle der ABAP Development Tools (ADT); die fachlichen Abfragen werden über deren Endpunkt für freie Datenvorschauen abgesetzt.
 
-\section{Umsetzung meines Verfahrens 1}
-\label{MeinsImplementierung1}
+Die Datenbasis der semantischen Suche bildet das Data Dictionary. Herangezogen werden die Feldliste der Tabellen sowie die Beschreibungstexte auf Tabellen- und auf Datenelementebene, sodass jedes Feld mit den auf drei Ebenen verfügbaren sprachlichen Informationen beschrieben wird. Die Eingrenzung des betrachteten Objektbestands erfolgt über den Objektkatalog, der jedem Entwicklungsobjekt sein Paket sowie seinen Ursprung zuordnet. Diese Eingrenzung ist von der in Abschnitt~\ref{subsec:ta-erschliessen} begründeten inhaltlichen Filterung des Schemakorpus zu unterscheiden: Der Objektkatalog begrenzt, welcher Ausschnitt des Systems überhaupt betrachtet wird, während die inhaltliche Filterung innerhalb dieses Ausschnitts bestimmt, welche Tabellen als Träger von Customizing in den Korpus aufgenommen werden.
+% Zu prüfen vor Übernahme: Nennung von Systembezeichnung und Mandant mit dem Kooperationspartner klären.
+% Ergänzen: Ablage der Codebasis und Folgen für die Nachvollziehbarkeit (Textbaustein 15.09.2026).
 
-Verfahren 1 habe ich komplett implementiert, getestet und produktiv
-gesetzt, es läuft seit 10 Jahren fehlerfrei und macht insbesondere
-meine Chefin total gluecklich.
+\section{Relevante Konfiguration erschließen}
+\label{sec:impl-erschliessen}
+% TODO (Umsetzung, Stand Prototyp 23.09.2026):
+%  - Korpusaufbau offline: Pakete über TADIR -> Filter DD02L (TABCLASS = TRANSP, CONTFLAG C/G) -> Felder DD03L/DD08L/DD02T -> Texte DD04T mit Sprachrückfall -> F1-Doku DOKTL
+%  - Granularität Feld (Default) bzw. Tabelle; Baseline ohne F1-Doku
+%  - Einbettung über Orchestration-Dienst des Generative AI Hub; Dimension konfigurierbar; L2-Normalisierung
+%  - FAISS IndexFlatIP (exakte Suche, Skalarprodukt = Kosinus) + Metadaten-JSON
+%  - Werkzeuge search_schema, describe_table, query_table (nur Gleichheitsfilter, Feldprojektion, beleg_sql)
+%  - MCP-Server (FastMCP), streamable HTTP, einmal gestartet je Sitzung
+%  - Umfang des Korpus (Anzahl Tabellen/Felder) angeben
 
-\section{Umsetzung meines Verfahrens 2}
-\label{Meins2Implementierung}
+\section{Semantisch interpretieren}
+\label{sec:impl-interpretieren}
+% TODO (Umsetzung):
+%  - ReAct-Agent (LangChain create_agent), Router customizing | code, Systemprompt mit Vorgehensschritten
+%  - Modellanbindung über Generative AI Hub, gekapselt in einer Funktion (Modellwechsel)
+%  - Klartextauflösung: CHECKTABLE -> Texttabelle (FRKART TEXT), Join nur bei eindeutiger Zuordnung und Wertüberlappung
+%  - Merkmale: is_feature (T549B), decode_feature (T549C), resolve_value text | lexical | abstain
+%  - read_source, search_objects, list_package für kundeneigenen Code
+%  - Oberfläche (Chainlit) mit Protokoll und Belegen
 
-Verfahren 2 habe ich gar nicht umgesetzt, es bleibt komplettes
-Papierdesign, aber es funktioniert bestimmt.
+\section{Aussagen an Systemdaten absichern}
+\label{sec:impl-absichern}
+% TODO (Umsetzung): Belegführung über beleg_sql und Trace-Sammlung; Prüfschleife als LangGraph-Zustandsautomat;
+% Stand ehrlich ausweisen: im produktiven Agentenpfad derzeit Belegdisziplin über den Systemprompt, deterministische Schleifen als Vergleichsbasis.
+
+\section{Abweichung vom Standard ausweisen}
+\label{sec:impl-abweichung}
+% TODO (Umsetzung): derzeit nur Namensraum (Z/Y-Datenelemente, Z-Objektsuche); Referenzabgleich noch nicht umgesetzt.

@@ -1,12 +1,27 @@
 \chapter{Einleitung}
 \label{Einleitung}
+% ---------------------------------------------------------------------------
+% Kennzeichnung (gilt für alle Kapitel): Ein Kommentar "% NEU: <Grund>" bzw.
+% "% GEÄNDERT: <Grund>" direkt über einem Absatz gilt für sämtliche Sätze
+% dieses Absatzes. Einzelne geänderte Sätze innerhalb eines unveränderten
+% Absatzes sind am Zeilenende markiert. Unmarkierter Text ist wörtlich
+% übernommen bzw. verschoben.
+% ---------------------------------------------------------------------------
+
 \section{Motivation}
+\label{sec:motivation}
 
 Betriebliche Software entwickelt sich fortlaufend weiter, indem sie an veränderte fachliche und technische Anforderungen angepasst wird. Im Verlauf dieser Weiterentwicklung nimmt ihre Komplexität tendenziell zu und ihre strukturelle Qualität ab, sofern dem nicht durch gezielte Maßnahmen entgegengewirkt wird \cite{lehman_metrics_1997}.
 
-Diese Dynamik prägt insbesondere langlebige, unternehmenskritische Standardsoftware, für die Enterprise-Resource-Planning-Systeme (ERP-Systeme) ein typisches Beispiel bilden. Über viele Jahre werden solche Systeme betriebsspezifisch angepasst, wodurch ein gewachsenes Portfolio aus Customizing und Eigenentwicklungen entsteht, das einen wesentlichen Teil der unternehmensindividuellen Prozesslogik trägt. Customizing bezeichnet dabei die tabellengesteuerte Konfiguration der Standardlogik eines ERP-Systems [BELEG ERFORDERLICH]. Das Nachvollziehen bestehender Software beansprucht bereits im Regelfall einen erheblichen Anteil der Entwicklungs- und Wartungszeit \cite{xia_measuring_2018}, wobei individuell angepasste, vom Standard abweichende Systeme dieses Verstehen zusätzlich erschweren.
+% GEÄNDERT: [BELEG ERFORDERLICH] durch vorhandene Quelle ersetzt (Beleg prüfen: Typologie "Configuration" bei Brehm et al.)
+Diese Dynamik prägt insbesondere langlebige, unternehmenskritische Standardsoftware, für die Enterprise-Resource-Planning-Systeme (ERP-Systeme) ein typisches Beispiel bilden. Über viele Jahre werden solche Systeme betriebsspezifisch angepasst, wodurch ein gewachsenes Portfolio aus Customizing und Eigenentwicklungen entsteht, das einen wesentlichen Teil der unternehmensindividuellen Prozesslogik trägt. Customizing bezeichnet dabei die tabellengesteuerte Konfiguration der Standardlogik eines ERP-Systems \cite{brehm_tailoring_2001}. Das Nachvollziehen bestehender Software beansprucht bereits im Regelfall einen erheblichen Anteil der Entwicklungs- und Wartungszeit \cite{xia_measuring_2018}, wobei individuell angepasste, vom Standard abweichende Systeme dieses Verstehen zusätzlich erschweren.
+
+% NEU: Definition des Titelbegriffs "Softwarearchäologie" (fehlte bislang im Text)
+Die Rekonstruktion des Verständnisses eines bestehenden Systems aus dessen vorhandenen Artefakten, wenn weder die ursprünglichen Entwickler noch eine belastbare Dokumentation verfügbar sind, wird als Softwarearchäologie bezeichnet \cite{hunt_software_2002}. Der Begriff verdeutlicht, dass der Zustand eines gewachsenen Systems nicht nachgeschlagen, sondern aus seinen Spuren erschlossen werden muss. Diese Tätigkeit bildet den Anwendungskontext der vorliegenden Arbeit.
 
 \section{Problemstellung und Forschungsfrage}
+\label{sec:problem-ff}
+% GEÄNDERT: \label ergänzt, da in Kap. 3 referenziert (vorher undefinierter Verweis)
 
 Die im vorangegangenen Abschnitt beschriebene Schwierigkeit, gewachsene Systeme nachzuvollziehen, verschärft sich im Kontext von Transformationsprojekten, in deren Rahmen bestehende Systeme auf einen neuen Releasestand oder eine neue Zielarchitektur überführt werden. Eine Analyse des gewachsenen Systems bildet dabei eine zentrale Voraussetzung, erfolgt in der Praxis jedoch weitgehend manuell und erweist sich dadurch als zeit-, kosten- sowie fehleranfällig.
 
@@ -14,24 +29,43 @@ Individuelle Anpassungen erhöhen den Wartungsaufwand und erschweren den Abgleic
 
 Diese Anforderung stellt sich in besonderem Maße für externe Beratungsunternehmen, die den Zustand eines Kundensystems ohne den Erfahrungsvorsprung einer internen IT-Abteilung sowie unter Zeitdruck rekonstruieren müssen. Für Beratungsunternehmen wie die mmmake GmbH, in deren Kooperation die vorliegende Arbeit entsteht, resultiert hieraus ein unmittelbarer Bedarf an Verfahren, welche die Erfassung sowie die fachliche Einordnung gewachsener Systemzustände unterstützen.
 
-%Alte formulierung: Vor diesem Hintergrund untersucht diese Arbeit die folgende Forschungsfrage:
-%Inwieweit lassen sich Abweichungen vom SAP-Standard in Customizing und
-%Eigenentwicklungen mithilfe eines MCP-basierten LLM-Agenten automatisiert
-%identifizieren, semantisch interpretieren, sowie in eine fachlich belastbare,
-%nat¨urlichsprachliche Dokumentation ¨uberf¨uhren?
-An diesen Bedarf knüpft die vorliegende Arbeit an, indem sie einen Ansatz untersucht, der das kundenindividuelle Customizing eines fremden Systems über natürlichsprachliche Anfragen erschließbar macht und dadurch die manuelle Exploration sowie die Rückfrage beim Fachbereich verringert. Daraus ergibt sich die folgende Forschungsfrage:
+% NEU: laufendes Beispiel (Meeting-Notiz "Beispiel durchweg nutzen"); Grundlage: Testfall TC1-S3 des Prototyps
+Ein typischer Fall verdeutlicht, worin die Schwierigkeit konkret besteht. Eine Beraterin soll im Rahmen eines Projekts klären, welche Abwesenheitsarten Auszubildende im Mitarbeiter-Self-Service beantragen dürfen. Die Antwort ist im System nicht an einer einzelnen Stelle hinterlegt, sondern ergibt sich aus mehreren miteinander verknüpften Customizing-Tabellen sowie aus einem sogenannten Merkmal, das eine Beschäftigtengruppe erst zur Laufzeit einer Regelgruppe zuordnet. Die Tabellen tragen kryptische technische Bezeichner und speichern überwiegend Schlüsselwerte, deren fachliche Bedeutung erst über weitere Tabellen erschließbar ist. Ohne Kenntnis dieser Verknüpfungen lässt sich die Frage nur durch das manuelle Nachverfolgen der Tabellen oder durch Rückfrage beim Fachbereich beantworten. Abbildung~\ref{fig:problem} stellt diesen Fall schematisch dar. Er wird in der gesamten Arbeit als durchgängiges Beispiel herangezogen.
 
-„Inwieweit lässt sich das kundenindividuelle Customizing eines gewachsenen SAP-Systems durch einen agentenbasierten LLM-Ansatz automatisiert sowie dialogbasiert erschließen und in eine fachlich belastbare, natürlichsprachliche Ist-Dokumentation überführen, die Abweichungen vom Herstellerstandard nachvollziehbar ausweist?"
+% NEU: Problemgrafik (Grafik G1 der Phase-1-Planung); Quelldatei Grafiken/drawio/abb1_1_problem.drawio
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{Grafiken/abb1_1_problem.pdf}
+	\caption{Manuelle Erschließung einer Fachfrage in einem gewachsenen SAP-System am Beispiel der beantragbaren Abwesenheitsarten für Auszubildende (eigene Darstellung).}
+	\label{fig:problem}
+\end{figure}
 
-Ein zunächst betrachteter Zugang besteht darin, den Beratenden eine dialogorientierte Schnittstelle bereitzustellen, über die einzelne Konfigurationsbereiche gezielt in natürlicher Sprache exploriert werden, ohne diese manuell im System nachzuverfolgen. Aufbauend darauf wird, soweit es der zeitliche Rahmen zulässt, untersucht, inwieweit sich der Ansatz von der Abweichung gegenüber dem Herstellerstandard auf den Vergleich zweier ursprünglich gleichartiger Systeminstanzen übertragen lässt, um Abweichungen zwischen einem Ausgangs- und einem abgeleiteten System aufzudecken.
+% GEÄNDERT: Überleitung zur FF auf den Titelbegriff "individuelle Entwicklungen" ausgerichtet (Titel bleibt verbindlich)
+An diesen Bedarf knüpft die vorliegende Arbeit an, indem sie einen Ansatz untersucht, der die individuellen Entwicklungen eines fremden Systems über natürlichsprachliche Anfragen erschließbar macht und dadurch die manuelle Exploration sowie die Rückfrage beim Fachbereich verringert. Als individuelle Entwicklungen werden dabei sämtliche betriebsspezifischen Ausprägungen eines Systems verstanden, die über den Auslieferungszustand des Herstellers hinausgehen, also sowohl das Customizing als auch die Eigenentwicklungen. Die Arbeit konzentriert sich innerhalb dieser Menge auf das Customizing. Dies liegt darin begründet, dass das Customizing einen wesentlichen Teil der unternehmensindividuellen Prozesslogik tabellengesteuert abbildet und seine fachliche Bedeutung sich einer codezentrierten Analyse entzieht, während für Eigenentwicklungen bereits Werkzeuge der Code-Analyse existieren (vgl. Abschnitt~\ref{sec:forschungsluecke}). Eigenentwicklungen werden daher nur dort herangezogen, wo sie zur Erklärung einer Customizing-Einstellung erforderlich sind. Daraus ergibt sich die folgende Forschungsfrage:
 
+% GEÄNDERT: Forschungsfrage an den verbindlichen Titel angepasst (individuelle Entwicklungen, Customizing als Schwerpunkt, belegte Ist-Dokumentation); Anführungszeichen korrigiert (vorher Kompilierfehler)
+\begin{quote}
+\glqq Inwieweit lassen sich die individuellen Entwicklungen eines gewachsenen SAP-Systems, mit dem Customizing als primärem Untersuchungsgegenstand, durch einen agentenbasierten LLM-Ansatz dialogbasiert erschließen, semantisch interpretieren und in eine an den Systemdaten belegte, natürlichsprachliche Ist-Dokumentation überführen, die Abweichungen vom Herstellerstandard nachvollziehbar ausweist?\grqq
+\end{quote}
 
+% NEU: Zerlegung der FF in Teilfragen, damit die Evaluation den Grad der Beantwortung je Teilfrage bestimmen kann (Betreueranmerkung zu 5.1.1)
+Das Wort \glqq inwieweit\grqq{} verdeutlicht, dass die Forschungsfrage nicht mit ja oder nein, sondern graduell beantwortet wird. Um diesen Grad bestimmbar zu machen, wird sie in vier Teilfragen zerlegt, die jeweils einem Bestandteil der Forschungsfrage entsprechen:
+\begin{enumerate}
+	\item[\textbf{TF1}] \textbf{Erschließen:} Inwieweit findet der Ansatz zu einer natürlichsprachlichen Anfrage die fachlich einschlägigen Customizing-Tabellen und deren Werte?
+	\item[\textbf{TF2}] \textbf{Interpretieren:} Inwieweit ist die erzeugte fachliche Deutung dieser Werte korrekt?
+	\item[\textbf{TF3}] \textbf{Belegen:} Inwieweit ist jede Aussage der Dokumentation auf abgerufene Systemdaten rückführbar, und enthält sich der Ansatz, wenn die Evidenz nicht ausreicht?
+	\item[\textbf{TF4}] \textbf{Abweichung ausweisen:} Inwieweit weist die Dokumentation die Abweichungen vom Herstellerstandard nachvollziehbar aus?
+\end{enumerate}
+Die Teilfragen strukturieren die Arbeit durchgängig, da jeder Bestandteil des in Kapitel~\ref{Ansatz} entworfenen Ansatzes einer Teilfrage zugeordnet ist und die Evaluation in Kapitel~\ref{Evaluation} deren Beantwortung einzeln misst.
+% VERSCHOBEN: Absatz zum Vergleich zweier Systeminstanzen -> Kap. 6, Abschnitt Ausblick (Entscheidung R5)
 
-\section{Stand der Forschung}
+\section{Stand der Forschung und Einordnung}
+\label{sec:einordnung}
 
+% GEÄNDERT: Verweis präzisiert (Vertiefung liegt nun in Abschnitt 2.3)
 Zur Einordnung der im vorherigen Abschnitt formulierten
 Forschungsfrage werden die relevanten Forschungsthemen im Folgenden vorgreifend
-zusammengefasst, wobei die vertiefte Betrachtung in Kapitel~\ref{StandDerForschung}
+zusammengefasst, wobei die vertiefte Betrachtung in Abschnitt~\ref{sec:stand-forschung}
 erfolgt.
 
 Strukturbasierte Extraktionsverfahren erschließen Wissen aus bestehenden Systemen:
@@ -54,8 +88,8 @@ Large Language Models (LLMs) erfassen Programmsyntax zuverlässig, weisen bei ti
 Semantik jedoch Schwächen auf~\cite{ma_exploring_2026}, die sich in unzureichend
 dokumentierten Legacy-Kontexten verstärken~\cite{sabetto_impact_2025}. Die
 LLM-gestützte Dokumentationsgenerierung gilt gleichwohl als vielversprechend, wie
-Untersuchungen an MUMPS- sowie Assembler-Systemen aufzeigen~\cite{diggs_leveraging_2024};
-ein Transfer auf den SAP-Kontext steht bislang aus. SAP-bezogene Arbeiten beschränken
+Untersuchungen an MUMPS- sowie Assembler-Systemen aufzeigen~\cite{diggs_leveraging_2024}. % GEÄNDERT: Semikolon-Anschluss in eigenen Satz aufgelöst
+Ein Transfer auf den SAP-Kontext steht bislang aus. SAP-bezogene Arbeiten beschränken
 sich zudem auf die ABAP-Codegenerierung~\cite{wallraven_benchmarking_2026}, sodass die
 Interpretation der Customizing-Ebene unberücksichtigt bleibt.
 
@@ -74,7 +108,8 @@ definierten Katalog vereinfachter Objekte~\cite{sap_ccm_atc}. Diese Werkzeuge
 gewährleisten einen Kompatibilitätsabgleich, leisten jedoch keine fachlich-semantische
 Interpretation des funktionalen Ist-Zustands.
 
-Nach dem in Kapitel~\ref{StandDerForschung} dargelegten Kenntnisstand besteht die
+% GEÄNDERT: Verweis auf Abschnitt 2.4 statt Kapitel 2; Beleg-Kommentar aufgelöst (Beleg nun in 1.1)
+Nach dem in Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand besteht die
 Forschungslücke folglich nicht im Fehlen agentenbasierter SAP-Analyseansätze, sondern
 darin, dass die semantische Interpretation der Customizing-Ebene zu einer fachlich
 belastbaren Ist-Dokumentation bislang unbesetzt verbleibt, während die verfügbaren
@@ -82,62 +117,64 @@ Ansätze auf Eigenentwicklungen sowie deren migrationsbezogene Remediation ausge
 sind. Dies begründet sich darin, dass Customizing eine tabellengesteuerte
 Konfiguration der Standardlogik darstellt, deren fachliche Bedeutung sich der
 code-zentrierten, an Compiler- sowie Prüfwerkzeugen verankerten Analyse entzieht.
-% [BELEG ERFORDERLICH: Customizing als tabellengesteuerte Konfiguration der Standardlogik]
-% Kandidat pruefen: bullinger_customizing_2003 -- oder passende SAP-Customizing-Definition ergaenzen
 
+% GEÄNDERT: "Abschnitt" -> "Kapitel"; RAG durch Grounding ersetzt, da Kap. 2 Grounding als nachweisbare Bindung von RAG abgrenzt (einheitliche Terminologie)
 Die in diesem Abschnitt umrissenen Forschungslinien bilden die Grundlage für den in
-Abschnitt~\ref{Ansatz} beschriebenen Lösungsansatz, der die strukturierte
-Extraktion mit einer semantischen Interpretation mittels Retrieval-Augmented
-Generation (RAG) über eine standardisierte Agentenschnittstelle verbindet.
+Kapitel~\ref{Ansatz} beschriebenen Lösungsansatz, der die strukturierte
+Extraktion mit einer semantischen Interpretation verbindet und deren Aussagen durch
+Grounding an den abgerufenen Systemdaten absichert.
 
 \section{Ansatz und Forschungsmethodik}
 \label{sec:ansatz-methodik}
- 
-% Vorabform (Einleitung): kompakter Ansatz-Überblick + Verortung der Methodik.
-% Die Vertiefung des Entwurfs erfolgt in Kap. 3, die Kapitelübersicht in 1.5.
- 
+
+% GEÄNDERT: Vorabform gestrafft (Dopplung mit 3.1 reduziert), Teilaspekte vorab genannt, RAG-Formulierung ersetzt, Umsetzungsstand nicht vorweggenommen
 Zur Beantwortung der Forschungsfrage wird ein agentenbasiertes Analyseframework
-entworfen sowie prototypisch umgesetzt, das den funktionalen Ist-Zustand eines
+entworfen sowie prototypisch umgesetzt, das den Ist-Zustand des Customizings eines
 gewachsenen SAP-Systems ausgehend von natürlichsprachlichen Anfragen erschließt.
-Basierend auf einer Analyseanfrage greift ein agentenbasierter Orchestrator
-lesend auf die Struktur- sowie Metadatenebene des Zielsystems zu, erschließt die
-zusammenhängenden Customizing-Tabellen und überführt diese mittels eines großen Sprachmodells
-(Large Language Model, LLM) in eine semantische Interpretation. Diese
-Interpretation wird mittels Retrieval-Augmented Generation (RAG) an den
-abgerufenen Systemdaten abgesichert, sodass jede Aussage nachvollziehbar an ihre
-Quelle gebunden wird und bei nicht tragender Evidenz eine begründete Enthaltung
-erfolgt. Die Erschließung erfolgt dabei dialogbasiert, sodass einzelne
-Konfigurationsbereiche gezielt in natürlicher Sprache exploriert werden können,
+Das Framework gliedert sich in vier Teilaspekte, die den vier Teilfragen entsprechen:
+Es erschließt zunächst die zu einer Anfrage relevanten Konfigurationstabellen, interpretiert
+deren Werte anschließend mithilfe eines Large Language Model (LLM) semantisch, sichert
+jede daraus formulierte Aussage durch Grounding an den abgerufenen Systemdaten ab und
+weist schließlich die Abweichungen vom Herstellerstandard aus. Reicht die Evidenz für eine
+Aussage nicht aus, so enthält sich das Framework begründet, anstatt eine nicht gedeckte
+Aussage zu erzeugen. Der Zugriff auf das Zielsystem erfolgt ausschließlich lesend über eine
+standardisierte Werkzeugschnittstelle, und die Erschließung erfolgt dialogbasiert, sodass
+einzelne Konfigurationsbereiche gezielt in natürlicher Sprache exploriert werden können,
 ohne diese manuell im System nachzuverfolgen. Das Ergebnis besteht aus einer
 natürlichsprachlichen Dokumentation, die den Beratenden einen belegten
 Überblick über den Konfigurationszustand eines ihnen zunächst unbekannten
-Systems ermöglicht. Die technische Anbindung des Systems erfolgt über eine
-standardisierte Werkzeugschnittstelle, deren Ausgestaltung als Bestandteil des
-Lösungsentwurfs in Kapitel~\ref{Ansatz} vertieft wird.
+Systems ermöglicht.
 
-
+% GEÄNDERT: DSR-Beleg ergänzt (Hevner et al.), Kandidaten-Kommentar aufgelöst
 Methodisch folgt die Arbeit dem Paradigma der gestaltungsorientierten Forschung
 (Design Science Research, DSR), das die Konstruktion sowie die Evaluation eines
 neuartigen Artefakts zur Lösung eines praktisch relevanten Problems in den
-Mittelpunkt stellt. % [BELEG ERFORDERLICH: DSR-Methodik]
-% Kandidaten: hevner_design_2004 (MIS Quarterly), peffers_design_2007 (JMIS)
+Mittelpunkt stellt \cite{hevner_design_2004}.
 Das zu gestaltende Artefakt besteht in dem beschriebenen Analyseframework, dessen
 Nutzen sich an der Qualität der erzeugten Ist-Dokumentation bemisst. Die Wahl
 dieser Methodik liegt darin begründet, dass die Arbeit nicht auf die Bestätigung
 einer vorab formulierten Hypothese, sondern auf die Konzeption, die Umsetzung
 sowie die Bewertung eines Lösungsartefakts zielt.
 
-
+% NEU: Vorgriff auf die Evaluation (Meeting-Notiz: "Inwiefern kann ich die Evaluation nutzen, um die FF zu lösen?")
+Die Bewertung erfolgt entlang der vier Teilfragen. Für jede Teilfrage wird vorab festgelegt,
+anhand welcher Kennzahl sowie ab welcher Ausprägung sie als beantwortet, als teilweise
+beantwortet oder als nicht beantwortet gilt. Die Kennzahlen werden an einer Reihe von
+Testfällen erhoben, zu denen das durchgängige Beispiel gehört, und durch die dokumentierten
+Erfahrungen von Beratenden mit dem Werkzeug ergänzt. Die Evaluation folgt dabei einer
+formativen, die Entwicklung begleitenden sowie einer abschließenden, summativen Phase
+\cite{venable_feds_2016}. Aus dem Profil der vier Teilfragen ergibt sich der Grad, in dem
+die Forschungsfrage beantwortet wird.
 
 \section{Aufbau der Arbeit}
-TODO:
-Im folgenden Kapitel \ref{StandDerForschung} werden Grundlagen
-dargelegt und der Stand der Forschung diskutiert. In Kapitel
-\ref{Ansatz} wird der Ansatz genauer beleuchtet. Im Kapitel
-\ref{Implementierung} wird die Umsetzung des Ansatzes
-beschrieben. Kapitel \ref{Validierung} präsentiert Resultate und eine
-Diskussion der Ergebnisse. Im Kapitel \ref{ZusammenfassungAusblick}
-wird die Arbeit zusammengefasst, ein Fazit gezogen und ein Ausblick
-auf zukuenftige Arbeiten gegeben.
+\label{sec:aufbau}
 
-
+% NEU: Kurzzusammenfassung je Kapitel mit Bezug zur FF (ersetzt TODO; Meeting-Notiz "Kurzzusammenfassung der Kapitel")
+Die Arbeit gliedert sich in sechs Kapitel, die jeweils einen Beitrag zur Beantwortung der Forschungsfrage leisten:
+\begin{itemize}
+	\item \textbf{Kapitel~\ref{StandDerForschung}} stellt zunächst das betrachtete SAP-System vor und zeigt, wo das Customizing technisch hinterlegt ist und wie es sich lesend erschließen lässt. Anschließend werden die Verfahren eingeführt, auf denen der Ansatz aufbaut, also Sprachmodelle, Grounding, semantische Suche sowie agentenbasierte Werkzeugnutzung. Die Betrachtung verwandter Arbeiten zeigt deren Nähe zum eigenen Vorhaben sowie deren Grenzen und leitet daraus die Forschungslücke ab, aus der die Forschungsfrage resultiert.
+	\item \textbf{Kapitel~\ref{Ansatz}} präsentiert den Lösungsansatz im Gesamtkontext und leitet daraus die Ziele sowie Anforderungen ab. Anschließend werden die vier Teilaspekte des Ansatzes einzeln beschrieben, wobei jede Entwurfsentscheidung an der Stelle begründet wird, an der sie erforderlich ist, und jeweils ausgewiesen wird, welche verwandte Arbeit übernommen und wie sie erweitert wird.
+	\item \textbf{Kapitel~\ref{Implementierung}} beschreibt die prototypische Umsetzung dieser Teilaspekte unter denselben Überschriften und legt dar, welche Technologien hierfür eingesetzt werden.
+	\item \textbf{Kapitel~\ref{Evaluation}} legt dar, wie der Prototyp evaluiert wird, um den Grad der Beantwortung jeder Teilfrage zu bestimmen, und präsentiert sowie diskutiert die Ergebnisse.
+	\item \textbf{Kapitel~\ref{ZusammenfassungAusblick}} beantwortet die Forschungsfrage zusammenfassend, benennt die Limitationen der Arbeit und gibt einen Ausblick auf weiterführende Fragestellungen.
+\end{itemize}

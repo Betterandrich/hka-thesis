@@ -17,7 +17,8 @@
 \usepackage{tikz}
 \usepackage{graphicx}              %Einbinden von Bildern
 \usepackage{subfigure}             %erweiterte Darstellungsoptionen für Bilder
-\usepackage[usenames]{color}       %farbiger Text
+% GEÄNDERT: color durch xcolor ersetzt, da tikz xcolor lädt und sonst ein Optionskonflikt entsteht
+\usepackage{xcolor}                %farbiger Text
 \usepackage[labelfont=bf,textfont=normalsize]{caption}
 \renewcommand{\figurename}{Abb. }  %ändert Abbildung in Abb.
 \usepackage{hyperref}              %Inhaltsverzeichnis verlinkt
@@ -27,6 +28,9 @@
 \usepackage{url}                   %für Websites
 \usepackage{parskip}               %Leerzeile statt Einrückung nach einem Absatz
 \usepackage{epstopdf}
+\usepackage{float}                 % NEU: für Gleitobjekte mit Option [H] (vorher Fehler 'Unknown float option H')
+\usepackage{booktabs}              % NEU: Linien in Tabellen (Vergleichs- und Zuordnungstabellen)
+\usepackage{array}                 % NEU: linksbündige Tabellenspalten (>{\raggedright\arraybackslash})
 %\usepackage{natbib}
 \addtokomafont{sectioning}{\rmfamily}	%ändert die serifenlose Überschrift in Roman
 
@@ -117,6 +121,7 @@
   \pagenumbering{Roman}   % römische Seitenzahl für Abbildungsverzeichnis
   \setcounter{page}{1}    % Seitenzahlen werden ab Abbildungsverzeichnis durchnummeriert
   \listoffigures          % Abbildungsverzeichnis
+  \listoftables           % NEU: Tabellenverzeichnis, da neue Tabellen hinzukommen
 
 \mainmatter
 
