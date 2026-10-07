@@ -67,14 +67,17 @@ Innerhalb dieser Ebenen besteht der Ansatz aus vier Teilaspekten, die jeweils ei
 \caption{Herleitung der Teilaspekte aus dem Stand der Forschung}
 \label{tab:teilaspekte}
 \small
-\begin{tabular}{p{2.2cm}p{0.8cm}p{4.2cm}p{4.6cm}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm}l>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{4.6cm}}
 \toprule
 \textbf{Teilaspekt} & \textbf{TF} & \textbf{Übernommen aus} & \textbf{Erweiterung für die Customizing-Ebene} \\
 \midrule
 Erschließen & TF1 & iterative, agentengesteuerte Exploration des Schemas \cite{wang_autolink_2026}; Ableitung der Tabellenbeziehungen aus dem DDIC \cite{berti_generic_2023} & Vorfilterung des Suchraums über die Auslieferungsklasse; semantische Suche als Werkzeug hinter der Schnittstelle \\
+\addlinespace
 Interpretieren & TF2 & Anreicherung um Bezeichnersemantik \cite{cai_columbo_2025, wretblad_synthetic_2024}; sprachmodellgestützte Dokumentation \cite{diggs_leveraging_2024} & deterministische Auflösung von Schlüsselwerten über Prüf- und Texttabellen sowie von Merkmalen \\
+\addlinespace
 Absichern & TF3 & mitgelieferte Belegabfrage \cite{theologitis_thucy_2026}; Prüfung vor der Ausgabe \cite{allemang_increasing_2025}; Enthaltung \cite{somov_confidence_2025} & Belegeinheit aus Tabelle, Schlüssel, Feld und Wert; Prüfung im Programmcode statt im Prompt \\
-Abweichung ausweisen & TF4 & Standardnähe \cite{sekatzek_messung_2009}; tabellarischer Customizing-Abgleich \cite{sap_customizing_abgleich} & fachliche Deutung der ermittelten Abweichung \\
+\addlinespace
+Abweichung ausweisen & TF4 & Standardnähe \cite{sekatzek_messung_2009}; tabellarischer Customizing-Abgleich \cite{sap_customizing_nodate} & fachliche Deutung der ermittelten Abweichung \\
 \bottomrule
 \end{tabular}
 \end{table}

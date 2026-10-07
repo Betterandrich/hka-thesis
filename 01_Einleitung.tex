@@ -104,11 +104,7 @@ Bewertungsaufgaben adressieren~\cite{dorairaj_deepa_sap_nodate}. Diese Ansätze 
 jedoch auf migrations- sowie bewertungsbezogene Aufgabenstellungen, nicht auf eine
 semantische Ist-Dokumentation des funktionalen Zustands.
 
-Auf Ebene verfügbarer Werkzeuge erfassen der SAP Readiness Check sowie die
-regelbasierte Custom-Code-Analyse des ABAP Test Cockpit (ATC) Abweichungen gegen einen
-definierten Katalog vereinfachter Objekte~\cite{sap_ccm_atc}. Diese Werkzeuge
-gewährleisten einen Kompatibilitätsabgleich, leisten jedoch keine fachlich-semantische
-Interpretation des funktionalen Ist-Zustands.
+Auf Ebene der verfügbaren Werkzeuge stellt SAP für die Umstellung auf SAP S/4HANA eine Analyse der Eigenentwicklungen bereit, die das ABAP Test Cockpit (ATC) gegen die sogenannte Simplification Database ausführt. Diese Datenbank verzeichnet sämtliche Objekte, die in SAP S/4HANA vereinfacht wurden, sodass die Prüfung jene Stellen im Quelltext ausweist, an denen eine Eigenentwicklung auf ein solches Objekt zugreift und daher anzupassen ist~\cite{sap_ccm_atc}. Das Ergebnis ist ein technischer Kompatibilitätsabgleich, der sich auf den Quelltext richtet. Welche fachliche Bedeutung eine Anpassung für den funktionalen Ist-Zustand trägt, bleibt dabei unberücksichtigt.
 
 % GEÄNDERT: Verweis auf Abschnitt 2.4 statt Kapitel 2; Beleg-Kommentar aufgelöst (Beleg nun in 1.1)
 Nach dem in Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand besteht die Forschungslücke folglich nicht im Fehlen agentenbasierter SAP-Analyseansätze, sondern darin, dass die semantische Interpretation der Customizing-Ebene zu einer fachlich belastbaren Ist-Dokumentation bislang unbesetzt bleibt. Demgegenüber zielen verfügbare Ansätze primär auf Eigenentwicklungen sowie deren migrationsbedingte Anpassung abzielen. Dies begründet sich darin, dass Customizing eine tabellengesteuerte Konfiguration der Standardlogik darstellt, deren fachliche Bedeutung sich der code-zentrierten, an Compiler- sowie Prüfwerkzeugen verankerten Analyse entzieht.
@@ -151,15 +147,7 @@ dieser Methodik liegt darin begründet, dass die Arbeit nicht auf die Bestätigu
 einer vorab formulierten Hypothese, sondern auf die Konzeption, die Umsetzung
 sowie die Bewertung eines Lösungsartefakts zielt.
 
-% NEU: Vorgriff auf die Evaluation (Meeting-Notiz: "Inwiefern kann ich die Evaluation nutzen, um die FF zu lösen?")
-Die Bewertung erfolgt entlang der vier Teilfragen. Für jede Teilfrage wird vorab festgelegt,
-anhand welcher Kennzahl sowie ab welcher Ausprägung sie als beantwortet, als teilweise
-beantwortet oder als nicht beantwortet gilt. Die Kennzahlen werden an einer Reihe von
-Testfällen erhoben, zu denen das durchgängige Beispiel gehört, und durch die dokumentierten
-Erfahrungen von Beratenden mit dem Werkzeug ergänzt. Die Evaluation folgt dabei einer
-formativen, die Entwicklung begleitenden sowie einer abschließenden, summativen Phase
-\cite{venable_feds_2016}. Aus dem Profil der vier Teilfragen ergibt sich der Grad, in dem
-die Forschungsfrage beantwortet wird.
+Die Evaluation erfolgt dabei qualitativ, indem mehrere SAP-Beratende die erzeugten Beschreibungen anhand definierter Kriterien unabhängig voneinander bewerten, sowie ergänzend durch einen Vergleich der Ergebnisse mit und ohne Grounding auf strukturierten Systemdaten. Die einzelnen Kapitel werden im folgenden Abschnitt näher dargestellt.
 
 \section{Aufbau der Arbeit}
 \label{sec:aufbau}
