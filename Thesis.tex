@@ -7,7 +7,11 @@
 %-------------------------- Pakete -------------------------
 
 \usepackage[bottom=30mm, top=30mm, inner=35mm, outer=30mm]{geometry} %legt Geometrie fest
-\usepackage{ngerman}               %deutsche Rechtschreibung
+\usepackage[T1]{fontenc}           % Trennung von Wörtern mit Umlauten
+\usepackage{lmodern}               % skalierbare Schrift zu T1
+\usepackage[ngerman]{babel}        % aktuelle deutsche Trennmuster
+\usepackage[babel=true]{microtype} % Feinausgleich im Blocksatz
+\setlength{\emergencystretch}{1.5em} % Notreserve statt überlanger Zeilen
 %\usepackage[applemac]{inputenc}   %Umlaute für Mac
 %\usepackage[latin1]{inputenc}     %Umlaute für Win
 \usepackage[utf8]{inputenc}        %Umlaute für Linux
@@ -103,7 +107,10 @@
   \setcounter{tocdepth}{3}    % Gliederung subsubsection wird in Inhaltsverzeichnis eingetragen
 
   % Passendes Deckblatt auswählen und anpassen
-  \input{00_1_Titel/MSc_Thesisdeckblatt.tex}
+    % Passendes Deckblatt auswählen und anpassen
+  \begingroup
+    \input{00_1_Titel/MSc_Thesisdeckblatt.tex}
+  \endgroup
   % \input{00_1_Titel/MSc_Thesisdeckblatt_EN.tex}
   % \input{00_1_Titel/BSc_Thesisdeckblatt.tex}
   % \input{00_1_Titel/BSc_Thesisdeckblatt_EN.tex}
