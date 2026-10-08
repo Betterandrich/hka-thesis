@@ -89,8 +89,8 @@ wobei eine natürlichsprachliche Deutung der ermittelten Abweichungen nicht erfo
 Large Language Models (LLMs) erfassen Programmsyntax zuverlässig, weisen bei tieferer
 Semantik jedoch Schwächen auf~\cite{ma_exploring_2026}, die sich in unzureichend
 dokumentierten Legacy-Kontexten verstärken~\cite{sabetto_impact_2025}. Die
-LLM-gestützte Dokumentationsgenerierung gilt gleichwohl als vielversprechend, wie
-Untersuchungen an MUMPS- sowie Assembler-Systemen aufzeigen~\cite{diggs_leveraging_2024}. % GEÄNDERT: Semikolon-Anschluss in eigenen Satz aufgelöst
+LLM-gestützte Dokumentationsgenerierung liefert dennoch verwertbare Ergebnisse, wie % GEÄNDERT: Stil (Review 08.10.)
+Untersuchungen an MUMPS- sowie Assembler-Systemen zeigen~\cite{diggs_leveraging_2024}. % GEÄNDERT: Semikolon-Anschluss in eigenen Satz aufgelöst % GEÄNDERT: Stil (Review 08.10.)
 Ein Transfer auf den SAP-Kontext steht bislang aus. SAP-bezogene Arbeiten beschränken
 sich zudem auf die ABAP-Codegenerierung~\cite{wallraven_benchmarking_2026}, sodass die
 Interpretation der Customizing-Ebene unberücksichtigt bleibt.
@@ -100,14 +100,14 @@ LLM-Agenten an externe Systeme~\cite{noauthor_introducing_nodate}, zu dem offene
 Sicherheits- sowie Reifefragen fortbestehen~\cite{hou_model_2025}. Erste
 praxisorientierte Ansätze wenden dieses Muster bereits auf SAP-Systeme an, indem
 agentenbasierte Werkzeugketten Migrations- sowie
-Bewertungsaufgaben adressieren~\cite{dorairaj_deepa_sap_nodate}. Diese Ansätze zielen
+Bewertungsaufgaben bearbeiten~\cite{dorairaj_deepa_sap_nodate}. Diese Ansätze zielen % GEÄNDERT: Stil (Review 08.10.)
 jedoch auf migrations- sowie bewertungsbezogene Aufgabenstellungen, nicht auf eine
 semantische Ist-Dokumentation des funktionalen Zustands.
 
 Auf Ebene der verfügbaren Werkzeuge stellt SAP für die Umstellung auf SAP S/4HANA eine Analyse der Eigenentwicklungen bereit, die das ABAP Test Cockpit (ATC) gegen die sogenannte Simplification Database ausführt. Diese Datenbank verzeichnet sämtliche Objekte, die in SAP S/4HANA vereinfacht wurden, sodass die Prüfung jene Stellen im Quelltext ausweist, an denen eine Eigenentwicklung auf ein solches Objekt zugreift und daher anzupassen ist~\cite{sap_ccm_atc}. Das Ergebnis ist ein technischer Kompatibilitätsabgleich, der sich auf den Quelltext richtet. Welche fachliche Bedeutung eine Anpassung für den funktionalen Ist-Zustand trägt, bleibt dabei unberücksichtigt.
 
 % GEÄNDERT: Verweis auf Abschnitt 2.4 statt Kapitel 2; Beleg-Kommentar aufgelöst (Beleg nun in 1.1)
-Nach dem in Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand besteht die Forschungslücke folglich nicht im Fehlen agentenbasierter SAP-Analyseansätze, sondern darin, dass die semantische Interpretation der Customizing-Ebene zu einer fachlich belastbaren Ist-Dokumentation bislang unbesetzt bleibt. Demgegenüber zielen verfügbare Ansätze primär auf Eigenentwicklungen sowie deren migrationsbedingte Anpassung abzielen. Dies begründet sich darin, dass Customizing eine tabellengesteuerte Konfiguration der Standardlogik darstellt, deren fachliche Bedeutung sich der code-zentrierten, an Compiler- sowie Prüfwerkzeugen verankerten Analyse entzieht.
+Nach dem in Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand besteht die Forschungslücke folglich nicht im Fehlen agentenbasierter SAP-Analyseansätze, sondern darin, dass die semantische Interpretation der Customizing-Ebene zu einer fachlich belastbaren Ist-Dokumentation bislang unbesetzt bleibt. Demgegenüber zielen verfügbare Ansätze primär auf Eigenentwicklungen sowie deren migrationsbedingte Anpassung. Dies liegt darin begründet, dass Customizing eine tabellengesteuerte Konfiguration der Standardlogik darstellt, deren fachliche Bedeutung sich der codezentrierten, an Compiler- sowie Prüfwerkzeugen verankerten Analyse entzieht. % GEÄNDERT: Stil (Review 08.10.)
 
 % GEÄNDERT: "Abschnitt" -> "Kapitel"; RAG durch Grounding ersetzt, da Kap. 2 Grounding als nachweisbare Bindung von RAG abgrenzt (einheitliche Terminologie)
 Die in diesem Abschnitt umrissenen Forschungslinien bilden die Grundlage für den in
