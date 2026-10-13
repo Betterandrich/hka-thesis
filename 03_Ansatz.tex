@@ -20,67 +20,40 @@ Aufbauend auf der in Kapitel~\ref{StandDerForschung} hergeleiteten Forschungslü
 \section{Lösung im Gesamtkontext}
 \label{sec:loesung}
 
-% GEÄNDERT: Platzhalter durch Abbildung ersetzt (draw.io, Quelldatei Grafiken/drawio/abb3_1_loesung.drawio); zeigt den Zielentwurf (R7); direkt unter der Überschrift, damit die Abbildung auf der ersten Seite des Kapitels steht (Meeting-Notiz M6)
+% GEÄNDERT (13.10.): Abbildung um die beteiligten Komponenten K1 bis K7 je Teilaspekt ergänzt (Betreueranmerkung "Komponenten bereits in 3.1 benennen und zeigen, wo sie aufkommen"); Quelldatei Grafiken/drawio/abb3_1_loesung.drawio
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{Grafiken/abb3_1_loesung.pdf}
-	\caption{Konzeptioneller Aufbau des agentenbasierten Analyseframeworks sowie der Datenfluss einer Analyseanfrage von der Fragestellung bis zur belegten Antwort (eigene Darstellung).}
+	\caption{Konzeptioneller Aufbau des agentenbasierten Analyseframeworks mit den Teilaspekten, den daran beteiligten Komponenten sowie dem Datenfluss einer Analyseanfrage bis zur belegten Antwort (eigene Darstellung).}
 	\label{fig:ansatz-ueberblick}
 \end{figure}
 
-% GEÄNDERT: RAG durch Grounding ersetzt (einheitliche Terminologie mit 2.2.1); Zugriff auf Werte ergänzt, da der Ansatz neben Struktur und Metadaten auch die Customizing-Werte liest
+% GEÄNDERT (13.10.): Absatz gekürzt; die Beschreibung des Zugriffs geht in den Komponentenabsatz über
 Der Ansatz besteht in einem agentenbasierten Analyseframework, das den
 funktionalen Ist-Zustand eines SAP-Systems ausgehend von einer
 natürlichsprachlichen Analyseanfrage erschließt und die identifizierten
 Abweichungen vom Herstellerstandard in einer fachlich belastbaren,
 natürlichsprachlichen Dokumentation zusammenführt. Abbildung~\ref{fig:ansatz-ueberblick}
-zeigt den konzeptionellen Aufbau sowie den Datenfluss einer Anfrage von der
-Fragestellung bis zur belegten Antwort. Ausgehend von der Analyseanfrage greift
-ein agentenbasierter Orchestrator über eine standardisierte Schnittstelle des
-Model Context Protocol (MCP) lesend auf die Struktur- und Metadatenebene sowie
-die Customizing-Werte des Zielsystems zu, erschließt die zusammenhängenden Customizing-Tabellen und deren
-Abweichungen vom Standard und überführt diese mittels eines Sprachmodells in
-eine semantische Interpretation, die durch Grounding
-an den abgerufenen Systemdaten abgesichert wird. Das Ergebnis besteht in einem
-Dokument, das den Ist-Zustand mit den erkannten Abweichungen beschreibt.
+zeigt den konzeptionellen Aufbau und den Datenfluss einer Anfrage von der
+Fragestellung bis zur belegten Antwort.
 
+% GEÄNDERT (13.10.): ersetzt den Absatz zu den drei Ebenen Retrieval, Zugriff und Grounding; die Teilaspekte bilden nun die alleinige Ordnungsstruktur (Plan I1)
+Die Verarbeitung einer Anfrage gliedert sich in vier Teilaspekte, die jeweils einer Teilfrage der Forschungsfrage entsprechen. Der erste Teilaspekt erschließt die zu einer Anfrage relevante Konfiguration, der zweite interpretiert deren Werte semantisch, der dritte sichert jede daraus formulierte Aussage an den Systemdaten ab, und der vierte weist die Abweichungen vom Herstellerstandard aus. Reicht die Evidenz für eine Aussage nicht aus, so enthält sich das Framework begründet, anstatt eine nicht gedeckte Aussage zu erzeugen. Da jeder Teilaspekt eine eigene Leistung erbringt, weist er auch eigene Fehlerarten auf, sodass sich ein fehlerhaftes Ergebnis in der Evaluation dem Teilaspekt zuordnen lässt, in dem es entstanden ist.
 
-Der Verarbeitungsweg gliedert sich in drei aufeinander aufbauende Ebenen, die
-jeweils eine eigene Teilaufgabe erfüllen und daher je eigene Fehlerarten
-aufweisen. Zunächst erfolgt auf der Ebene des Retrievals das Schema-Linking, das
-aus einem sehr großen Datenkatalog die für eine Anfrage relevanten Tabellen
-bestimmt, da das vollständige Schema aus Gründen des Kontextfensters nicht als
-Eingabe dienen kann. Im Anschluss erfolgt auf der Ebene des Zugriffs die lesende
-Abfrage der ausgewählten Struktur- und Metadaten über die MCP-Schnittstelle.
-Abschließend erfolgt auf der Ebene des Groundings die Absicherung der erzeugten
-Aussagen, indem jede Aussage nachweisbar an die abgerufenen Quelldaten gebunden
-und bei nicht tragender Evidenz eine begründete Enthaltung ausgelöst wird. Diese
-begriffliche Trennung von Retrieval, Zugriff und Grounding bildet die
-Ordnungsstruktur, entlang derer die Entwurfsentscheidungen in
-Abschnitt~\ref{sec:teilaspekte} behandelt werden. % GEÄNDERT: Verweis auf neuen Abschnitt
+% NEU (13.10.): Komponenten bereits im Gesamtkontext benannt und den Teilaspekten zugeordnet (Betreueranmerkung)
+Getragen werden diese Teilaspekte von sieben Komponenten, die in Abbildung~\ref{fig:ansatz-ueberblick} unterhalb des jeweiligen Teilaspekts aufgeführt sind. Die Nutzerschnittstelle (K1) nimmt die Anfrage entgegen und stellt die Antwort gemeinsam mit den gelesenen Belegen dar. Der Orchestrator (K2) wählt die Werkzeuge aus, mit denen eine Anfrage bearbeitet wird. Der Werkzeugserver (K3) stellt diese Werkzeuge über die standardisierte Schnittstelle des Model Context Protocol (MCP) bereit und greift ausschließlich lesend auf das Zielsystem zu. Er stützt sich dabei auf einen Schemakorpus und Suchindizes (K4), die vorab aus dem Data Dictionary und aus den Aktivitäten des Einführungsleitfadens (Implementation Guide, IMG) aufgebaut werden. Die Prüfschicht (K5) bindet jede Aussage an die abgerufenen Daten, und die Abweichungsanalyse (K6) stellt fest, welche Einträge vom Auslieferungszustand abweichen. Das Sprachmodell (K7) deutet die gelesenen Werte und formuliert die Antwort. Die Zuordnung in der Abbildung verdeutlicht, dass der Werkzeugserver an allen vier Teilaspekten beteiligt ist, da jeder Teilaspekt auf gelesene Systemdaten angewiesen ist. Das Zusammenspiel der Komponenten beschreibt Abschnitt~\ref{sec:architektur-ueberblick}, und dieselben Kennungen K1 bis K7 finden sich in der dortigen Architekturdarstellung wieder.
+% TODO Kap. 2: Einführungsleitfaden (IMG) in 2.1 kurz definieren, da er hier erstmals als Wissensquelle auftritt [BELEG ERFORDERLICH: SAP-Dokumentation zum Einführungsleitfaden]
 
-% NEU: Teilaspekte vorab benannt und aus dem Stand der Forschung abgeleitet (Meeting-Notizen M7 sowie R7: "der Ansatz soll sich aus dem Related Work ergeben")
-Innerhalb dieser Ebenen besteht der Ansatz aus vier Teilaspekten, die jeweils einer Teilfrage der Forschungsfrage entsprechen. Der erste Teilaspekt erschließt die zu einer Anfrage relevante Konfiguration, der zweite interpretiert deren Werte semantisch, der dritte sichert jede Aussage an den Systemdaten ab, und der vierte weist die Abweichungen vom Herstellerstandard aus. Keiner dieser Teilaspekte wird neu erfunden. Jeder übernimmt vielmehr ein in Abschnitt~\ref{sec:stand-forschung} betrachtetes Verfahren und erweitert es um das, was die Customizing-Ebene zusätzlich erfordert. Tabelle~\ref{tab:teilaspekte} stellt diese Herleitung gegenüber.
+% GEÄNDERT (13.10.): Herleitung aus dem Stand der Forschung als Fließtext mit Abbildung statt Tabelle (vorher Tab. "Herleitung der Teilaspekte aus dem Stand der Forschung")
+Keiner der Teilaspekte wird neu erfunden. Jeder übernimmt ein in Abschnitt~\ref{sec:stand-forschung} betrachtetes Verfahren und erweitert es um das, was die Customizing-Ebene zusätzlich erfordert, wie Abbildung~\ref{fig:herleitung} zeigt. Die Erschließung übernimmt die iterative, agentengesteuerte Exploration des Schemas \cite{wang_autolink_2026} und die Ableitung der Tabellenbeziehungen aus dem Data Dictionary \cite{berti_generic_2023}. Sie ergänzt beide um eine Vorfilterung des Suchraums über die Auslieferungsklasse und um einen Einstieg über die Aktivitäten des Einführungsleitfadens und die Beschreibungstexte der Datenelemente. Die Interpretation übernimmt die Anreicherung kryptischer Bezeichner um Beschreibungen \cite{cai_columbo_2025, wretblad_synthetic_2024} und die sprachmodellgestützte Dokumentation von Altsystemen \cite{diggs_leveraging_2024}, löst Schlüsselwerte und Merkmale jedoch deterministisch über die im Data Dictionary hinterlegten Prüf- und Texttabellen auf. Die Absicherung übernimmt die mitgelieferte Belegabfrage \cite{theologitis_thucy_2026}, die Prüfung einer Aussage vor ihrer Ausgabe \cite{allemang_increasing_2025} und die Enthaltung bei unzureichender Evidenz \cite{somov_confidence_2025}. Ihre Erweiterung besteht in einer Belegeinheit aus Tabelle, Schlüssel, Feld und Wert und in der Verankerung der Prüfung im Programmcode. Der Ausweis der Abweichung knüpft schließlich an die Messung der Standardnähe \cite{sekatzek_messung_2009} und an den tabellarischen Customizing-Abgleich \cite{sap_customizing_nodate} an und ergänzt beide um die fachliche Deutung der ermittelten Abweichung.
 
-\begin{table}[htbp]
-\centering
-\caption{Herleitung der Teilaspekte aus dem Stand der Forschung}
-\label{tab:teilaspekte}
-\small
-\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm}l>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{4.6cm}}
-\toprule
-\textbf{Teilaspekt} & \textbf{TF} & \textbf{Übernommen aus} & \textbf{Erweiterung für die Customizing-Ebene} \\
-\midrule
-Erschließen & TF1 & iterative, agentengesteuerte Exploration des Schemas \cite{wang_autolink_2026}; Ableitung der Tabellenbeziehungen aus dem DDIC \cite{berti_generic_2023} & Vorfilterung des Suchraums über die Auslieferungsklasse; semantische Suche als Werkzeug hinter der Schnittstelle \\
-\addlinespace
-Interpretieren & TF2 & Anreicherung um Bezeichnersemantik \cite{cai_columbo_2025, wretblad_synthetic_2024}; sprachmodellgestützte Dokumentation \cite{diggs_leveraging_2024} & deterministische Auflösung von Schlüsselwerten über Prüf- und Texttabellen sowie von Merkmalen \\
-\addlinespace
-Absichern & TF3 & mitgelieferte Belegabfrage \cite{theologitis_thucy_2026}; Prüfung vor der Ausgabe \cite{allemang_increasing_2025}; Enthaltung \cite{somov_confidence_2025} & Belegeinheit aus Tabelle, Schlüssel, Feld und Wert; Prüfung im Programmcode statt im Prompt \\
-\addlinespace
-Abweichung ausweisen & TF4 & Standardnähe \cite{sekatzek_messung_2009}; tabellarischer Customizing-Abgleich \cite{sap_customizing_nodate} & fachliche Deutung der ermittelten Abweichung \\
-\bottomrule
-\end{tabular}
-\end{table}
+% NEU (13.10.): Abbildung ersetzt die bisherige Tabelle tab:teilaspekte; Quelldatei Grafiken/drawio/abb3_2_herleitung.drawio
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{Grafiken/abb3_2_herleitung.pdf}
+	\caption[Herleitung der Teilaspekte aus dem Stand der Forschung]{Herleitung der Teilaspekte aus dem Stand der Forschung; übernommene Verfahren nach A~\cite{wang_autolink_2026}, B~\cite{berti_generic_2023}, C~\cite{cai_columbo_2025, wretblad_synthetic_2024}, D~\cite{diggs_leveraging_2024}, E~\cite{theologitis_thucy_2026}, F~\cite{allemang_increasing_2025}, G~\cite{somov_confidence_2025}, H~\cite{sekatzek_messung_2009} und I~\cite{sap_customizing_nodate} (eigene Darstellung).}
+	\label{fig:herleitung}
+\end{figure}
 
 % GEÄNDERT: Begründung des Fokus mit "weil" an die Lücke gebunden (Meeting-Notiz M8); Verweis korrigiert (vorher undefiniertes Label "Forschungsstand")
 Der Betrachtungsschwerpunkt liegt auf der Customizing-Ebene. Dies liegt darin
@@ -88,13 +61,13 @@ begründet, dass die fachliche Bedeutung einer Customizing-Einstellung nicht aus
 einem einzelnen Artefakt hervorgeht, sondern aus dem Zusammenspiel der
 konfigurierten Werte mit der interpretierenden Standardlogik resultiert, und dass
 gerade diese semantische Interpretation der Customizing-Ebene nach dem in
-Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand unbesetzt verbleibt.
+Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand unbesetzt bleibt. % GEÄNDERT: "verbleibt" -> "bleibt" (Korrekturregister)
 Kundeneigener ABAP-Code wird kontextgebunden herangezogen, um
 Customizing-Abweichungen zu erklären, nicht jedoch als eigenständiges
 Analyseobjekt behandelt.
 
-% NEU: durchgängiges Beispiel im Gesamtkontext (Meeting-Notiz M11)
-Am durchgängigen Beispiel lässt sich der Ablauf wie folgt nachvollziehen. Die Anfrage, welche Abwesenheitsarten Auszubildende beantragen dürfen, führt im ersten Teilaspekt auf die Customizing-Tabelle, welche die beantragbaren Arten je Regelgruppe festlegt, sowie auf das Merkmal, das die Regelgruppe bestimmt. Im zweiten Teilaspekt wird die Gruppe der Auszubildenden über dieses Merkmal einer Regelgruppe zugeordnet, und die zugehörigen Schlüsselwerte werden über die Texttabelle in Bezeichnungen überführt. Der dritte Teilaspekt gewährleistet, dass jede genannte Abwesenheitsart mit der Tabellenzeile belegt ist, aus der sie stammt, und dass eine nicht eindeutig bestimmbare Regelgruppe zu einer Rückfrage statt zu einer Vermutung führt. Der vierte Teilaspekt weist schließlich aus, welche dieser Einträge vom Auslieferungszustand abweichen.
+% GEÄNDERT (13.10.): Beispiel an den Befund zum Merkmal angepasst; die Zuordnung der Beschäftigten erfolgt über ein kundeneigenes Feld in den Stammdaten und liegt außerhalb des Untersuchungsgegenstands (Plan I2)
+Am durchgängigen Beispiel lässt sich der Ablauf wie folgt nachvollziehen. Die Anfrage, welche Abwesenheitsarten Auszubildende beantragen dürfen, führt im ersten Teilaspekt über den Fachbegriff der Regelgruppe auf die Customizing-Tabelle, welche die beantragbaren Arten je Regelgruppe festlegt, und auf das Merkmal, das die Regelgruppe bestimmt. Im zweiten Teilaspekt wird der Begriff \glqq Auszubildende\grqq{} über den gepflegten Bezeichnungstext einer kundeneigenen Regelgruppe zugeordnet, und die zugehörigen Schlüsselwerte werden über die Texttabelle in Bezeichnungen überführt. Die Auswertung des Merkmals zeigt dabei, dass die Zuordnung einzelner Beschäftigter zu dieser Regelgruppe über ein kundeneigenes Feld in den Stammdaten erfolgt und damit außerhalb des Customizing liegt. Der dritte Teilaspekt gewährleistet, dass jede genannte Abwesenheitsart mit der Tabellenzeile belegt ist, aus der sie stammt, und dass die Antwort diese Grenze benennt, anstatt eine Annahme über die Stammdaten zu treffen. Der vierte Teilaspekt weist schließlich aus, dass sowohl die Regelgruppe als auch das Entscheidungsfeld des Merkmals Ergänzungen des Auslieferungszustands darstellen.
 
 \section{Ziele und Anforderungen}
 \label{sec:ziele-anforderungen}
@@ -136,13 +109,13 @@ Neben diesen Anforderungen unterliegt der Entwurf drei Randbedingungen, die nich
 \section{Architekturüberblick}
 \label{sec:architektur-ueberblick}
 
-% GEÄNDERT: Einleitung angepasst und Architekturdiagramm ergänzt (draw.io, Grafiken/drawio/abb3_2_architektur.drawio)
+% GEÄNDERT: Einleitung angepasst und Architekturdiagramm ergänzt (draw.io, Grafiken/drawio/abb3_3_architektur.drawio; 13.10.: Kennungen K1 bis K7, Werkzeuge an den Prototyp angeglichen)
 Auf Grundlage der zuvor definierten Anforderungen gibt dieser Abschnitt einen Überblick über die Gesamtarchitektur des Analyseframeworks, die in Abbildung~\ref{fig:architektur} dargestellt ist. Das System gliedert sich in eine Nutzerschnittstelle, einen agentenbasierten Orchestrator, einen über das Model Context Protocol angebundenen Werkzeugserver, die lesende Anbindung des Zielsystems sowie die Bereitstellung des Sprachmodells und der Einbettungsverfahren über den SAP Generative AI Hub.
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=\linewidth]{Grafiken/abb3_2_architektur.pdf}
-	\caption{Architektur des Analyseframeworks; gestrichelt dargestellte Komponenten sind Teil des Zielentwurfs und im Prototyp noch nicht umgesetzt (eigene Darstellung im Stil der SAP-Referenzarchitekturen \cite{sap_architecture_center}).}
+	\includegraphics[width=\linewidth]{Grafiken/abb3_3_architektur.pdf}
+	\caption{Architektur des Analyseframeworks mit den Komponenten K1 bis K7 aus Abbildung~\ref{fig:ansatz-ueberblick}; gestrichelt dargestellte Komponenten sind Teil des Zielentwurfs und im Prototyp noch nicht umgesetzt (eigene Darstellung im Stil der SAP-Referenzarchitekturen \cite{sap_architecture_center}).}
 	\label{fig:architektur}
 \end{figure}
 
