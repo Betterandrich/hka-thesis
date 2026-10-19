@@ -15,7 +15,7 @@
 % ---------------------------------------------------------------------------
 
 % GEÄNDERT: Kapiteleinleitung an die neue Reihenfolge angepasst (Lösung zuerst, Betreueranmerkung S1)
-Aufbauend auf der in Kapitel~\ref{StandDerForschung} hergeleiteten Forschungslücke wird in diesem Kapitel der Ansatz des Analyseframeworks beschrieben. Beschrieben wird dabei der Zielentwurf, dessen prototypische Umsetzung Gegenstand von Kapitel~\ref{Implementierung} ist. Die Darstellung beginnt mit der Lösung im Gesamtkontext, leitet daraus die Ziele sowie Anforderungen ab und gibt anschließend einen Überblick über die Architektur. Im Anschluss werden die vier Teilaspekte des Ansatzes einzeln erläutert, wobei jede Entwurfsentscheidung an der Stelle begründet wird, an der sie erforderlich ist, und gegen die jeweils betrachteten Alternativen abgewogen wird.
+Dieses Kapitel beschreibt den Entwurf des Analyseframeworks, das die in Kapitel~\ref{StandDerForschung} hergeleitete Forschungslücke schließt. Nach einem Überblick über die Lösung folgen die Anforderungen und die Architektur. Den Kern bilden die vier Bestandteile sowie deren einzeln begründeten Entwurfsentscheidungen. Die prototypische Umsetzung wird in Kapitel~\ref{Implementierung} dargestellt.
 
 \section{Lösung im Gesamtkontext}
 \label{sec:loesung}
@@ -24,7 +24,7 @@ Aufbauend auf der in Kapitel~\ref{StandDerForschung} hergeleiteten Forschungslü
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{Grafiken/abb3_1_loesung.pdf}
-	\caption{Konzeptioneller Aufbau des agentenbasierten Analyseframeworks mit den Teilaspekten, den daran beteiligten Komponenten sowie dem Datenfluss einer Analyseanfrage bis zur belegten Antwort (eigene Darstellung).}
+	\caption{Konzeptioneller Aufbau des agentenbasierten Analyseframeworks mit den vier Bestandteilen und deren Komponenten sowie dem Datenfluss einer Analyseanfrage bis zur belegten Antwort (eigene Darstellung).}
 	\label{fig:ansatz-ueberblick}
 \end{figure}
 
@@ -38,10 +38,10 @@ zeigt den konzeptionellen Aufbau und den Datenfluss einer Anfrage von der
 Fragestellung bis zur belegten Antwort.
 
 % GEÄNDERT (13.10.): ersetzt den Absatz zu den drei Ebenen Retrieval, Zugriff und Grounding; die Teilaspekte bilden nun die alleinige Ordnungsstruktur (Plan I1)
-Die Verarbeitung einer Anfrage gliedert sich in vier Teilaspekte, die jeweils einer Teilfrage der Forschungsfrage entsprechen. Der erste Teilaspekt erschließt die zu einer Anfrage relevante Konfiguration, der zweite interpretiert deren Werte semantisch, der dritte sichert jede daraus formulierte Aussage an den Systemdaten ab, und der vierte weist die Abweichungen vom Herstellerstandard aus. Reicht die Evidenz für eine Aussage nicht aus, so enthält sich das Framework begründet, anstatt eine nicht gedeckte Aussage zu erzeugen. Da jeder Teilaspekt eine eigene Leistung erbringt, weist er auch eigene Fehlerarten auf, sodass sich ein fehlerhaftes Ergebnis in der Evaluation dem Teilaspekt zuordnen lässt, in dem es entstanden ist.
+Die Verarbeitung einer Anfrage gliedert sich in die vier Bestandteile des Prototyps, die jeweils einer Teilfrage der Forschungsfrage entsprechen. Der erste Teil erschließt die zu einer Anfrage relevante Konfiguration, der zweite interpretiert deren Werte semantisch, der dritte sichert jede daraus formulierte Aussage an den Systemdaten ab und der vierte weist die Abweichungen vom Herstellerstandard aus. Reicht die Evidenz für eine Aussage nicht aus, so enthält sich das Framework begründet, anstatt eine nicht gedeckte Aussage zu erzeugen. Da jeder Teil eine eigene Leistung erbringt, weist er auch eigene Fehlerarten auf, sodass sich ein fehlerhaftes Ergebnis in der Evaluation dem Bestandteil zuordnen lässt, in dem es entstanden ist.
 
 % NEU (13.10.): Komponenten bereits im Gesamtkontext benannt und den Teilaspekten zugeordnet (Betreueranmerkung)
-Getragen werden diese Teilaspekte von sieben Komponenten, die in Abbildung~\ref{fig:ansatz-ueberblick} von \textbf{K1} bis \textbf{K7} dargestellt sind:
+Getragen werden diese vier Bestandteile von sieben Komponenten, die in Abbildung~\ref{fig:ansatz-ueberblick} von \textbf{K1} bis \textbf{K7} dargestellt sind:
 \begin{enumerate}
 	\item[\textbf{K1}] \textbf{Nutzerschnittstelle:} Nimmt die Anfrage entgegen und stellt die Antwort gemeinsam mit den gelesenen Belegen dar.
 	\item[\textbf{K2}] \textbf{Orchestrator:} Wählt die Werkzeuge aus, mit denen eine Anfrage bearbeitet wird.
@@ -51,33 +51,33 @@ Getragen werden diese Teilaspekte von sieben Komponenten, die in Abbildung~\ref{
 	\item[\textbf{K6}] \textbf{Abweichungsanalyse:} Stellt fest, welche Einträge vom Auslieferungszustand abweichen.
 	\item[\textbf{K7}] \textbf{Sprachmodell:} Deutet die gelesenen Werte und formuliert die Antwort.
 \end{enumerate}
-Die Zuordnung in der Abbildung verdeutlicht, dass der Werkzeugserver an allen vier Teilaspekten beteiligt ist, da jeder Teilaspekt auf gelesene Systemdaten angewiesen ist. Das Zusammenspiel der Komponenten beschreibt Abschnitt~\ref{sec:architektur-ueberblick}, und dieselben Kennungen K1 bis K7 finden sich in der dortigen Architekturdarstellung wieder.
-% TODO Kap. 2: Einführungsleitfaden (IMG) in 2.1 kurz definieren, da er hier erstmals als Wissensquelle auftritt [BELEG ERFORDERLICH: SAP-Dokumentation zum Einführungsleitfaden]
+Das Zusammenspiel der Komponenten K1 bis K7 wird im Abschnitt~\ref{sec:architektur-ueberblick} genauer erklärt und in der dortigen Architektur grafisch dargestellt.
 
-% GEÄNDERT (13.10.): Herleitung aus dem Stand der Forschung als Fließtext mit Abbildung statt Tabelle (vorher Tab. "Herleitung der Teilaspekte aus dem Stand der Forschung")
-Keiner der Teilaspekte wird neu erfunden. Jeder übernimmt ein in Abschnitt~\ref{sec:stand-forschung} betrachtetes Verfahren und erweitert es um das, was die Customizing-Ebene zusätzlich erfordert, wie Abbildung~\ref{fig:herleitung} zeigt. Die Erschließung übernimmt die iterative, agentengesteuerte Exploration des Schemas \cite{wang_autolink_2026} und die Ableitung der Tabellenbeziehungen aus dem Data Dictionary \cite{berti_generic_2023}. Sie ergänzt beide um eine Vorfilterung des Suchraums über die Auslieferungsklasse und um einen Einstieg über die Aktivitäten des Einführungsleitfadens sowie die Beschreibungstexte der Datenelemente. Die Interpretation übernimmt die Anreicherung kryptischer Bezeichner um Beschreibungen \cite{cai_columbo_2025, wretblad_synthetic_2024} und die sprachmodellgestützte Dokumentation von Altsystemen \cite{diggs_leveraging_2024}, löst Schlüsselwerte und Merkmale jedoch deterministisch über die im Data Dictionary hinterlegten Prüf- und Texttabellen auf. Die Absicherung übernimmt die mitgelieferte Belegabfrage \cite{theologitis_thucy_2026}, die Prüfung einer Aussage vor ihrer Ausgabe \cite{allemang_increasing_2025} und die Enthaltung bei unzureichender Evidenz \cite{somov_confidence_2025}. Ihre Erweiterung besteht in einer Belegeinheit aus Tabelle, Schlüssel, Feld und Wert und in der Verankerung der Prüfung im Programmcode. Der Ausweis der Abweichung knüpft schließlich an die Messung der Standardnähe \cite{sekatzek_messung_2009} und an den tabellarischen Customizing-Abgleich \cite{sap_customizing_nodate} an und ergänzt beide um die fachliche Deutung der ermittelten Abweichung.
+
+Die einzelnen Bestandteile setzen sich aus den in Abschnitt~\ref{sec:stand-forschung} betrachteten Verfahren zusammen. Dabei werden diese wie in Abbildung ~\ref{fig:herleitung} erweitert um die vorliegende Forschungsfrage beantworten zu können. 
+
+Teil 1: Die Erschließung übernimmt die iterative, agentengesteuerte Exploration des Schemas \cite{wang_autolink_2026} und die Ableitung der Tabellenbeziehungen aus dem Data Dictionary \cite{berti_generic_2023}. Sie ergänzt beide um eine Vorfilterung des Suchraums über die Auslieferungsklasse und um einen Einstieg über die Aktivitäten des Einführungsleitfadens sowie die Beschreibungstexte der Datenelemente. 
+
+Teil 2: Die Interpretation übernimmt die Anreicherung kryptischer Bezeichner von Tabellen und Spalten um Beschreibungen \cite{cai_columbo_2025, wretblad_synthetic_2024} und die sprachmodellgestützte Dokumentation von Altsystemen \cite{diggs_leveraging_2024}. Damit werden Schlüsselwerte aufgelöst und Merkmale deterministisch über die im Data Dictionary hinterlegten Prüf- und Texttabellen zugeordnet. 
+
+Teil 3: Die Absicherung übernimmt die mitgelieferte Belegabfrage \cite{theologitis_thucy_2026}, die Prüfung einer Aussage vor ihrer Ausgabe \cite{allemang_increasing_2025} und die Enthaltung bei unzureichender Evidenz \cite{somov_confidence_2025}. Ihre Erweiterung besteht in einer Belegeinheit aus Tabelle, Schlüssel, Feld und Wert und in der Verankerung der Prüfung im Programmcode.
+
+Teil 4: Der Ausweis der Abweichung übernimmt schließlich den Auslieferungszustand als Referenz, an der auch die Messung der Standardnähe ansetzt \cite{sekatzek_messung_2009}, und den Vergleich je Eintrag von Customizing-Tabellen \cite{sap_customizing_nodate}. Er ergänzt beide um die fachliche Deutung der ermittelten Abweichung und um den Abgleich von Werten im Quelltext mit dem Customizing.
 
 % NEU (13.10.): Abbildung ersetzt die bisherige Tabelle tab:teilaspekte; Quelldatei Grafiken/drawio/abb3_2_herleitung.drawio
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{Grafiken/abb3_2_herleitung.pdf}
-	\caption[Herleitung der Teilaspekte aus dem Stand der Forschung]{Herleitung der Teilaspekte aus dem Stand der Forschung; übernommene Verfahren nach A~\cite{wang_autolink_2026}, B~\cite{berti_generic_2023}, C~\cite{cai_columbo_2025, wretblad_synthetic_2024}, D~\cite{diggs_leveraging_2024}, E~\cite{theologitis_thucy_2026}, F~\cite{allemang_increasing_2025}, G~\cite{somov_confidence_2025}, H~\cite{sekatzek_messung_2009} und I~\cite{sap_customizing_nodate} (eigene Darstellung).}
+	\caption[Herleitung der Teilaspekte aus dem Stand der Forschung]{Herleitung der Teilaspekte aus dem Stand der Forschung; übernommene und erweiterte Verfahren nach A~\cite{wang_autolink_2026}, B~\cite{berti_generic_2023}, C~\cite{cai_columbo_2025, wretblad_synthetic_2024}, D~\cite{diggs_leveraging_2024}, E~\cite{theologitis_thucy_2026}, F~\cite{allemang_increasing_2025}, G~\cite{somov_confidence_2025}, H~\cite{sekatzek_messung_2009} und I~\cite{sap_customizing_nodate} (eigene Darstellung).}
 	\label{fig:herleitung}
 \end{figure}
 
 % GEÄNDERT: Begründung des Fokus mit "weil" an die Lücke gebunden (Meeting-Notiz M8); Verweis korrigiert (vorher undefiniertes Label "Forschungsstand")
-Der Betrachtungsschwerpunkt liegt auf der Customizing-Ebene. Dies liegt darin
-begründet, dass die fachliche Bedeutung einer Customizing-Einstellung nicht aus
-einem einzelnen Artefakt hervorgeht, sondern aus dem Zusammenspiel der
-konfigurierten Werte mit der interpretierenden Standardlogik resultiert, und dass
-gerade diese semantische Interpretation der Customizing-Ebene nach dem in
-Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand unbesetzt bleibt. % GEÄNDERT: "verbleibt" -> "bleibt" (Korrekturregister)
-Kundeneigener ABAP-Code wird kontextgebunden herangezogen, um
-Customizing-Abweichungen zu erklären, nicht jedoch als eigenständiges
-Analyseobjekt behandelt.
+Der Betrachtungsschwerpunkt liegt auf der Customizing-Ebene. Dies liegt darin begründet, dass die fachliche Bedeutung einer Customizing-Einstellung nicht aus einem einzelnen Objekt hervorgeht, sondern aus dem Zusammenspiel der konfigurierten Werte mit der interpretierenden Standardlogik resultiert. Gerade diese semantische Interpretation der Customizing-Ebene bleibt nach dem in
+Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand unbesetzt. % GEÄNDERT: "verbleibt" -> "bleibt" (Korrekturregister)
 
 % GEÄNDERT (13.10.): Beispiel an den Befund zum Merkmal angepasst; die Zuordnung der Beschäftigten erfolgt über ein kundeneigenes Feld in den Stammdaten und liegt außerhalb des Untersuchungsgegenstands (Plan I2)
-Am durchgängigen Beispiel lässt sich der Ablauf wie folgt nachvollziehen. Die Anfrage, welche Abwesenheitsarten Auszubildende beantragen dürfen, führt im ersten Teilaspekt über den Fachbegriff der Regelgruppe auf die Customizing-Tabelle, welche die beantragbaren Arten je Regelgruppe festlegt, und auf das Merkmal, das die Regelgruppe bestimmt. Im zweiten Teilaspekt wird der Begriff \glqq Auszubildende\grqq{} über den gepflegten Bezeichnungstext einer kundeneigenen Regelgruppe zugeordnet, und die zugehörigen Schlüsselwerte werden über die Texttabelle in Bezeichnungen überführt. Die Auswertung des Merkmals zeigt dabei, dass die Zuordnung einzelner Beschäftigter zu dieser Regelgruppe über ein kundeneigenes Feld in den Stammdaten erfolgt und damit außerhalb des Customizing liegt. Der dritte Teilaspekt gewährleistet, dass jede genannte Abwesenheitsart mit der Tabellenzeile belegt ist, aus der sie stammt, und dass die Antwort diese Grenze benennt, anstatt eine Annahme über die Stammdaten zu treffen. Der vierte Teilaspekt weist schließlich aus, dass sowohl die Regelgruppe als auch das Entscheidungsfeld des Merkmals Ergänzungen des Auslieferungszustands darstellen.
+Am durchgängigen Beispiel lässt sich der Ablauf nachvollziehen. Gefragt wird, welche Abwesenheitsarten Auszubildende beantragen dürfen. Im ersten Bestandteil führt der Fachbegriff der Regelgruppe zu einer Customizing-Tabelle. Sie legt fest, welche Abwesenheitsarten je Regelgruppe beantragbar sind. Zusätzlich wird ein Merkmal gefunden. Es ordnet jeden Beschäftigten einer Regelgruppe zu. Im zweiten Schritt wird der Begriff \glqq Auszubildende\grqq{} über den gepflegten Bezeichnungstext einer kundeneigenen Regelgruppe zugeordnet, und die zugehörigen Schlüsselwerte werden über die Texttabelle in Bezeichnungen überführt. Die Auswertung des Merkmals zeigt dabei, dass die Zuordnung einzelner Beschäftigter zu dieser Regelgruppe über ein kundeneigenes Feld in den Stammdaten erfolgt. Der dritte Bestandteil gewährleistet, dass jede genannte Abwesenheitsart mit der Tabellenzeile belegt ist, aus der sie stammt, und dass die Antwort diese Grenze benennt, anstatt eine Annahme über die Stammdaten zu treffen. Der vierte Teil weist schließlich aus, dass sowohl die Regelgruppe als auch das Entscheidungsfeld des Merkmals Ergänzungen des Auslieferungszustands darstellen.
 
 \section{Ziele und Anforderungen}
 \label{sec:ziele-anforderungen}
