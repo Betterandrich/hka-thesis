@@ -19,7 +19,7 @@
 % ---------------------------------------------------------------------------
 
 % GEÄNDERT (21.10.): Leseführung und durchgängiges Beispiel ergänzt; "Bestandteile" -> "Verarbeitungsschritte"
-Dieses Kapitel beschreibt den Entwurf des Analyseframeworks, das die in Kapitel~\ref{StandDerForschung} hergeleitete Forschungslücke schließt. Abschnitt~\ref{sec:loesung} gibt zunächst einen Überblick über die Lösung und ihre Komponenten. Darauf folgen die Anforderungen und die Architektur. Den Kern bilden die vier Verarbeitungsschritte, deren Entwurfsentscheidungen in Abschnitt~\ref{sec:teilaspekte} einzeln begründet werden. Das durchgängige Beispiel aus Abschnitt~\ref{sec:problem-ff} begleitet dabei jeden Abschnitt, sodass sich jede Entscheidung an einem konkreten Fall nachvollziehen lässt.
+Dieses Kapitel beschreibt den Entwurf des Analyseframeworks, das die in Kapitel~\ref{StandDerForschung} hergeleitete Forschungslücke schließt. Abschnitt~\ref{sec:loesung} gibt zunächst einen Überblick über die Lösung und ihre Komponenten. Darauf folgen die Anforderungen und die Architektur. Den Kern bilden die vier Verarbeitungsschritte, deren Entwurfsentscheidungen in Abschnitt~\ref{sec:teilaspekte} einzeln begründet werden. Das in Kapitel ~\ref{sec:problem-ff} eingeführte Beispiel wird weiterhin verwendet, um getroffene Entscheidungen an einem konkreten Fall nachvollziehbar zu erläutern. 
 
 \section{Lösung im Gesamtkontext}
 \label{sec:loesung}
@@ -28,7 +28,7 @@ Dieses Kapitel beschreibt den Entwurf des Analyseframeworks, das die in Kapitel~
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{Grafiken/abb3_1_loesung.pdf}
-	\caption{Konzeptioneller Aufbau des agentenbasierten Analyseframeworks mit den vier Verarbeitungsschritten und deren Komponenten sowie dem Weg einer Analyseanfrage bis zur belegten Antwort (eigene Darstellung).}
+	\caption{Konzeptioneller Aufbau des Analyseframeworks mit den vier Verarbeitungsschritten und deren Komponenten sowie dem Weg einer Analyseanfrage bis zur belegten Antwort (eigene Darstellung).}
 	\label{fig:ansatz-ueberblick}
 \end{figure}
 
@@ -49,8 +49,11 @@ Reicht die Evidenz für eine Aussage nicht aus, so enthält sich das Framework b
 Das durchgängige Beispiel zeigt, wie eine Anfrage diese Schritte durchläuft. Gefragt wird, welche Abwesenheitsarten Auszubildende im Mitarbeiter-Self-Service beantragen dürfen:
 \begin{enumerate}
 	\item Der Fachbegriff der Regelgruppe führt zu einer Customizing-Tabelle, die je Regelgruppe festlegt, welche Abwesenheitsarten beantragbar sind. Zusätzlich wird ein Merkmal gefunden, das die Beschäftigten einer Regelgruppe zuordnet.
+	\schrittpfeil
 	\item Der Begriff \glqq Auszubildende\grqq{} wird über den gepflegten Bezeichnungstext einer kundeneigenen Regelgruppe zugeordnet. Die Schlüsselwerte der Abwesenheitsarten werden über die Texttabelle in ihre Bezeichnungen überführt. Die Auswertung des Merkmals zeigt zudem, dass die Zuordnung einzelner Beschäftigter über ein kundeneigenes Feld in den Stammdaten erfolgt.
+	\schrittpfeil
 	\item Jede genannte Abwesenheitsart ist mit der Tabellenzeile belegt, aus der sie stammt. Die Antwort benennt außerdem, dass die Zuordnung der Beschäftigten in den Stammdaten liegt, anstatt darüber eine Annahme zu treffen.
+	\schrittpfeil
 	\item Die Antwort weist aus, dass die Regelgruppe und das Entscheidungsfeld des Merkmals Ergänzungen des Auslieferungszustands sind.
 \end{enumerate}
 
@@ -129,7 +132,7 @@ Entwurfsentscheidungen, die sich auf eine dieser Randbedingungen stützen, sind 
 \label{sec:architektur-ueberblick}
 
 % GEÄNDERT (21.10.): keine zweite Aufzählung der Komponenten, da diese in 3.1 eingeführt sind; Abschnitt beschreibt das Zusammenspiel und enthält die beiden Architekturentscheidungen aus 3.4.1 und 3.4.2
-Auf Grundlage der Anforderungen zeigt Abbildung~\ref{fig:architektur} die Architektur des Analyseframeworks. Sie ordnet die Komponenten K1 bis K7 aus Abschnitt~\ref{sec:loesung} den Plattformen zu, auf denen sie betrieben werden.
+Auf Grundlage der Anforderungen illustriert Abbildung~\ref{fig:architektur} die Architektur des Analyseframeworks. Sie ordnet die Komponenten K1 bis K7 aus Abschnitt~\ref{sec:loesung} den Plattformen zu, auf denen sie betrieben werden.
 
 \begin{figure}[htbp]
 	\centering
@@ -151,20 +154,13 @@ Eine Entscheidung betrifft den Ort der semantischen Suche. Sie kann als Vorverar
 \textbf{Anbindung des Sprachmodells}
 
 % VERSCHOBEN (21.10.) aus 3.4.2, da es sich um eine Architekturentscheidung handelt
-Für die Anbindung des Sprachmodells und des Embedding-Modells kommen zwei Wege in Betracht: der direkte Zugriff auf einen Modellanbieter oder der von SAP bereitgestellte Generative AI Hub. Die Wahl fällt auf den Generative AI Hub, da er sich in die vorgegebene Plattform einfügt und beide Modelle über denselben Zugang bereitstellt. Der Modellzugriff ist im Orchestrator an einer einzigen Stelle gekapselt, sodass sich das Modell austauschen lässt (NFA2).
+Für die Anbindung des Sprachmodells und des Embedding-Modells kommen zwei Wege in Betracht: der direkte Zugriff auf einen Modellanbieter oder der von SAP bereitgestellte Generative AI Hub. Die Wahl fällt auf den Generative AI Hub, da hiermit die Datenhoheit gewährleistet wird und keine Personaldaten an den Anbieter zum weiteren Training freigegeben werden. Zusätzlich dazu bindet sich dieser in die vorgegebene Plattform (BTP) ein und ermöglicht die Bereitstellung beider Modelle über denselben Zugang. Der Modellzugriff ist im Orchestrator an einer einzigen Stelle gekapselt, sodass sich das Modell austauschen lässt (NFA2).
 
 \section{Verarbeitungsschritte im Detail}
 \label{sec:teilaspekte}
 
 % GEÄNDERT (21.10.): vorher "Teilaspekte des Ansatzes"; einheitlicher Aufbau je Abschnitt, damit der Leser den Rhythmus wiedererkennt
-Die folgenden Abschnitte beschreiben die vier Verarbeitungsschritte in der Reihenfolge, in der eine Anfrage sie durchläuft. Jeder Abschnitt ist gleich aufgebaut und umfasst:
-\begin{enumerate}
-	\item die Leistung des Schritts im durchgängigen Beispiel und die Teilfrage, die er beantwortet,
-	\item die aus dem Stand der Forschung übernommenen Verfahren und ihre Erweiterung,
-	\item die Entwurfsentscheidungen mit den verworfenen Alternativen,
-	\item die verbleibende Fehlerart, die in der Evaluation gemessen wird.
-\end{enumerate}
-Kapitel~\ref{Implementierung} beschreibt die Umsetzung derselben Schritte unter denselben Überschriften.
+Die folgenden Abschnitte beschreiben die vier Verarbeitungsschritte in der Reihenfolge, in der eine Anfrage sie durchläuft. Jeder Abschnitt ist gleich aufgebaut. Er beginnt mit der Funktion des Schritts im durchgängigen Beispiel und der Teilfrage, die dieser beantwortet. Danach werden die aus dem Stand der Forschung übernommenen Verfahren und ihre Erweiterung beschrieben. Den Hauptteil bilden die Entwurfsentscheidungen, die jeweils gegen die verworfenen Alternativen abgewogen werden. Jeder Abschnitt schließt mit der Fehlerart, die in diesem Schritt bestehen bleibt und in der Evaluation gemessen wird. Kapitel~\ref{Implementierung} beschreibt die Umsetzung derselben Schritte unter denselben Überschriften.
 
 \subsection{Relevante Konfiguration erschließen}
 \label{subsec:ta-erschliessen}
@@ -195,7 +191,7 @@ Grundlage der semantischen Suche ist ein Schemakorpus, der aus den Metadaten des
 \textbf{Eingrenzung des Suchraums}
 
 % GEÄNDERT (21.10.): Satzbau vereinfacht; "Tabellenkategorie" -> "Tabellenart" (einheitlich mit Kap. 2)
-Die semantische Suche setzt voraus, dass der durchsuchte Bestand die einschlägigen Tabellen enthält und möglichst wenige fachfremde. Bei einem ungefiltert aufgebauten Korpus ist diese Voraussetzung nicht erfüllt. Am Prototyp zeigte sich im Beispiel, dass die Suche die Tabellen der Bewegungsdaten des Personalwesens als relevanter einstufte als die zutreffende Customizing-Tabelle, obwohl die gesuchte Einstellung nur in Letzterer hinterlegt ist. Dies folgt aus dem Verfahren selbst. Ein Ähnlichkeitsmaß bewertet die Nähe zweier Beschreibungstexte und kann nicht erkennen, ob eine Tabelle Konfiguration oder Bewegungsdaten enthält. Diese Unterscheidung liefern die in Abschnitt~\ref{subsec:customizing} eingeführten Merkmale Auslieferungsklasse und Tabellenart.
+Die semantische Suche setzt voraus, dass der durchsuchte Bestand die einschlägigen Tabellen enthält und möglichst wenige fachfremde enthält. Bei einem ungefiltert aufgebauten Korpus ist diese Voraussetzung nicht erfüllt. Am Prototyp zeigte sich im Beispiel, dass die Suche die Tabellen der Bewegungsdaten des Personalwesens als relevanter einstufte als die zutreffende Customizing-Tabelle, obwohl die gesuchte Einstellung nur in Letzterer hinterlegt ist. Dies folgt aus dem Verfahren selbst. Ein Ähnlichkeitsmaß bewertet die Nähe zweier Beschreibungstexte und kann nicht erkennen, ob eine Tabelle Konfiguration oder Bewegungsdaten enthält. Diese Unterscheidung liefern die in Abschnitt~\ref{subsec:customizing} eingeführten Merkmale Auslieferungsklasse und Tabellenart.
 
 Für die Anwendung dieses Kriteriums kommen zwei Stellen in Betracht. Die Kandidaten können zur Laufzeit im Orchestrator gefiltert werden, oder die fachfremden Tabellen werden bereits beim Aufbau des Korpus ausgeschlossen. Der Entwurf sieht die zweite Variante vor. Eine nachgelagerte Filterung entfernt fachfremde Tabellen zwar aus der Antwort, aber nicht aus der Rangliste der Suche. Dort belegen sie Plätze der begrenzten Kandidatenmenge und können einschlägige Tabellen verdrängen. Zudem bleibt der Ausschluss reproduzierbar, da er nicht von der Formulierung einer Anfrage abhängt (NFA4). Die Eingrenzung verschiebt jedoch die zu erwartende Fehlerart. An die Stelle fachfremder Treffer tritt das Risiko, dass eine einschlägige Tabelle wegen abweichend gepflegter Metadaten ausgeschlossen wird.
 
@@ -265,7 +261,7 @@ Die Auswertung eines Merkmals kann auf Daten führen, die außerhalb des Customi
 % GEÄNDERT (21.10.): Rolle des Quelltexts nach Entscheidung E1 präzisiert (Code bleibt Kontext, um komplexere Customizing-Fragen zu erklären); Grundsätze zum Lesen ergänzt
 Manche Einstellungen lassen sich aus den Tabellen allein nicht erklären. Dies ist etwa der Fall, wenn eine Erweiterung die Standardlogik ergänzt oder ein Programm einen Customizing-Wert auf eigene Weise auswertet. Der Ansatz zieht kundeneigenen ABAP-Code deshalb als zusätzlichen Kontext heran, sobald eine Einstellung ohne die verarbeitende Programmlogik nicht erklärbar ist. Der Code bleibt damit eine ergänzende Quelle für das Verständnis des Customizing und wird nicht für sich analysiert.
 
-Für kundeneigene Objekte ist diese Quelle besonders wichtig. Eine Erhebung am Zielsystem hat ergeben, dass kundeneigene Tabellen überwiegend keine Fremdschlüsselbeziehungen aufweisen und ihre Feldbedeutung überwiegend von generischen Datenelementen übernehmen. Die tragfähigen Bezugspunkte liegen für solche Objekte daher in ihrer Verwendung im Quelltext und in den tatsächlich enthaltenen Werten. Für das Lesen des Quelltexts gelten drei Grundsätze:
+Für kundeneigene Objekte ist diese Quelle besonders wichtig. Eine Erhebung am Zielsystem hat ergeben, dass kundeneigene Tabellen überwiegend keine Fremdschlüsselbeziehungen aufweisen und ihre Feldbedeutung häufig von generischen Datenelementen übernehmen. Die tragfähigen Bezugspunkte liegen für solche Objekte daher in ihrer Verwendung im Quelltext und in den tatsächlich enthaltenen Werten. Für das Lesen des Quelltexts gelten drei Grundsätze:
 \begin{itemize}
 	\item \textbf{Überblick vor Volltext:} Zu einem Programm wird zunächst eine Strukturübersicht erzeugt, die Routinen, Aufrufe und Tabellenzugriffe mit Zeilennummern ausweist. Erst danach werden die relevanten Stellen gezielt gelesen, sodass der Kontext des Sprachmodells klein bleibt.
 	\item \textbf{Aufrufkette folgen:} Aufgerufene Funktionsbausteine, Methoden und Erweiterungen werden ebenfalls gelesen, wenn sich die Logik erst aus ihnen erschließt. Standard- und Kundencode werden dabei als solche gekennzeichnet.
@@ -299,8 +295,8 @@ Die Erweiterung besteht in der Festlegung der Belegeinheit. Eine Aussage über e
 \textbf{Prüfung im Programmcode statt im Prompt}
 
 % GEÄNDERT (21.10.): Satzbau vereinfacht
-Für die Umsetzung der Prüfung bestehen zwei Wege. Sie kann dem Sprachmodell über den Prompt auferlegt werden, oder sie erfolgt außerhalb des Modells als fest vorgegebener Ablauf. Der Entwurf sieht die zweite Variante vor. Eine im Prompt formulierte Prüfpflicht müsste von derselben Instanz erfüllt werden, deren Ausgaben sie absichern soll. Sie kann damit genau dann entfallen, wenn sie benötigt wird. Für prüfpflichtige Unternehmensanwendungen wird ausdrücklich empfohlen, Prüfungen im Code zu verankern und das Sprachmodell nur an einer austauschbaren Stelle formulieren zu lassen \cite{ahn_prompts_2026}. % [BIB-EINTRAG FEHLT: ahn_prompts_2026 ist weder in Literaturverzeichnis.bib noch in manual-refs.bib enthalten]
-Gestützt wird die Entscheidung zudem durch den Befund, dass aktuelle Modelle einzelne Werkzeugaufrufe zuverlässig ausführen, bei der Planung mehrstufiger Aufrufketten jedoch deutlich zurückbleiben \cite{wang_mcp-bench_2025}. Die Prüfung ist deshalb als Ablauf mit festen Zuständen und Übergängen modelliert, der den Prüfweg unabhängig von der Entscheidung des Modells festlegt.
+Für die Umsetzung der Prüfung bestehen zwei Wege. Sie kann dem Sprachmodell über den Prompt auferlegt werden, oder sie erfolgt außerhalb des Modells als fest vorgegebener Ablauf. Eine im Prompt formulierte Prüfpflicht müsste von derselben Instanz erfüllt werden, deren Ausgaben sie absichern soll. Sie kann damit genau dann entfallen, wenn sie benötigt wird. Für prüfpflichtige Unternehmensanwendungen wird ausdrücklich empfohlen, Prüfungen im Code zu verankern und das Sprachmodell nur an einer austauschbaren Stelle formulieren zu lassen \cite{ahn_prompts_2026}. % [BIB-EINTRAG FEHLT: ahn_prompts_2026 ist weder in Literaturverzeichnis.bib noch in manual-refs.bib enthalten]
+Gestützt wird die Entscheidung zudem durch den Befund, dass aktuelle Modelle einzelne Werkzeugaufrufe zuverlässig ausführen, bei der Planung mehrstufiger Aufrufketten jedoch deutlich zurückbleiben \cite{wang_mcp-bench_2025}. Die Prüfung ist deshalb als Ablauf mit festen Zuständen und Übergängen modelliert, der den Weg unabhängig von der Entscheidung des Modells festlegt.
 
 \textbf{Stufen der Prüfung}
 
@@ -333,33 +329,13 @@ In diesem Schritt bleiben vier Fehlerarten zu messen: erfundene Bezeichner (F3),
 \label{subsec:ta-abweichung}
 
 % GEÄNDERT (21.10.): Einstieg über das Beispiel; Herleitung aus 3.1 (Sekatzek, Customizing-Abgleich) übernommen; Quellenschlüssel sap_customizing_abgleich (nicht in der .bib) durch sap_customizing_nodate ersetzt
-Im Beispiel sind die Regelgruppe der Auszubildenden und das Feld, nach dem das Merkmal entscheidet, Ergänzungen des Kunden. Der vierte Schritt macht solche Abweichungen sichtbar und beantwortet damit die Teilfrage~TF4. Eine Abweichung setzt stets eine Referenz voraus, gegen die sie festgestellt wird. Der Ansatz übernimmt dafür den Auslieferungszustand als Referenz, an der auch die Messung der Standardnähe ansetzt \cite{sekatzek_messung_2009}. Zudem übernimmt er den Vergleich von Customizing-Tabellen je Eintrag, wie ihn die Werkzeuge zum Customizing-Abgleich bereits leisten \cite{sap_customizing_nodate}. Für die Festlegung, was als Standard gilt, konnte keine einschlägige Primärquelle identifiziert werden. Sie ist daher als eigener Beitrag der Arbeit zu begründen. Tabelle~\ref{tab:referenz-standard} stellt die in Betracht kommenden Referenzen gegenüber.
+% GEÄNDERT (21.10.): Tabelle tab:referenz-standard durch Fließtext ersetzt
+Im Beispiel sind die Regelgruppe der Auszubildenden und das Feld, nach dem das Merkmal entscheidet, Ergänzungen des Kunden. Der vierte Schritt macht solche Abweichungen sichtbar und beantwortet damit die Teilfrage~TF4. Eine Abweichung setzt stets eine Referenz voraus, gegen die sie festgestellt wird. Der Ansatz übernimmt dafür den Auslieferungszustand als Referenz, an der auch die Messung der Standardnähe ansetzt \cite{sekatzek_messung_2009}. Zudem übernimmt er den Vergleich von Customizing-Tabellen je Eintrag, wie ihn die Werkzeuge zum Customizing-Abgleich bereits leisten \cite{sap_customizing_nodate}. Für die Festlegung, was als Standard gilt, konnte keine einschlägige Primärquelle identifiziert werden. Sie ist daher als eigener Beitrag der Arbeit zu begründen.
 
-\begin{table}[htbp]
-\centering
-\caption{Referenzen zur Bestimmung einer Abweichung vom Standard}
-\label{tab:referenz-standard}
-\small
-\begin{tabular}{p{3.3cm}p{3.6cm}p{5.4cm}}
-\toprule
-\textbf{Referenz} & \textbf{Erkennt} & \textbf{Einordnung} \\
-\midrule
-Namensraum der Objekte & kundeneigene Tabellen, Felder und Programme & geeignet für Objekte, erkennt jedoch keine veränderten Werte in Standardtabellen \\
-Auslieferungsklasse & Tabellen, die Customizing tragen & verworfen als Abweichungskriterium, da sie die Bestimmung einer Tabelle beschreibt und nicht, ob deren Inhalt vom Standard abweicht; dient ausschließlich der Eingrenzung in Abschnitt~\ref{subsec:ta-erschliessen} \\
-Ausgelieferter Referenzinhalt & veränderte, ergänzte und gelöschte Einträge in Standardtabellen & geeignet für Werte, setzt einen lesbaren Referenzbestand voraus \\
-SAP-Dokumentation & beschriebenes Standardverhalten & geeignet zur Deutung, nicht zum Nachweis einer Abweichung \\
-\bottomrule
-\end{tabular}
-\end{table}
+Als Referenz kommen vier Quellen in Betracht, die jeweils etwas anderes erkennen. Der Namensraum eines Objekts zeigt, ob eine Tabelle, ein Feld oder ein Programm vom Kunden angelegt wurde. Veränderte Werte in Tabellen des Herstellers erkennt er jedoch nicht. Diese Lücke schließt der vom Hersteller ausgelieferte Referenzinhalt. Gleicht man die Einträge einer Standardtabelle mit ihm ab, werden veränderte, ergänzte und gelöschte Einträge sichtbar. Dafür muss der Referenzinhalt im System allerdings lesbar sein. % [BELEG ERFORDERLICH: Auslieferungsmandant bzw. BC-Sets als Träger des ausgelieferten Customizing-Inhalts]
+Die SAP-Dokumentation beschreibt das Standardverhalten. Sie eignet sich damit zur Deutung einer Abweichung, aber nicht zu ihrem Nachweis. Die Auslieferungsklasse wird als Kriterium verworfen. Sie beschreibt, wofür eine Tabelle bestimmt ist, und sagt nichts darüber aus, ob ihr Inhalt vom Standard abweicht. Sie dient deshalb nur der Eingrenzung des Suchraums in Abschnitt~\ref{subsec:ta-erschliessen}.
 
-% GEÄNDERT (21.10.): Arten der Abweichung als Aufzählung mit Bezug zum Beispiel
-Der Entwurf kombiniert drei dieser Referenzen, die jeweils eine eigene Aufgabe übernehmen:
-\begin{itemize}
-	\item \textbf{Abweichende Objekte:} Kundeneigene Tabellen, Felder und Programme werden über ihren Namensraum erkannt. Im Beispiel trifft dies auf das Entscheidungsfeld des Merkmals zu.
-	\item \textbf{Abweichende Werte:} Die Einträge einer Standardtabelle werden mit dem vom Hersteller ausgelieferten Referenzinhalt abgeglichen. Dadurch werden veränderte, ergänzte und gelöschte Einträge erkannt, im Beispiel die ergänzte Regelgruppe. % [BELEG ERFORDERLICH: Auslieferungsmandant bzw. BC-Sets als Träger des ausgelieferten Customizing-Inhalts]
-	\item \textbf{Deutung:} Die SAP-Dokumentation beschreibt das Standardverhalten, vor dessen Hintergrund eine Abweichung fachlich gedeutet wird.
-\end{itemize}
-Die Erweiterung gegenüber dem tabellarischen Abgleich liegt damit in der belegten fachlichen Deutung der Abweichung. Jede ausgewiesene Abweichung trägt dieselbe Belegeinheit wie eine Aussage über den Ist-Zustand, ergänzt um den Referenzeintrag, gegen den sie festgestellt wurde.
+Der Entwurf kombiniert die drei übrigen Referenzen, sodass jede eine eigene Aufgabe übernimmt. Der Namensraum weist abweichende Objekte aus, im Beispiel das Entscheidungsfeld des Merkmals. Der Abgleich mit dem Referenzinhalt weist abweichende Werte aus, im Beispiel die ergänzte Regelgruppe. Die Dokumentation liefert schließlich das Standardverhalten, vor dessen Hintergrund eine Abweichung fachlich gedeutet wird. Die Erweiterung gegenüber dem tabellarischen Abgleich liegt damit in der belegten fachlichen Deutung der Abweichung. Jede ausgewiesene Abweichung trägt dieselbe Belegeinheit wie eine Aussage über den Ist-Zustand, ergänzt um den Referenzeintrag, gegen den sie festgestellt wurde.
 % OFFEN (Umsetzung): Ob der Referenzinhalt über die ADT-Datenvorschau mandantenübergreifend lesbar ist, ist am Zielsystem zu prüfen, bevor Kap. 4 die Umsetzung beschreibt.
 
 \textbf{Widersprüche zwischen Quelltext und Customizing}
@@ -368,30 +344,13 @@ Die Erweiterung gegenüber dem tabellarischen Abgleich liegt damit in der belegt
 Ergänzend weist dieser Schritt Widersprüche innerhalb der individuellen Entwicklungen aus. Fragt kundeneigener Code einen Schlüsselwert ab, wird dieser Wert gegen die Tabelle geprüft, die ihn definiert. Fehlt der Wert dort, greift die Logik im System nicht, obwohl Code und Customizing für sich genommen fehlerfrei wirken. Ein solcher Widerspruch ist keine Abweichung vom Standard im engeren Sinne. Er wird dennoch in diesem Schritt behandelt, da er auf demselben Abgleich mit einer Referenztabelle beruht und für die fachliche Einordnung ebenso bedeutsam ist.
 
 % NEU (21.10.): verbleibende Fehlerart mit Bezug zur Evaluation
-Als Fehler bleiben in diesem Schritt nicht erkannte und fälschlich ausgewiesene Abweichungen. Die Evaluation misst dafür den Anteil korrekt ausgewiesener Abweichungen gegenüber der Referenzantwort (Tabelle~\ref{tab:eval-ziele}).
+Als Fehler bleiben in diesem Schritt nicht erkannte und fälschlich ausgewiesene Abweichungen. Die Evaluation misst dafür den Anteil korrekt benannter Abweichungen gegenüber der Referenzantwort (Tabelle~\ref{tab:eval-ziele}).
 
 \section{Zusammenfassung}
 \label{sec:ansatz-zusammenfassung}
 
 % GEÄNDERT (21.10.): Übersicht Entwurfsentscheidungen -> Anforderungen -> Messung in Kap. 5 als Brücke zur Evaluation ergänzt
-Die vier Verarbeitungsschritte bilden gemeinsam den Entwurf des Analyseframeworks. Jeder Schritt beantwortet eine Teilfrage, übernimmt Verfahren aus dem Stand der Forschung und erweitert sie um das, was die Customizing-Ebene zusätzlich erfordert. Die Entwurfsentscheidungen folgen dabei einem gemeinsamen Prinzip. Was sich deterministisch aus den Metadaten des Systems ableiten lässt, wird außerhalb des Sprachmodells ausgeführt, sodass es nachprüfbar bleibt. Tabelle~\ref{tab:entwurf-evaluation} fasst zusammen, welche Entscheidungen jeder Schritt trifft und woran die Evaluation ihn misst.
-
-\begin{table}[htbp]
-\centering
-\caption{Entwurfsentscheidungen je Verarbeitungsschritt und ihre Messung in der Evaluation}
-\label{tab:entwurf-evaluation}
-\small
-\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{3.4cm}}
-\toprule
-\textbf{Schritt} & \textbf{Zentrale Entwurfs\-entscheidungen} & \textbf{Anforde\-rungen} & \textbf{Messung in Kapitel~\ref{Evaluation}} \\
-\midrule
-Erschließen (TF1) & drei Einstiege; Korpus auf Feldebene; Filter beim Korpusaufbau; exakte Suche & FA2, FA3, NFA3, NFA4, NFA5 & Trefferquote der Soll-Tabellen; F1, F2 \\
-Interpretieren (TF2) & Schlüssel und Merkmale deterministisch auflösen; Stammdaten als Grenze; Quelltext nur lesen & FA3, FA4, NFA4, NFA5 & Anteil korrekter Aussagen; F5, F8 \\
-Absichern (TF3) & Belegeinheit; Prüfung außerhalb des Modells; Enthaltung als Endzustand & FA5, FA6, NFA1 & Auflösbarkeit der Belege, Wertübereinstimmung, Enthaltungen; F3 bis F6 \\
-Abweichung (TF4) & Namensraum und Referenzinhalt als Referenz; Abgleich von Code-Werten & FA7 & Anteil korrekt ausgewiesener Abweichungen \\
-\bottomrule
-\end{tabular}
-\end{table}
+Die vier Verarbeitungsschritte bilden gemeinsam den Entwurf des Analyseframeworks. Jeder Schritt beantwortet eine Teilfrage, übernimmt Verfahren aus dem Stand der Forschung und erweitert sie um das, was die Customizing-Ebene zusätzlich erfordert. Die Entwurfsentscheidungen folgen dabei einem gemeinsamen Prinzip. Was sich deterministisch aus den Metadaten des Systems ableiten lässt, wird außerhalb des Sprachmodells ausgeführt, sodass es nachprüfbar bleibt. 
 
 Das folgende Kapitel~\ref{Implementierung} beschreibt die prototypische Umsetzung dieser Verarbeitungsschritte, bevor Kapitel~\ref{Evaluation} prüft, in welchem Grad sie die Teilfragen beantworten.
 
