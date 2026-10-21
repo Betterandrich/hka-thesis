@@ -12,115 +12,124 @@
 % inwiefern der Gesamtentwurf und seine Einzelaspekte die Forschungsfrage lösen.
 % Anmerkungen 22.09.: erst den Ansatz präsentieren, dann Ziele/Anforderungen;
 % Teilaspekte statt Entscheidungskapitel; Entscheidungen "on the go".
+% Überarbeitung 21.10.: Lesefluss vom Überblick zum Detail; Begriff
+% "Verarbeitungsschritt" statt "Teilaspekt/Bestandteil"; Beispiel als roter
+% Faden in jedem Abschnitt; Code bleibt Kontext (E1); Kap. 3 beschreibt den
+% Zielentwurf ohne Umsetzungsstand (E2); Ähnlichkeitsmaße im Anhang (E3).
 % ---------------------------------------------------------------------------
 
-% GEÄNDERT: Kapiteleinleitung an die neue Reihenfolge angepasst (Lösung zuerst, Betreueranmerkung S1)
-Dieses Kapitel beschreibt den Entwurf des Analyseframeworks, das die in Kapitel~\ref{StandDerForschung} hergeleitete Forschungslücke schließt. Nach einem Überblick über die Lösung folgen die Anforderungen und die Architektur. Den Kern bilden die vier Bestandteile sowie deren einzeln begründeten Entwurfsentscheidungen. Die prototypische Umsetzung wird in Kapitel~\ref{Implementierung} dargestellt.
+% GEÄNDERT (21.10.): Leseführung und durchgängiges Beispiel ergänzt; "Bestandteile" -> "Verarbeitungsschritte"
+Dieses Kapitel beschreibt den Entwurf des Analyseframeworks, das die in Kapitel~\ref{StandDerForschung} hergeleitete Forschungslücke schließt. Abschnitt~\ref{sec:loesung} gibt zunächst einen Überblick über die Lösung und ihre Komponenten. Darauf folgen die Anforderungen und die Architektur. Den Kern bilden die vier Verarbeitungsschritte, deren Entwurfsentscheidungen in Abschnitt~\ref{sec:teilaspekte} einzeln begründet werden. Das durchgängige Beispiel aus Abschnitt~\ref{sec:problem-ff} begleitet dabei jeden Abschnitt, sodass sich jede Entscheidung an einem konkreten Fall nachvollziehen lässt.
 
 \section{Lösung im Gesamtkontext}
 \label{sec:loesung}
 
-% GEÄNDERT (13.10.): Abbildung um die beteiligten Komponenten K1 bis K7 je Teilaspekt ergänzt (Betreueranmerkung "Komponenten bereits in 3.1 benennen und zeigen, wo sie aufkommen"); Quelldatei Grafiken/drawio/abb3_1_loesung.drawio
+% GEÄNDERT (13.10.): Abbildung um die beteiligten Komponenten K1 bis K7 ergänzt; Quelldatei Grafiken/drawio/abb3_1_loesung.drawio
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{Grafiken/abb3_1_loesung.pdf}
-	\caption{Konzeptioneller Aufbau des agentenbasierten Analyseframeworks mit den vier Bestandteilen und deren Komponenten sowie dem Datenfluss einer Analyseanfrage bis zur belegten Antwort (eigene Darstellung).}
+	\caption{Konzeptioneller Aufbau des agentenbasierten Analyseframeworks mit den vier Verarbeitungsschritten und deren Komponenten sowie dem Weg einer Analyseanfrage bis zur belegten Antwort (eigene Darstellung).}
 	\label{fig:ansatz-ueberblick}
 \end{figure}
 
-% GEÄNDERT (13.10.): Absatz gekürzt; die Beschreibung des Zugriffs geht in den Komponentenabsatz über
-Der Ansatz besteht in einem agentenbasierten Analyseframework, das den
-funktionalen Ist-Zustand eines SAP-Systems ausgehend von einer
-natürlichsprachlichen Analyseanfrage erschließt und die identifizierten
-Abweichungen vom Herstellerstandard in einer fachlich belastbaren,
-natürlichsprachlichen Dokumentation zusammenführt. Abbildung~\ref{fig:ansatz-ueberblick}
-zeigt den konzeptionellen Aufbau und den Datenfluss einer Anfrage von der
-Fragestellung bis zur belegten Antwort.
+% GEÄNDERT (21.10.): zweiter Satz eigenständig formuliert
+Der Ansatz besteht in einem agentenbasierten Analyseframework, das den funktionalen Ist-Zustand eines SAP-Systems ausgehend von einer natürlichsprachlichen Anfrage erschließt. Die identifizierten Einstellungen und ihre Abweichungen vom Herstellerstandard führt es in einer belegten, natürlichsprachlichen Dokumentation zusammen. Abbildung~\ref{fig:ansatz-ueberblick} zeigt den konzeptionellen Aufbau und den Weg einer Anfrage von der Fragestellung bis zur belegten Antwort.
 
-% GEÄNDERT (13.10.): ersetzt den Absatz zu den drei Ebenen Retrieval, Zugriff und Grounding; die Teilaspekte bilden nun die alleinige Ordnungsstruktur (Plan I1)
-Die Verarbeitung einer Anfrage gliedert sich in die vier Bestandteile des Prototyps, die jeweils einer Teilfrage der Forschungsfrage entsprechen. Der erste Teil erschließt die zu einer Anfrage relevante Konfiguration, der zweite interpretiert deren Werte semantisch, der dritte sichert jede daraus formulierte Aussage an den Systemdaten ab und der vierte weist die Abweichungen vom Herstellerstandard aus. Reicht die Evidenz für eine Aussage nicht aus, so enthält sich das Framework begründet, anstatt eine nicht gedeckte Aussage zu erzeugen. Da jeder Teil eine eigene Leistung erbringt, weist er auch eigene Fehlerarten auf, sodass sich ein fehlerhaftes Ergebnis in der Evaluation dem Bestandteil zuordnen lässt, in dem es entstanden ist.
-
-% NEU (13.10.): Komponenten bereits im Gesamtkontext benannt und den Teilaspekten zugeordnet (Betreueranmerkung)
-Getragen werden diese vier Bestandteile von sieben Komponenten, die in Abbildung~\ref{fig:ansatz-ueberblick} von \textbf{K1} bis \textbf{K7} dargestellt sind:
+% GEÄNDERT (21.10.): Verarbeitungsschritte als Aufzählung mit Teilfrage, damit der Leser die vier Schritte einmal vollständig sieht
+Jede Anfrage durchläuft vier Verarbeitungsschritte, die jeweils einer Teilfrage der Forschungsfrage entsprechen:
 \begin{enumerate}
-	\item[\textbf{K1}] \textbf{Nutzerschnittstelle:} Nimmt die Anfrage entgegen und stellt die Antwort gemeinsam mit den gelesenen Belegen dar.
-	\item[\textbf{K2}] \textbf{Orchestrator:} Wählt die Werkzeuge aus, mit denen eine Anfrage bearbeitet wird.
-	\item[\textbf{K3}] \textbf{Werkzeugserver:} Stellt die Werkzeuge über die standardisierte Schnittstelle des Model Context Protocol (MCP) bereit und greift ausschließlich lesend auf das Zielsystem zu.
-	\item[\textbf{K4}] \textbf{Schemakorpus und Suchindizes:} Werden vorab aus dem Data Dictionary und aus den Aktivitäten des Einführungsleitfadens aufgebaut und bilden die Grundlage der Suche im Werkzeugserver.
-	\item[\textbf{K5}] \textbf{Prüfschicht:} Bindet jede Aussage an die abgerufenen Daten.
-	\item[\textbf{K6}] \textbf{Abweichungsanalyse:} Stellt fest, welche Einträge vom Auslieferungszustand abweichen.
-	\item[\textbf{K7}] \textbf{Sprachmodell:} Deutet die gelesenen Werte und formuliert die Antwort.
+	\item \textbf{Relevante Konfiguration erschließen (TF1):} Das Framework bestimmt die Customizing-Tabellen und Felder, die für die Anfrage einschlägig sind.
+	\item \textbf{Semantisch interpretieren (TF2):} Das Framework überführt die gelesenen Werte in eine fachliche Aussage.
+	\item \textbf{Aussagen an Systemdaten absichern (TF3):} Das Framework bindet jede Aussage an die Tabellenzeile, aus der sie stammt.
+	\item \textbf{Abweichung vom Standard ausweisen (TF4):} Das Framework kennzeichnet, welche Einstellungen vom Auslieferungszustand abweichen, und deutet diese fachlich.
 \end{enumerate}
-Das Zusammenspiel der Komponenten K1 bis K7 wird im Abschnitt~\ref{sec:architektur-ueberblick} genauer erklärt und in der dortigen Architektur grafisch dargestellt.
+Reicht die Evidenz für eine Aussage nicht aus, so enthält sich das Framework begründet, anstatt eine nicht gedeckte Aussage zu erzeugen. Da jeder Verarbeitungsschritt eine eigene Leistung erbringt, weist er auch eigene Fehlerarten auf. Ein fehlerhaftes Ergebnis lässt sich in der Evaluation daher dem Verarbeitungsschritt zuordnen, in dem es entstanden ist.
 
+% VERSCHOBEN (21.10.) vom Ende des Abschnitts direkt hinter den Ablauf und GEÄNDERT: Aufzählung je Verarbeitungsschritt, einheitliche Benennung (vorher Bestandteil/Schritt/Abschnitt/Teil gemischt); Inhalt wie Fassung 19.10.
+Das durchgängige Beispiel zeigt, wie eine Anfrage diese Schritte durchläuft. Gefragt wird, welche Abwesenheitsarten Auszubildende im Mitarbeiter-Self-Service beantragen dürfen:
+\begin{enumerate}
+	\item Der Fachbegriff der Regelgruppe führt zu einer Customizing-Tabelle, die je Regelgruppe festlegt, welche Abwesenheitsarten beantragbar sind. Zusätzlich wird ein Merkmal gefunden, das die Beschäftigten einer Regelgruppe zuordnet.
+	\item Der Begriff \glqq Auszubildende\grqq{} wird über den gepflegten Bezeichnungstext einer kundeneigenen Regelgruppe zugeordnet. Die Schlüsselwerte der Abwesenheitsarten werden über die Texttabelle in ihre Bezeichnungen überführt. Die Auswertung des Merkmals zeigt zudem, dass die Zuordnung einzelner Beschäftigter über ein kundeneigenes Feld in den Stammdaten erfolgt.
+	\item Jede genannte Abwesenheitsart ist mit der Tabellenzeile belegt, aus der sie stammt. Die Antwort benennt außerdem, dass die Zuordnung der Beschäftigten in den Stammdaten liegt, anstatt darüber eine Annahme zu treffen.
+	\item Die Antwort weist aus, dass die Regelgruppe und das Entscheidungsfeld des Merkmals Ergänzungen des Auslieferungszustands sind.
+\end{enumerate}
 
-Die einzelnen Bestandteile setzen sich aus den in Abschnitt~\ref{sec:stand-forschung} betrachteten Verfahren zusammen. Dabei werden diese wie in Abbildung ~\ref{fig:herleitung} erweitert um die vorliegende Forschungsfrage beantworten zu können. 
+% GEÄNDERT (21.10.): je Komponente ergänzt, in welchem Verarbeitungsschritt sie wirkt und wo sie beschrieben wird (Feedback "Komponenten benennen und zeigen, wo diese aufkommen"); IMG bei erster Nennung eingeführt
+Getragen werden die Verarbeitungsschritte von sieben Komponenten, die in Abbildung~\ref{fig:ansatz-ueberblick} mit K1 bis K7 gekennzeichnet sind. Die folgende Aufzählung nennt zu jeder Komponente ihre Aufgabe und den Abschnitt, in dem sie genauer beschrieben wird:
+\begin{enumerate}
+	\item[\textbf{K1}] \textbf{Nutzerschnittstelle:} Nimmt die Anfrage entgegen und stellt die Antwort gemeinsam mit den gelesenen Belegen dar (Abschnitt~\ref{sec:architektur-ueberblick}).
+	\item[\textbf{K2}] \textbf{Orchestrator:} Wählt in jedem Verarbeitungsschritt die Werkzeuge aus, mit denen eine Anfrage bearbeitet wird, und formuliert die Antwort (Abschnitt~\ref{sec:architektur-ueberblick}).
+	\item[\textbf{K3}] \textbf{Werkzeugserver:} Stellt die Werkzeuge über die standardisierte Schnittstelle des Model Context Protocol (MCP) bereit und greift ausschließlich lesend auf das Zielsystem zu. Er trägt vor allem das Erschließen und das Interpretieren (Abschnitte~\ref{subsec:ta-erschliessen} und \ref{subsec:ta-interpretieren}).
+	\item[\textbf{K4}] \textbf{Schemakorpus und Suchindizes:} Werden vorab aus dem Data Dictionary und aus den Aktivitäten des Einführungsleitfadens (Implementation Guide, IMG) aufgebaut und bilden die Grundlage der Suche (Abschnitt~\ref{subsec:ta-erschliessen}).
+	\item[\textbf{K5}] \textbf{Prüfschicht:} Bindet jede Aussage an die abgerufenen Daten (Abschnitt~\ref{subsec:ta-absichern}).
+	\item[\textbf{K6}] \textbf{Abweichungsanalyse:} Stellt fest, welche Einträge vom Auslieferungszustand abweichen (Abschnitt~\ref{subsec:ta-abweichung}).
+	\item[\textbf{K7}] \textbf{Sprachmodell:} Deutet die gelesenen Werte und formuliert die Antwort. Über denselben Zugang wird das Embedding-Modell der semantischen Suche bezogen (Abschnitte~\ref{sec:architektur-ueberblick} und \ref{subsec:ta-interpretieren}).
+\end{enumerate}
 
-Teil 1: Die Erschließung übernimmt die iterative, agentengesteuerte Exploration des Schemas \cite{wang_autolink_2026} und die Ableitung der Tabellenbeziehungen aus dem Data Dictionary \cite{berti_generic_2023}. Sie ergänzt beide um eine Vorfilterung des Suchraums über die Auslieferungsklasse und um einen Einstieg über die Aktivitäten des Einführungsleitfadens sowie die Beschreibungstexte der Datenelemente. 
-
-Teil 2: Die Interpretation übernimmt die Anreicherung kryptischer Bezeichner von Tabellen und Spalten um Beschreibungen \cite{cai_columbo_2025, wretblad_synthetic_2024} und die sprachmodellgestützte Dokumentation von Altsystemen \cite{diggs_leveraging_2024}. Damit werden Schlüsselwerte aufgelöst und Merkmale deterministisch über die im Data Dictionary hinterlegten Prüf- und Texttabellen zugeordnet. 
-
-Teil 3: Die Absicherung übernimmt die mitgelieferte Belegabfrage \cite{theologitis_thucy_2026}, die Prüfung einer Aussage vor ihrer Ausgabe \cite{allemang_increasing_2025} und die Enthaltung bei unzureichender Evidenz \cite{somov_confidence_2025}. Ihre Erweiterung besteht in einer Belegeinheit aus Tabelle, Schlüssel, Feld und Wert und in der Verankerung der Prüfung im Programmcode.
-
-Teil 4: Der Ausweis der Abweichung übernimmt schließlich den Auslieferungszustand als Referenz, an der auch die Messung der Standardnähe ansetzt \cite{sekatzek_messung_2009}, und den Vergleich je Eintrag von Customizing-Tabellen \cite{sap_customizing_nodate}. Er ergänzt beide um die fachliche Deutung der ermittelten Abweichung und um den Abgleich von Werten im Quelltext mit dem Customizing.
+% GEÄNDERT (21.10.): Absätze "Teil 1" bis "Teil 4" entfernt, da sie am Beginn der Abschnitte 3.4.1 bis 3.4.4 wiederholt wurden; hier nur noch die Einordnung der Abbildung
+Jeder Verarbeitungsschritt baut auf Verfahren auf, die in Abschnitt~\ref{sec:stand-forschung} betrachtet wurden. Abbildung~\ref{fig:herleitung} zeigt, welche Verfahren je Schritt übernommen werden und welche Eigenschaften der Customizing-Ebene eine Erweiterung erfordern. Zu diesen Eigenschaften zählen etwa die große Zahl kryptisch benannter Tabellen und der Umstand, dass die Tabellen überwiegend Schlüsselwerte statt Klartext speichern. Welche Verfahren genau übernommen und wie sie erweitert werden, beschreibt jeweils der Beginn der Abschnitte~\ref{subsec:ta-erschliessen} bis \ref{subsec:ta-abweichung}.
 
 % NEU (13.10.): Abbildung ersetzt die bisherige Tabelle tab:teilaspekte; Quelldatei Grafiken/drawio/abb3_2_herleitung.drawio
+% GEÄNDERT (21.10.): Beschriftung auf "Verarbeitungsschritte" umgestellt (in der Grafik selbst steht noch "Teilaspekte", in draw.io anpassen)
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{Grafiken/abb3_2_herleitung.pdf}
-	\caption[Herleitung der Teilaspekte aus dem Stand der Forschung]{Herleitung der Teilaspekte aus dem Stand der Forschung; übernommene und erweiterte Verfahren nach A~\cite{wang_autolink_2026}, B~\cite{berti_generic_2023}, C~\cite{cai_columbo_2025, wretblad_synthetic_2024}, D~\cite{diggs_leveraging_2024}, E~\cite{theologitis_thucy_2026}, F~\cite{allemang_increasing_2025}, G~\cite{somov_confidence_2025}, H~\cite{sekatzek_messung_2009} und I~\cite{sap_customizing_nodate} (eigene Darstellung).}
+	\caption[Herleitung der Verarbeitungsschritte aus dem Stand der Forschung]{Herleitung der Verarbeitungsschritte aus dem Stand der Forschung; übernommene und erweiterte Verfahren nach A~\cite{wang_autolink_2026}, B~\cite{berti_generic_2023}, C~\cite{cai_columbo_2025, wretblad_synthetic_2024}, D~\cite{diggs_leveraging_2024}, E~\cite{theologitis_thucy_2026}, F~\cite{allemang_increasing_2025}, G~\cite{somov_confidence_2025}, H~\cite{sekatzek_messung_2009} und I~\cite{sap_customizing_nodate} (eigene Darstellung).}
 	\label{fig:herleitung}
 \end{figure}
 
-% GEÄNDERT: Begründung des Fokus mit "weil" an die Lücke gebunden (Meeting-Notiz M8); Verweis korrigiert (vorher undefiniertes Label "Forschungsstand")
-Der Betrachtungsschwerpunkt liegt auf der Customizing-Ebene. Dies liegt darin begründet, dass die fachliche Bedeutung einer Customizing-Einstellung nicht aus einem einzelnen Objekt hervorgeht, sondern aus dem Zusammenspiel der konfigurierten Werte mit der interpretierenden Standardlogik resultiert. Gerade diese semantische Interpretation der Customizing-Ebene bleibt nach dem in
-Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand unbesetzt. % GEÄNDERT: "verbleibt" -> "bleibt" (Korrekturregister)
-
-% GEÄNDERT (13.10.): Beispiel an den Befund zum Merkmal angepasst; die Zuordnung der Beschäftigten erfolgt über ein kundeneigenes Feld in den Stammdaten und liegt außerhalb des Untersuchungsgegenstands (Plan I2)
-Am Azubi-Beispiel lässt sich der Ablauf nachvollziehen. Gefragt wird, welche Abwesenheitsarten Auszubildende beantragen dürfen. Im ersten Bestandteil führt der Fachbegriff der Regelgruppe zu einer Customizing-Tabelle. Sie legt fest, welche Abwesenheitsarten je Regelgruppe beantragbar sind. Zusätzlich wird ein Merkmal gefunden, das jeden Beschäftigten einer Regelgruppe zuordnet. Im zweiten Schritt wird der Begriff \glqq Auszubildende\grqq{} über den gepflegten Bezeichnungstext einer kundeneigenen Regelgruppe zugeordnet, und die zugehörigen Schlüsselwerte werden über die Texttabelle in Bezeichnungen überführt. Die Auswertung des Merkmals zeigt dabei, dass die Zuordnung einzelner Beschäftigter zu dieser Regelgruppe über ein kundeneigenes Feld in den Stammdaten erfolgt. Der dritte Abschnitt gewährleistet, dass jede genannte Abwesenheitsart mit der korrekten Tabellenzeile belegt ist und dass die Antwort diese Grenze benennt, anstatt eine Annahme über die Stammdaten zu treffen. Der vierte Teil dokumentiert, dass sowohl die Regelgruppe als auch das Entscheidungsfeld des Merkmals Ergänzungen des Auslieferungszustands darstellen.
+% ENTFERNT (21.10.): Absatz zum Betrachtungsschwerpunkt Customizing; die Begründung steht in Abschnitt 1.2 bei der Forschungsfrage (Feedback "soll in der Forschungsfrage klar sein", "Abgrenzung muss nicht dringend in den Text")
 
 \section{Ziele und Anforderungen}
 \label{sec:ziele-anforderungen}
 
-% VERSCHOBEN aus 3.1 und GEÄNDERT: Teilziele an die vier Teilfragen angeglichen (Ziele als Teil des Ansatzes, Betreueranmerkung S1)
-Ziel des Ansatzes ist es, die Customizing-Ebene zu erschließen, semantisch zu interpretieren, jede Aussage an den Systemdaten zu belegen sowie Abweichungen vom SAP-Standard auszuweisen und das Ergebnis in eine natürlichsprachliche Dokumentation zu überführen. Diese Teilziele entsprechen unmittelbar den in Abschnitt~\ref{sec:problem-ff} formulierten Teilfragen und strukturieren den gesamten Entwurf: Die Erschließung gewährleistet, dass die für eine Anfrage relevanten Konfigurationen überhaupt gefunden werden; die semantische Interpretation stellt sicher, dass deren fachliche Bedeutung erschlossen und nicht allein der technische Wert wiedergegeben wird; die Belegung gewährleistet, dass jede Aussage nachprüfbar bleibt; der Ausweis der Abweichung macht das Ergebnis schließlich für die fachliche Einordnung im Rahmen von Transformationsprojekten nutzbar. Die Absicherung dieser Aussagen gegen nicht gedeckte Interpretationen bildet dabei die entscheidende Abgrenzung des Ansatzes von einer generischen Retrieval-Augmented Generation.
+% GEÄNDERT (21.10.): Zielabsatz gekürzt, da 3.1 die Teilziele bereits nennt; Abgrenzung zu RAG nur noch in 3.4.3
+Ziel des Ansatzes ist es, Fragen von Beratenden zum Customizing eines ihnen unbekannten Systems mit belegten Aussagen zu beantworten. Die vier Verarbeitungsschritte bilden dafür die Teilziele, aus denen sich die folgenden Anforderungen ableiten.
 
 \subsection{Funktionale Anforderungen}
 \label{subsec:anf-funktional}
 
-% GEÄNDERT/NEU (R12): Skizze zu nummerierten Anforderungen mit Bezug zur Teilfrage ausformuliert
+% GEÄNDERT (21.10.): FA3 um Quelltext als Kontext präzisiert (E1); FA8 so gefasst, dass keine eigene Funktion zur Zusammenführung vorausgesetzt wird (E2)
 Die funktionalen Anforderungen beschreiben, welche Leistungen das Framework erbringen muss, um die Teilfragen zu beantworten. Sie umfassen folgende Punkte:
 \begin{enumerate}
 	\item[\textbf{FA1}] \textbf{Natürlichsprachliche Anfrage:} Das Framework nimmt Anfragen in natürlicher Sprache entgegen und ermöglicht Folgefragen im Dialog. (alle TF)
-	\item[\textbf{FA2}] \textbf{Erschließung ohne vollständiges Schema:} Das Framework bestimmt die für eine Anfrage relevanten Customizing-Tabellen sowie Felder, ohne das vollständige Schema als Eingabe zu benötigen. (TF1)
-	\item[\textbf{FA3}] \textbf{Lesender Zugriff:} Das Framework liest Struktur, Metadaten sowie Werte der ermittelten Tabellen und bei Bedarf den Quelltext zugehöriger Eigenentwicklungen. (TF1, TF2)
+	\item[\textbf{FA2}] \textbf{Erschließung ohne vollständiges Schema:} Das Framework bestimmt die für eine Anfrage relevanten Customizing-Tabellen und Felder, ohne das vollständige Schema als Eingabe zu benötigen. (TF1)
+	\item[\textbf{FA3}] \textbf{Lesender Zugriff:} Das Framework liest Struktur, Metadaten und Werte der ermittelten Tabellen. Lässt sich eine Einstellung ohne die verarbeitende Programmlogik nicht erklären, liest es zusätzlich den Quelltext der zugehörigen Eigenentwicklungen. (TF1, TF2)
 	\item[\textbf{FA4}] \textbf{Klartextauflösung:} Das Framework überführt Schlüsselwerte über die im DDIC gepflegten Beziehungen in ihre Bezeichnungen und löst Merkmale auf. (TF2)
-	\item[\textbf{FA5}] \textbf{Belegpflicht:} Jede Aussage trägt den Verweis auf die Tabellenzeile sowie die Abfrage, aus der sie stammt, und interpretierende Aussagen sind als solche gekennzeichnet. (TF3)
+	\item[\textbf{FA5}] \textbf{Belegpflicht:} Jede Aussage trägt den Verweis auf die Tabellenzeile und die Abfrage, aus der sie stammt. Interpretierende Aussagen sind als solche gekennzeichnet. (TF3)
 	\item[\textbf{FA6}] \textbf{Enthaltung:} Reicht die Evidenz für eine Aussage nicht aus, so wird die Aussage nicht erzeugt und die offene Frage an den Nutzer zurückgegeben. (TF3)
 	\item[\textbf{FA7}] \textbf{Ausweis der Abweichung:} Das Framework kennzeichnet, welche Einträge vom Auslieferungszustand abweichen, und deutet diese Abweichungen fachlich. (TF4)
-	\item[\textbf{FA8}] \textbf{Ergebnisdokument:} Die belegten Aussagen mehrerer Anfragen lassen sich zu einer strukturierten Ist-Dokumentation zusammenführen. (alle TF)
+	\item[\textbf{FA8}] \textbf{Antwort als Dokumentationsbaustein:} Die Antwort ist eine natürlichsprachliche Beschreibung, deren Aussagen einzeln belegt sind, sodass sie sich als Baustein einer Ist-Dokumentation weiterverwenden lässt. (alle TF)
 \end{enumerate}
 
 \subsection{Nicht-funktionale Anforderungen und Randbedingungen}
 \label{subsec:anf-nichtfunktional}
 
-% GEÄNDERT: Gedankenstrich-Einschub aufgelöst; Anforderungen nummeriert und begründet (R12)
+% GEÄNDERT (21.10.): NFA5 ergänzt (Entscheidung 06.10.: kein projektspezifisches Domänenwissen)
 Die nicht-funktionalen Anforderungen legen die Qualitätsmerkmale des Entwurfs fest:
 \begin{enumerate}
-	\item[\textbf{NFA1}] \textbf{Nachvollziehbarkeit:} Der Weg von der Anfrage zur Aussage ist über die aufgerufenen Werkzeuge sowie die abgesetzten Abfragen rekonstruierbar, da ein fachkundiger Nutzer eine Aussage andernfalls nicht prüfen kann.
-	\item[\textbf{NFA2}] \textbf{Austauschbarkeit des Sprachmodells:} Das verwendete Modell lässt sich ohne Änderung der übrigen Architektur ersetzen, da die Entwicklung der Modelle schneller verläuft als die Bearbeitungszeit der Arbeit.
+	\item[\textbf{NFA1}] \textbf{Nachvollziehbarkeit:} Der Weg von der Anfrage zur Aussage ist über die aufgerufenen Werkzeuge und die abgesetzten Abfragen rekonstruierbar, da ein fachkundiger Nutzer eine Aussage andernfalls nicht prüfen kann.
+	\item[\textbf{NFA2}] \textbf{Austauschbarkeit des Sprachmodells:} Das verwendete Modell lässt sich ohne Änderung der übrigen Architektur ersetzen, da sich die Modelle schneller weiterentwickeln, als die Bearbeitungszeit der Arbeit dauert.
 	\item[\textbf{NFA3}] \textbf{Skalierbarkeit:} Die Erschließung bleibt auch bei einem Bestand von mehreren Tausend Customizing-Tabellen funktionsfähig, da das Data Dictionary eines SAP-Systems zehntausende Tabellen umfasst.
 	\item[\textbf{NFA4}] \textbf{Reproduzierbarkeit:} Entscheidungen, die sich deterministisch aus den Metadaten ableiten lassen, werden nicht dem Sprachmodell überlassen, sodass sie für jeden Lauf identisch ausfallen.
+	\item[\textbf{NFA5}] \textbf{Übertragbare Wissensquellen:} Das Framework nutzt nur Wissen, das in jedem SAP-System desselben Releasestands vorliegt. Dazu zählen die Metadaten des Data Dictionary und die im System ausgelieferte Dokumentation. Projektspezifische Hinweise sind ausgeschlossen, da sie in einem fremden System nicht vorliegen.
 \end{enumerate}
 
-Neben diesen Anforderungen unterliegt der Entwurf drei Randbedingungen, die nicht aus der Zielsetzung der Arbeit, sondern aus der Umgebung des Kooperationspartners sowie aus dem Untersuchungsgegenstand resultieren. Die erste Randbedingung betrifft die Betriebsplattform: Die Lösung ist innerhalb der von der mmmake GmbH bereitgestellten SAP Business Technology Platform (BTP) zu realisieren, deren Konnektivitätsstrukturen den technischen Rahmen des Zugriffs auf das Zielsystem festlegen und nicht Gegenstand einer eigenen Entwurfsentscheidung sind. Die zweite Randbedingung betrifft die Zugriffsart: Sämtliche Zugriffe auf das Quellsystem erfolgen ausschließlich lesend. Dies liegt darin begründet, dass der Untersuchungsgegenstand der Ist-Zustand eines gewachsenen Systems ist und ein schreibender Zugriff den zu beschreibenden Zustand verändern würde. Die dritte Randbedingung betrifft die Datenbasis: Als Untersuchungsgegenstand steht ein einzelnes SAP-System zur Verfügung, sodass sämtliche empirischen Aussagen zunächst an dessen Ausprägung gebunden sind. Entwurfsentscheidungen, die sich auf eine dieser Randbedingungen stützen, sind als bedingt zu verstehen, da sie bei veränderter Umgebung anders ausfallen könnten.
+% GEÄNDERT (21.10.): Randbedingungen als Aufzählung statt als langer Absatz
+Neben diesen Anforderungen unterliegt der Entwurf drei Randbedingungen. Sie ergeben sich aus der Umgebung des Kooperationspartners und aus dem Untersuchungsgegenstand:
+\begin{itemize}
+	\item \textbf{Betriebsplattform:} Die Lösung ist innerhalb der von der mmmake GmbH bereitgestellten SAP Business Technology Platform (BTP) zu realisieren. Deren Konnektivitätsdienste legen den technischen Rahmen des Zugriffs auf das Zielsystem fest.
+	\item \textbf{Lesender Zugriff:} Alle Zugriffe auf das Zielsystem erfolgen ausschließlich lesend, da ein schreibender Zugriff den zu beschreibenden Ist-Zustand verändern würde.
+	\item \textbf{Einzelsystem:} Als Untersuchungsgegenstand steht ein einzelnes SAP-System zur Verfügung, sodass alle empirischen Aussagen zunächst an dessen Ausprägung gebunden sind.
+\end{itemize}
+Entwurfsentscheidungen, die sich auf eine dieser Randbedingungen stützen, sind daher als bedingt zu verstehen.
 % Die technische Ausführung der BTP-Randbedingung (.dest-Proxy) wird in Kapitel 4 beschrieben.
 
 \section{Architekturüberblick}
 \label{sec:architektur-ueberblick}
 
-% GEÄNDERT: Einleitung angepasst und Architekturdiagramm ergänzt (draw.io, Grafiken/drawio/abb3_3_architektur.drawio; 13.10.: Kennungen K1 bis K7, Werkzeuge an den Prototyp angeglichen)
-Auf Grundlage der zuvor definierten Anforderungen gibt dieser Abschnitt einen Überblick über die Gesamtarchitektur des Analyseframeworks, die in Abbildung~\ref{fig:architektur} dargestellt ist. Das System gliedert sich in eine Nutzerschnittstelle, einen agentenbasierten Orchestrator, einen über das Model Context Protocol angebundenen Werkzeugserver, die lesende Anbindung des Zielsystems sowie die Bereitstellung des Sprachmodells und der Einbettungsverfahren über den SAP Generative AI Hub.
+% GEÄNDERT (21.10.): keine zweite Aufzählung der Komponenten, da diese in 3.1 eingeführt sind; Abschnitt beschreibt das Zusammenspiel und enthält die beiden Architekturentscheidungen aus 3.4.1 und 3.4.2
+Auf Grundlage der Anforderungen zeigt Abbildung~\ref{fig:architektur} die Architektur des Analyseframeworks. Sie ordnet die Komponenten K1 bis K7 aus Abschnitt~\ref{sec:loesung} den Plattformen zu, auf denen sie betrieben werden.
 
 \begin{figure}[htbp]
 	\centering
@@ -129,81 +138,78 @@ Auf Grundlage der zuvor definierten Anforderungen gibt dieser Abschnitt einen Ü
 	\label{fig:architektur}
 \end{figure}
 
-% NEU (R12): Beschreibung der Komponenten und ihrer Zuordnung zu den Ebenen
-Der Orchestrator nimmt die Anfrage entgegen, wählt die aufzurufenden Werkzeuge aus und formuliert aus deren Ergebnissen die Antwort. Der Werkzeugserver kapselt sämtliches Wissen darüber, wie die Metadaten sowie Werte eines SAP-Systems aufzufinden und zu lesen sind, und stellt dieses dem Orchestrator als klar abgegrenzte Werkzeuge bereit. Er enthält hierzu den aus dem Data Dictionary aufgebauten Schemakorpus samt Vektorindex, über den die semantische Suche erfolgt. Der Zugriff auf das Zielsystem erfolgt über die REST-Schnittstelle der ABAP Development Tools, wobei die Verbindung über die Konnektivitätsdienste der BTP hergestellt wird. Zwischen dem Orchestrator und der Ausgabe liegen die Prüfschicht sowie die Abweichungsanalyse, die in den Abschnitten~\ref{subsec:ta-absichern} und \ref{subsec:ta-abweichung} beschrieben werden.
+Eine Anfrage gelangt über die Nutzerschnittstelle (K1) zum Orchestrator (K2). Dieser wählt die passenden Werkzeuge aus und ruft sie über das MCP am Werkzeugserver (K3) auf. Der Werkzeugserver kapselt das Wissen darüber, wie die Metadaten und Werte eines SAP-Systems aufzufinden und zu lesen sind. Für die Suche nutzt er den Schemakorpus und die Suchindizes (K4). Auf das Zielsystem greift er über die REST-Schnittstelle der ABAP Development Tools (ADT) zu, wobei die Verbindung über die Konnektivitätsdienste der BTP hergestellt wird. Bevor eine Antwort ausgegeben wird, durchläuft sie die Prüfschicht (K5) und die Abweichungsanalyse (K6). Sprachmodell und Embedding-Modell (K7) werden über den SAP Generative AI Hub bezogen.
 
-% NEU (Textbaustein 14.09.2026): Rolle des Sprachmodells im Ablauf
-Diese Aufteilung legt fest, an welchen Stellen das Sprachmodell wirkt. Es wirkt ausschließlich bei der Auswahl der Werkzeuge sowie bei der Formulierung der Antwort. An keiner Stelle bestimmt es, welche Daten als vorhanden gelten, da sowohl die semantische Suche als auch der lesende Zugriff sowie die Prüfung deterministisch außerhalb des Modells erfolgen. Dies ist die architektonische Voraussetzung dafür, dass eine Aussage an die Systemdaten gebunden werden kann.
+% GEÄNDERT (21.10.): Deutung der Werte als Aufgabe des Sprachmodells ergänzt (vorher nur Werkzeugauswahl und Formulierung)
+Diese Aufteilung legt fest, an welchen Stellen das Sprachmodell wirkt. Es wählt die Werkzeuge aus, deutet die gelesenen Werte und formuliert die Antwort. Welche Daten als vorhanden gelten, bestimmt es dagegen an keiner Stelle, da die Suche, der lesende Zugriff und die Prüfung außerhalb des Modells erfolgen. Dies ist die architektonische Voraussetzung dafür, dass eine Aussage an die Systemdaten gebunden werden kann.
 
-\section{Teilaspekte des Ansatzes}
+\textbf{Suche als Werkzeug hinter der Schnittstelle}
+
+% VERSCHOBEN (21.10.) aus 3.4.1 ("Verortung der semantischen Suche"), da es sich um eine Architekturentscheidung handelt; vereinfacht
+Eine Entscheidung betrifft den Ort der semantischen Suche. Sie kann als Vorverarbeitung im Orchestrator erfolgen oder als eigenes Werkzeug im Werkzeugserver, das der Orchestrator wie jedes andere Werkzeug aufruft. Der Entwurf sieht die zweite Möglichkeit vor. Dies liegt darin begründet, dass das Wissen, wie die Metadaten eines SAP-Systems aufzufinden sind, an das Quellsystem gebunden ist und nicht an das Sprachmodell. Läge es im Orchestrator, müsste es bei einem Wechsel des Modells oder des Agentenframeworks neu hergestellt werden (NFA2). Diese Verortung hat eine bewusst in Kauf genommene Folge. Der Orchestrator kennt die Suchstrategie nicht und kann sie deshalb nicht an eine Anfrage anpassen. Er kann die Suche lediglich mit veränderten Suchbegriffen erneut aufrufen.
+
+\textbf{Anbindung des Sprachmodells}
+
+% VERSCHOBEN (21.10.) aus 3.4.2, da es sich um eine Architekturentscheidung handelt
+Für die Anbindung des Sprachmodells und des Embedding-Modells kommen zwei Wege in Betracht: der direkte Zugriff auf einen Modellanbieter oder der von SAP bereitgestellte Generative AI Hub. Die Wahl fällt auf den Generative AI Hub, da er sich in die vorgegebene Plattform einfügt und beide Modelle über denselben Zugang bereitstellt. Der Modellzugriff ist im Orchestrator an einer einzigen Stelle gekapselt, sodass sich das Modell austauschen lässt (NFA2).
+
+\section{Verarbeitungsschritte im Detail}
 \label{sec:teilaspekte}
 
-% GEÄNDERT: Einleitung umgestellt von "Entwurfsentscheidungen" auf "Teilaspekte", Entscheidungen werden innerhalb der Teilaspekte begründet (Betreueranmerkung S2)
-Die folgenden Abschnitte beschreiben die vier Teilaspekte des Ansatzes. Jeder Abschnitt benennt zunächst die Teilfrage, die er adressiert, sowie das Verfahren, das er aus dem Stand der Forschung übernimmt, und beschreibt anschließend die eingesetzte Technologie. Entwurfsentscheidungen werden dort begründet, wo sie für den jeweiligen Teilaspekt erforderlich sind, und gegen die betrachteten Alternativen abgewogen. Die technische Umsetzung derselben Teilaspekte beschreibt Kapitel~\ref{Implementierung} unter denselben Überschriften.
+% GEÄNDERT (21.10.): vorher "Teilaspekte des Ansatzes"; einheitlicher Aufbau je Abschnitt, damit der Leser den Rhythmus wiedererkennt
+Die folgenden Abschnitte beschreiben die vier Verarbeitungsschritte in der Reihenfolge, in der eine Anfrage sie durchläuft. Jeder Abschnitt ist gleich aufgebaut und umfasst:
+\begin{enumerate}
+	\item die Leistung des Schritts im durchgängigen Beispiel und die Teilfrage, die er beantwortet,
+	\item die aus dem Stand der Forschung übernommenen Verfahren und ihre Erweiterung,
+	\item die Entwurfsentscheidungen mit den verworfenen Alternativen,
+	\item die verbleibende Fehlerart, die in der Evaluation gemessen wird.
+\end{enumerate}
+Kapitel~\ref{Implementierung} beschreibt die Umsetzung derselben Schritte unter denselben Überschriften.
 
 \subsection{Relevante Konfiguration erschließen}
 \label{subsec:ta-erschliessen}
-% GEÄNDERT: vorher "Schema-Linking und Skalierung" sowie "Verortung des Retrievals in der Architektur" (Skizzen), hier zusammengeführt und ausformuliert (R12)
 
-% NEU (R12)
-Der erste Teilaspekt beantwortet die Teilfrage~TF1 und bestimmt, welche Customizing-Tabellen sowie Felder für eine Anfrage einschlägig sind. Da das vollständige Schema eines SAP-Systems aus Gründen des Kontextfensters nicht als Eingabe dienen kann, übernimmt der Ansatz das in Abschnitt~\ref{subsec:rw-schema} beschriebene Prinzip der iterativen, agentengesteuerten Exploration \cite{wang_autolink_2026}. Der Agent erhält das Schema nicht vorab, sondern erschließt es schrittweise über drei Arten von Werkzeugen: eine semantische Suche, welche die zu einer Anfrage bedeutungsähnlichsten Felder als Kandidaten liefert, eine Strukturabfrage, welche die Felder, Schlüssel sowie Prüftabellen einer Tabelle aus dem Data Dictionary liest, sowie eine Wertabfrage, welche die Inhalte einer Tabelle gefiltert ausliest. Die Beziehungen zwischen den Tabellen werden dabei, wie bei Berti et al., deterministisch aus den Prüftabellen-Zuordnungen des Data Dictionary abgeleitet \cite{berti_generic_2023} und nicht vom Sprachmodell erschlossen.
+% GEÄNDERT (21.10.): Einstieg über das Beispiel; Herleitung aus 3.1 hierher übernommen und um die Erweiterungen ergänzt
+Im Beispiel muss der erste Schritt die Customizing-Tabelle finden, die je Regelgruppe die beantragbaren Abwesenheitsarten festlegt. Allgemein bestimmt er, welche Tabellen und Felder für eine Anfrage einschlägig sind, und beantwortet damit die Teilfrage~TF1. Das vollständige Schema eines SAP-Systems kann dafür nicht als Eingabe dienen, da es das Kontextfenster des Sprachmodells übersteigt. Der Ansatz übernimmt deshalb die iterative, agentengesteuerte Exploration des Schemas \cite{wang_autolink_2026}. Der Orchestrator erhält das Schema nicht vorab, sondern erschließt es schrittweise über Werkzeuge. Die Beziehungen zwischen den Tabellen werden dabei, wie bei Berti et al., deterministisch aus den Prüftabellen des Data Dictionary abgeleitet \cite{berti_generic_2023}. Erweitert werden beide Verfahren um eine Vorfilterung des Suchraums und um zwei zusätzliche Einstiege, die sich auf im System gepflegte Zuordnungen stützen.
+
+% NEU (21.10.): Werkzeuge des Schritts als Aufzählung; IMG-Einstieg und Begriffszuordnung nach Prototypstand ergänzt (Plan I4)
+Für die Erschließung stellt der Werkzeugserver folgende Werkzeuge bereit:
+\begin{itemize}
+	\item \textbf{Semantische Suche:} Sie liefert zu einer Anfrage die bedeutungsähnlichsten Felder aus dem Schemakorpus.
+	\item \textbf{Einstieg über den Einführungsleitfaden:} Er führt von einer Aktivität des IMG über das zugehörige Pflegeobjekt zu den Tabellen, in denen die Einstellung gepflegt wird.
+	\item \textbf{Begriffszuordnung:} Sie führt einen Fachbegriff über die Feldbezeichner der Datenelemente auf die Customizing-Tabellen zurück, deren Felder diesen Begriff tragen.
+	\item \textbf{Struktur- und Beziehungsabfrage:} Sie liest Felder, Schlüssel, Prüftabellen und Pflegeviews einer Tabelle aus dem Data Dictionary und ermittelt Verbindungswege zwischen Tabellen.
+	\item \textbf{Wertabfrage:} Sie liest die Inhalte einer Tabelle gefiltert aus.
+\end{itemize}
+
+\textbf{Mehrere Einstiege statt einer Suche}
+
+% NEU (21.10.): Entwurfsentscheidung zu den Einstiegen (Prototypverlauf: Beratersprache trifft Feldtexte schlecht)
+Die drei Einstiege ergänzen sich, da Beratende und Data Dictionary unterschiedliche Begriffe verwenden. Beratende formulieren ihre Fragen häufig in der Sprache des Einführungsleitfadens, also etwa \glqq Abwesenheitsarten für den Self-Service festlegen\grqq. Der Schemakorpus kennt dagegen nur die Beschreibungen einzelner Felder. Die semantische Suche überbrückt diesen Unterschied nur unscharf, da sie lediglich die Ähnlichkeit zweier Texte bewertet. Der Einstieg über den Einführungsleitfaden und die Begriffszuordnung nutzen dagegen Zuordnungen, die im System selbst gepflegt sind. Sie erfüllen damit auch die Anforderung, nur Wissen zu verwenden, das in jedem System vorliegt (NFA5). Die Alternative, den Unterschied über projektspezifische Hinweise im Prompt zu überbrücken, wurde aus demselben Grund verworfen.
 
 \textbf{Aufbau des Schemakorpus}
 
-% NEU (R12)
-Grundlage der semantischen Suche ist ein Schemakorpus, der aus den Metadaten des Data Dictionary erzeugt wird. Jedes Feld einer Tabelle bildet darin ein eigenständiges Dokument, das den technischen Bezeichner mit den Beschreibungstexten auf Tabellen-, Feld- sowie Datenelementebene und, soweit vorhanden, mit der Feldhilfe des Datenelements verbindet. Diese Zusammenführung ist erforderlich, da die fachliche Bedeutung eines Feldes im Data Dictionary nicht an einer einzigen Stelle hinterlegt ist, sondern sich auf Tabelle, Feld sowie Datenelement verteilt.
-% VERSCHOBEN aus 2.1.2 (Nächste-Nachbarn-Suche), Entwurfsentscheidung zur Granularität
-Ergänzend ist zu berücksichtigen, dass die Größe der indexierten Einheit die Güte des Abrufs wesentlich beeinflusst, da die gewählte Granularität bestimmt, wie viel Kontext ein einzelner Treffer transportiert und wie trennscharf er von anderen Einträgen unterscheidbar bleibt \cite{chen_dense_2024}. Die Festlegung, ob ein Eintrag eine Tabelle oder ein einzelnes Feld beschreibt, ist damit keine Implementierungsdetailfrage, sondern eine Entwurfsentscheidung mit unmittelbarer Wirkung auf die Trefferqualität. % NEU: Entscheidung ausgewiesen
-Der Ansatz wählt die Feldebene, da eine Anfrage in der Regel auf eine einzelne fachliche Eigenschaft zielt und ein Tabellendokument die Beschreibung dieser Eigenschaft mit den Beschreibungen sämtlicher übrigen Felder vermischen würde.
+% GEÄNDERT (21.10.): gekürzt, Satzbau vereinfacht
+Grundlage der semantischen Suche ist ein Schemakorpus, der aus den Metadaten des Data Dictionary erzeugt wird. Jedes Feld einer Tabelle bildet darin ein eigenes Dokument. Es verbindet den technischen Bezeichner mit den Beschreibungstexten der Tabelle, des Feldes und des Datenelements und, soweit vorhanden, mit der Feldhilfe des Datenelements. Diese Zusammenführung ist erforderlich, da die fachliche Bedeutung eines Feldes im Data Dictionary auf mehrere Stellen verteilt ist. Die Größe der indexierten Einheit beeinflusst zudem die Güte der Suche. Sie bestimmt, wie viel Kontext ein Treffer transportiert und wie gut er sich von anderen Einträgen unterscheiden lässt \cite{chen_dense_2024}. Der Ansatz wählt die Feldebene, da eine Anfrage in der Regel auf eine einzelne fachliche Eigenschaft zielt. Ein Dokument je Tabelle würde die Beschreibung dieser Eigenschaft mit den Beschreibungen aller übrigen Felder vermischen.
 
 \textbf{Eingrenzung des Suchraums}
 
-% NEU (Textbaustein 11.09.2026)
-Die semantische Suche setzt voraus, dass der durchsuchte Bestand die fachlich einschlägigen Objekte enthält und möglichst wenige, die es nicht sind. Die Beobachtungen am Prototyp zeigen, dass diese Voraussetzung bei einem ungefiltert aufgebauten Korpus nicht erfüllt ist. Im durchgängigen Beispiel wurden die Tabellen der Bewegungsdaten des Personalwesens gegenüber der fachlich zutreffenden Customizing-Tabelle als relevanter eingestuft, obwohl die gesuchte Konfiguration ausschließlich in letzterer hinterlegt ist. Dies ist eine unmittelbare Folge des Auswahlverfahrens, da ein Ähnlichkeitsmaß die Nähe zweier Beschreibungstexte bewertet und über keinen Begriff davon verfügt, ob ein Objekt Konfiguration oder Bewegungsdaten trägt. Die benötigte Unterscheidung liegt folglich nicht im Beschreibungstext, sondern in den in Abschnitt~\ref{subsec:customizing} eingeführten Merkmalen Auslieferungsklasse und Tabellenkategorie, die Customizing-Tabellen von Bewegungsdaten sowie Strukturen trennen.
+% GEÄNDERT (21.10.): Satzbau vereinfacht; "Tabellenkategorie" -> "Tabellenart" (einheitlich mit Kap. 2)
+Die semantische Suche setzt voraus, dass der durchsuchte Bestand die einschlägigen Tabellen enthält und möglichst wenige fachfremde. Bei einem ungefiltert aufgebauten Korpus ist diese Voraussetzung nicht erfüllt. Am Prototyp zeigte sich im Beispiel, dass die Suche die Tabellen der Bewegungsdaten des Personalwesens als relevanter einstufte als die zutreffende Customizing-Tabelle, obwohl die gesuchte Einstellung nur in Letzterer hinterlegt ist. Dies folgt aus dem Verfahren selbst. Ein Ähnlichkeitsmaß bewertet die Nähe zweier Beschreibungstexte und kann nicht erkennen, ob eine Tabelle Konfiguration oder Bewegungsdaten enthält. Diese Unterscheidung liefern die in Abschnitt~\ref{subsec:customizing} eingeführten Merkmale Auslieferungsklasse und Tabellenart.
 
-% NEU (Textbaustein 11.09.2026): Entwurfsentscheidung Laufzeit- vs. Korpusfilter
-Für die Anwendung dieses Kriteriums kommen zwei Stellen in Betracht: die Filterung der Kandidaten zur Laufzeit innerhalb des Agenten oder die Filterung bei der Erstellung des Korpus, sodass fachfremde Objekte gar nicht erst in den Index gelangen. Die Entscheidung fällt zugunsten der zweiten Variante. Dies liegt darin begründet, dass eine nachgelagerte Filterung die fachfremden Objekte zwar aus der Antwort, nicht jedoch aus der Rangliste entfernt, sodass sie bis zu ihrer Verwerfung Plätze der begrenzten Kandidatenmenge belegen und einschlägige Objekte verdrängen können. Zudem bleibt die Ausschlussentscheidung auf diesem Weg reproduzierbar, da sie nicht von der Formulierung einer Anfrage abhängt (NFA4). Die Eingrenzung verschiebt jedoch die zu erwartende Fehlerart: An die Stelle fachfremder Treffer tritt das Risiko, dass ein einschlägiges Objekt aufgrund abweichend gepflegter Metadaten ausgeschlossen wird, was die Evaluation durch die Erfassung nicht gefundener Tabellen berücksichtigen muss.
+Für die Anwendung dieses Kriteriums kommen zwei Stellen in Betracht. Die Kandidaten können zur Laufzeit im Orchestrator gefiltert werden, oder die fachfremden Tabellen werden bereits beim Aufbau des Korpus ausgeschlossen. Der Entwurf sieht die zweite Variante vor. Eine nachgelagerte Filterung entfernt fachfremde Tabellen zwar aus der Antwort, aber nicht aus der Rangliste der Suche. Dort belegen sie Plätze der begrenzten Kandidatenmenge und können einschlägige Tabellen verdrängen. Zudem bleibt der Ausschluss reproduzierbar, da er nicht von der Formulierung einer Anfrage abhängt (NFA4). Die Eingrenzung verschiebt jedoch die zu erwartende Fehlerart. An die Stelle fachfremder Treffer tritt das Risiko, dass eine einschlägige Tabelle wegen abweichend gepflegter Metadaten ausgeschlossen wird.
 
 \textbf{Einbettung und Ähnlichkeitsmaß}
 
-% NEU (R12)
-Die Dokumente des Korpus sowie die Anfrage werden über ein Embedding-Modell in einen gemeinsamen Vektorraum überführt. Das Modell wird über den SAP Generative AI Hub bezogen, sodass derselbe Zugang wie für das Sprachmodell genutzt wird. Für die Wahl der Korpussprache sowie der Vektorlänge gelten die in Abschnitt~\ref{subsec:embeddings} dargelegten Eigenschaften:
-% VERSCHOBEN aus 2.1.2 (Text-Embeddings bzw. Embedding-Modelle): zwei Entscheidungssätze
-Die Sprachwahl des indexierten Korpus ist somit keine Nebensächlichkeit, sondern eine begründungspflichtige Entwurfsentscheidung. Die gewählte Dimensionalität stellt eine bewusste Abwägung zwischen Speicherbedarf sowie Trennschärfe dar, deren Auswirkung im Rahmen dieser Arbeit nicht aus der Literatur übernommen, sondern am konkreten Korpus zu beobachten ist.
-% Anmerkung: "somit" bzw. Satzbezug nach Verschiebung prüfen; Umsetzung (Sprache mit Fallback, Dimension) in Kap. 4
+% GEÄNDERT (21.10.): Bruchstellen aus der Verschiebung aus Kap. 2 behoben ("somit", "Diese Feststellung" ohne Bezug); Gegenüberstellung der Maße in den Anhang verschoben (Entscheidung E3)
+Die Dokumente des Korpus und die Anfrage werden über ein Embedding-Modell in einen gemeinsamen Vektorraum überführt. Dafür sind zwei Festlegungen zu treffen. Die erste betrifft die Sprache des Korpus. Die Beschreibungstexte des Data Dictionary sind nicht für jedes Objekt in jeder Sprache gepflegt. Der Entwurf legt deshalb eine Hauptsprache fest und ergänzt fehlende Texte aus einer zweiten Sprache, sodass jedes Feld eine Beschreibung erhält. Da Modelle Treffer in der Sprache der Anfrage bevorzugen (Abschnitt~\ref{subsec:embeddings}), beeinflusst die Wahl der Hauptsprache die Trefferqualität. Die zweite Festlegung betrifft die Länge der Vektoren. Sie wägt Speicherbedarf und Trennschärfe gegeneinander ab. Da die Literatur diese Wirkung nur allgemein beschreibt, wird sie am konkreten Korpus beobachtet.
 
-% VERSCHOBEN aus 2.1.2 (Maße zur Bestimmung der Vektorähnlichkeit), Entwurfsentscheidung zum Ähnlichkeitsmaß
-Diese Feststellung ist für die Begründung der Verfahrenswahl wesentlich, da die Entscheidung zwischen diesen drei Maßen im normalisierten Fall keine inhaltliche, sondern eine rechentechnische ist; die Wahl fällt auf das Skalarprodukt, weil es sich ohne Wurzel- oder Divisionsoperation auswerten lässt und damit die Kosinusähnlichkeit exakt und effizient realisiert.
-
-Die übrigen betrachteten Maße wurden aus inhaltlichen Gründen verworfen. Ein Skalarprodukt ohne vorherige Normalisierung ist nicht rangäquivalent zur Kosinusähnlichkeit, da der Zusammenhang zur Distanz nur bei konstanter Vektorlänge besteht und die Längen realer Repräsentationen erheblich schwanken \cite{shrivastava_asymmetric_2014}; es bevorzugt folglich Dokumente mit großer Vektornorm unabhängig von deren inhaltlicher Passung. Die Manhattan-Distanz bleibt auch nach Normalisierung rangverschieden, da sie sich nicht als Funktion des Skalarprodukts allein darstellen lässt, und ist für hochdimensionale dichte Repräsentationen nicht etabliert. Der Jaccard-Koeffizient misst die Überschneidung zweier Mengen \cite{manning_introduction_2008} und setzt damit diskrete Merkmale voraus; angewandt auf Bezeichner würde er auf die Übereinstimmung von Zeichenketten zurückfallen und ebenjenes Vokabularproblem reproduzieren, dessen Umgehung den Einsatz von Embeddings überhaupt begründet. Gleiches gilt für Maße der Zeichenkettenähnlichkeit wie die Editierdistanz \cite{manning_introduction_2008}, die die Anzahl der zur Überführung zweier Zeichenketten erforderlichen Operationen zählt: Sie eignen sich zur Erkennung von Schreibvarianten innerhalb eines bekannten Bezeichnervorrats, nicht jedoch zur Überbrückung der semantischen Lücke zwischen einer fachlichen Anfrage und einem technischen Kürzel. Die nachfolgende Tabelle stellt die betrachteten Maße gegenüber.
- 
-\begin{table}[htbp]
-\centering
-\caption{Gegenüberstellung der betrachteten Ähnlichkeits- und Distanzmaße}
-\label{tab:aehnlichkeitsmasse}
-\small % GEÄNDERT: Schriftgröße, da die Tabelle sonst über den Satzspiegel ragt
-\begin{tabular}{p{3.0cm}p{3.4cm}p{6.4cm}}
-\hline
-\textbf{Maß} & \textbf{Gegenstand} & \textbf{Einordnung für diese Arbeit} \\
-\hline
-Kosinusähnlichkeit & Winkel zwischen dichten Vektoren & Verwendet; längeninvariant und im Information Retrieval etabliert \\
-Skalarprodukt (normalisiert) & Winkel, implizit & Verwendet; auf Einheitsvektoren rangäquivalent zur Kosinusähnlichkeit sowie effizienter auswertbar \\
-Skalarprodukt (unnormalisiert) & Winkel und Länge & Verworfen; bevorzugt Vektoren großer Norm unabhängig von der inhaltlichen Passung \\
-Euklidische Distanz & Abstand im Raum & Nicht verwendet; auf Einheitsvektoren rangäquivalent, jedoch rechenaufwendiger \\
-Manhattan-Distanz & Abstand entlang der Achsen & Verworfen; auch normalisiert nicht rangäquivalent, für dichte Repräsentationen unüblich \\
-Jaccard-Koeffizient & Mengenüberschneidung & Verworfen; setzt diskrete Merkmale voraus und fällt auf lexikalische Übereinstimmung zurück \\
-Editierdistanz & Zeichenketten\-abstand & Verworfen; erkennt Schreibvarianten, überbrückt jedoch keine Bedeutungsunterschiede \\
-\hline
-\end{tabular}
-\end{table}
+Als Ähnlichkeitsmaß dient das Skalarprodukt normalisierter Vektoren. Auf Vektoren der Länge eins liefert es dieselbe Rangfolge wie die Kosinusähnlichkeit, lässt sich aber ohne Wurzel- und Divisionsoperation auswerten. Die übrigen betrachteten Maße wurden verworfen. Sie liefern entweder eine abweichende Rangfolge oder fallen auf die Übereinstimmung von Zeichenketten zurück und überbrücken damit nicht den Unterschied zwischen einer fachlichen Anfrage und einem technischen Bezeichner. Anhang~\ref{Anhang_Aehnlichkeit} stellt die Maße mit ihrer Begründung gegenüber.
 
 \textbf{Exakte Suche und Skalierung}
 
-% VERSCHOBEN aus 2.1.2 (Nächste-Nachbarn-Suche), Entwurfsentscheidung zur exakten Suche
-Für den vorliegenden Anwendungsfall ist die exakte Suche angemessen, da der Umfang des Schema-Korpus eines abgegrenzten Untersuchungsgegenstands vollständige Vergleiche zulässt und ein durch Approximation verursachter Trefferverlust die Aussagekraft der nachgelagerten Verifikation unterlaufen würde. Diese Entscheidung ist somit eine Folge des Grounding-Verständnisses und keine reine Leistungsabwägung.
-
-% NEU (Textbaustein 10.09.2026, präzisiert 11.09.2026): Skalierungsvarianten als Entscheidung im Teilaspekt
-Diese Abwägung ist an die Größe des Korpus gebunden. Angestrebt ist eine Größenordnung von mehreren Tausend Customizing-Tabellen (NFA3), für die vier Varianten zur Auswahl stehen, die in Tabelle~\ref{tab:skalierung} gegenübergestellt sind.
+% GEÄNDERT (21.10.): Satzbau vereinfacht
+Die Suche vergleicht die Anfrage mit jedem Dokument des Korpus, anstatt die nächsten Nachbarn nur näherungsweise zu bestimmen. Für einen abgegrenzten Systemausschnitt ist dieser vollständige Vergleich mit vertretbarem Aufwand möglich. Ein durch Näherung verursachter Trefferverlust würde dagegen die nachgelagerte Prüfung unterlaufen, da eine nicht gefundene Tabelle auch nicht geprüft werden kann. Diese Abwägung ist an die Größe des Korpus gebunden. Angestrebt ist eine Größenordnung von mehreren Tausend Customizing-Tabellen (NFA3). Dafür kommen vier Varianten in Betracht, die Tabelle~\ref{tab:skalierung} gegenüberstellt.
 
 \begin{table}[htbp]
 \centering
@@ -214,98 +220,120 @@ Diese Abwägung ist an die Größe des Korpus gebunden. Angestrebt ist eine Grö
 \toprule
 \textbf{Variante} & \textbf{Prinzip} & \textbf{Stärke} & \textbf{Schwäche} \\
 \midrule
-V1 Vollständiger Vektorindex & sämtliche Beschreibungen einmalig einbetten & einheitliches Verfahren & Trefferqualität durch Beschreibungsqualität begrenzt \\
-V2 Deterministische Vorfilterung & Eingrenzung über Auslieferungsklasse und Tabellenkategorie vor der Einbettung & schneidet fachfremde Kandidaten strukturell ab & Filterkriterien sind selbst begründungspflichtig \\
+V1 Vollständiger Vektorindex & alle Beschreibungen einmalig einbetten & einheitliches Verfahren & Trefferqualität durch Beschreibungsqualität begrenzt \\
+V2 Deterministische Vorfilterung & Eingrenzung über Auslieferungsklasse und Tabellenart vor der Einbettung & schließt fachfremde Kandidaten strukturell aus & Filterkriterien sind selbst begründungspflichtig \\
 V3 Iterative Exploration & Anker suchen, Metadaten gezielt nachladen, Kandidatenmenge schrittweise erweitern \cite{wang_autolink_2026} & kein vollständiger Vorabindex nötig & mehr Werkzeugaufrufe, höhere Antwortzeit \\
 V4 Pfadfindung auf dem DDIC-Graphen & Fremdschlüssel und Prüftabellen als Graph \cite{safdarian_schemagraphsql_2026} & Beziehungen per Konstruktion nicht halluzinierbar & bei kundeneigenen Tabellen ohne gepflegte Fremdschlüssel wirkungslos \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-% NEU
-Der Ansatz kombiniert die Varianten V2 und V3. Die Vorfilterung schneidet Objekte ab, die sich deterministisch als fachfremd erkennen lassen, während die iterative Exploration den verbleibenden Bestand gezielt erschließt, ohne ihn vollständig in den Kontext zu laden. Die Variante V4 wird nicht als eigenständiges Suchverfahren eingesetzt, da kundeneigene Tabellen nach einer Erhebung am Zielsystem überwiegend keine Fremdschlüsselbeziehungen aufweisen, geht jedoch in die Strukturabfrage ein, welche die Prüftabellen einer gefundenen Tabelle liefert. Ob die exakte Suche bei dieser Größenordnung beizubehalten ist, wird gemeinsam mit der Umsetzung der Skalierung in Kapitel~\ref{Implementierung} geprüft.
+% GEÄNDERT (21.10.): V4 auf die Struktur- und Beziehungsabfrage bezogen
+Der Ansatz kombiniert die Varianten V2 und V3. Die Vorfilterung schließt Tabellen aus, die sich deterministisch als fachfremd erkennen lassen. Die iterative Exploration erschließt den verbleibenden Bestand gezielt, ohne ihn vollständig in den Kontext zu laden. Die Variante V4 wird nicht als eigenes Suchverfahren eingesetzt, da kundeneigene Tabellen nach einer Erhebung am Zielsystem überwiegend keine Fremdschlüsselbeziehungen aufweisen. Sie geht jedoch in die Struktur- und Beziehungsabfrage ein, die zu einer gefundenen Tabelle die Prüftabellen und Verbindungswege liefert. Ob die exakte Suche bei dieser Größenordnung beibehalten werden kann, wird in Kapitel~\ref{Implementierung} geprüft.
 
-\textbf{Verortung der semantischen Suche}
-
-% NEU (Textbaustein 14.09.2026): Entwurfsentscheidung Retrieval hinter der MCP-Schnittstelle
-Eine weitere Entscheidung betrifft den Ort, an dem die semantische Suche ausgeführt wird. Sie kann als Vorverarbeitung innerhalb des Agenten erfolgen, der die Kandidatenmenge dann selbst ermittelt, oder als eigenständiges Werkzeug hinter der standardisierten Schnittstelle, das der Agent wie jedes andere Werkzeug aufruft, ohne dessen Funktionsweise zu kennen. Die Entscheidung fällt zugunsten der zweiten Möglichkeit. Dies liegt darin begründet, dass das Wissen darüber, wie die Metadaten eines SAP-Systems aufzufinden sind, an das Quellsystem und nicht an das Sprachmodell gebunden ist. Wird es im Agenten verankert, so trägt dieser systemspezifisches Wissen, das bei einem Wechsel des Modells oder des Agentenframeworks erneut herzustellen wäre (NFA2). Die gewählte Verortung ist mit einer bewusst in Kauf genommenen Konsequenz verbunden: Da der Agent die Suchstrategie nicht kennt, kann er sie nicht anfragebezogen anpassen, sondern lediglich mit veränderten Suchbegriffen erneut aufrufen.
+% NEU (21.10.): verbleibende Fehlerart mit Bezug zur Evaluation
+Als Fehlerart bleibt in diesem Schritt, dass eine fachfremde Tabelle als relevant eingestuft oder eine einschlägige Tabelle nicht gefunden wird. Die Evaluation erfasst beide Fälle getrennt als Fehlerklassen F1 und F2 (Tabelle~\ref{tab:fehlerklassen}).
 
 \subsection{Semantisch interpretieren}
 \label{subsec:ta-interpretieren}
-% GEÄNDERT: vorher "Anbindung der Sprachmodelle" und "Umgang mit kundeneigenem ABAP-Code" (Skizzen), hier als Entscheidungen im Teilaspekt ausformuliert (R12)
 
-% NEU (R12)
-Der zweite Teilaspekt beantwortet die Teilfrage~TF2 und überführt die erschlossenen Werte in eine fachliche Aussage. Diese Aufgabe übernimmt ein Sprachmodell, dem neben den gelesenen Tabelleninhalten die zugehörigen Metadaten des Data Dictionary als Interpretationskontext bereitgestellt werden. Der Ansatz übernimmt damit den in Abschnitt~\ref{subsec:rw-schema} beschriebenen Befund, dass die Anreicherung kryptischer Bezeichner um Beschreibungen die Genauigkeit nachgelagerter Aufgaben erhöht \cite{cai_columbo_2025, wretblad_synthetic_2024}. Die Erweiterung gegenüber diesen Arbeiten besteht darin, dass zwei Teilschritte der Interpretation nicht dem Sprachmodell überlassen, sondern deterministisch ausgeführt werden, da sie sich aus den Metadaten ableiten lassen.
+% GEÄNDERT (21.10.): Einstieg über das Beispiel; Herleitung aus 3.1 (Diggs et al.) ergänzt
+Im Beispiel muss der zweite Schritt klären, welche Regelgruppe mit \glqq Auszubildende\grqq{} gemeint ist und welche Abwesenheitsarten sich hinter den gelesenen Schlüsselwerten verbergen. Allgemein überführt er die gelesenen Werte in eine fachliche Aussage und beantwortet damit die Teilfrage~TF2. Diese Aufgabe übernimmt das Sprachmodell, dem neben den Tabelleninhalten die Metadaten des Data Dictionary als Kontext bereitgestellt werden. Der Ansatz übernimmt damit den Befund, dass die Anreicherung kryptischer Bezeichner um Beschreibungen die Genauigkeit nachgelagerter Aufgaben erhöht \cite{cai_columbo_2025, wretblad_synthetic_2024}. Aus der sprachmodellgestützten Dokumentation von Altsystemen übernimmt er das Ziel, schwer verständliche Artefakte in natürlicher Sprache zu beschreiben \cite{diggs_leveraging_2024}. Die Erweiterung besteht darin, dass zwei Teilschritte der Interpretation deterministisch im Werkzeugserver erfolgen, da sie sich aus den Metadaten ableiten lassen.
 
 \textbf{Auflösung von Schlüsselwerten}
 
-% NEU (Textbaustein 11.09.2026, gekürzt): Entscheidung deterministische Auflösung statt LLM
-Der erste dieser Teilschritte ist die Auflösung von Schlüsselwerten in ihre Bezeichnungen. Sie kann dem Sprachmodell überlassen werden, das den Zusammenhang zwischen Schlüssel und Text aus dem Kontext erschließt, oder als deterministischer Verarbeitungsschritt erfolgen, der die im Data Dictionary hinterlegte Beziehung von der Prüftabelle zur Texttabelle auswertet. Der Entwurf sieht den zweiten Weg vor. Ausschlaggebend ist die Fehlerwirkung: Eine falsch aufgelöste Beziehung erzeugt keinen erkennbaren Fehler, sondern einen sprachlich unauffälligen sowie fachlich plausiblen Klartext, der lediglich nicht zu dem gelesenen Wert gehört. Ein solcher Fehler ist ohne Rückgriff auf das Quellsystem nicht erkennbar und entsteht bereits bei der Aufbereitung der Eingangsdaten, also vor jeder Prüfung, die auf diesen Daten aufsetzt. Die Auflösung setzt allerdings voraus, dass die Beziehung im Data Dictionary gepflegt ist, was für kundeneigene Tabellen überwiegend nicht zutrifft.
+% GEÄNDERT (21.10.): Feldzuordnung über die Fremdschlüsseldefinition statt über gleichlautende Namen ergänzt (Prototypverlauf); Satzbau vereinfacht
+Der erste Teilschritt ist die Auflösung von Schlüsselwerten in ihre Bezeichnungen. Das Sprachmodell könnte den Zusammenhang zwischen Schlüssel und Text aus dem Kontext erschließen. Der Entwurf sieht stattdessen einen deterministischen Weg vor, der die im Data Dictionary hinterlegte Beziehung vom Feld über die Prüftabelle zur Texttabelle auswertet. Die Felder der Texttabelle werden dabei über die gepflegte Fremdschlüsseldefinition zugeordnet, da Feldnamen zwischen Tabellen abweichen können. Ausschlaggebend für diese Entscheidung ist die Fehlerwirkung. Eine falsch aufgelöste Beziehung erzeugt keinen erkennbaren Fehler. Sie liefert einen plausiblen Klartext, der lediglich nicht zum gelesenen Wert gehört. Ein solcher Fehler ist ohne Rückgriff auf das System nicht erkennbar und entsteht bereits vor jeder Prüfung. Die Auflösung setzt allerdings voraus, dass die Beziehung im Data Dictionary gepflegt ist. Für kundeneigene Tabellen trifft dies überwiegend nicht zu.
 
 \textbf{Auflösung von Merkmalen}
 
-% NEU (R12, Grundlage: Prototyp): Merkmale und Zuordnung fachlicher Begriffe
-Der zweite Teilschritt betrifft die in Abschnitt~\ref{subsec:customizing} eingeführten Merkmale. Der Entscheidungsbaum eines Merkmals wird deterministisch aus den zugehörigen Customizing-Tabellen gelesen, sodass die möglichen Ergebniswerte sowie die Felder, nach denen verzweigt wird, feststehen. Offen bleibt dabei die Zuordnung eines fachlichen Begriffs der Anfrage zu einem dieser Werte, im durchgängigen Beispiel also der Begriff \glqq Auszubildende\grqq{} zu einer Regelgruppe. Diese Zuordnung erfolgt gestuft: Liegt zu den Werten ein gepflegter Bezeichnungstext vor, so wird über diesen zugeordnet und die Zuordnung gilt als belegt. Fehlt ein solcher Text, so ist lediglich eine Zuordnung über die Ähnlichkeit der Zeichenketten möglich, die als Interpretation gekennzeichnet wird. Ist auch diese nicht eindeutig, so enthält sich das Framework und gibt die möglichen Werte zur Auswahl an den Nutzer zurück.
+% GEÄNDERT (21.10.): Stufen als Aufzählung
+Der zweite Teilschritt betrifft die in Abschnitt~\ref{subsec:customizing} eingeführten Merkmale. Der Entscheidungsbaum eines Merkmals wird vollständig aus den zugehörigen Customizing-Tabellen gelesen. Damit steht fest, nach welchen Feldern verzweigt wird und welcher Wert bei welcher Bedingung zurückgegeben wird. Offen bleibt die Zuordnung eines Fachbegriffs der Anfrage zu einem dieser Werte, im Beispiel also des Begriffs \glqq Auszubildende\grqq{} zu einer Regelgruppe. Diese Zuordnung erfolgt in drei Stufen:
+\begin{enumerate}
+	\item \textbf{Über einen gepflegten Text:} Liegt zu den Werten ein Bezeichnungstext in der zugehörigen Texttabelle vor, wird über diesen zugeordnet. Die Zuordnung gilt als belegt.
+	\item \textbf{Über die Ähnlichkeit der Zeichenketten:} Fehlt ein solcher Text, wird über die Ähnlichkeit von Begriff und Wert zugeordnet. Diese Zuordnung wird als Interpretation gekennzeichnet.
+	\item \textbf{Enthaltung:} Ist auch diese Zuordnung nicht eindeutig, legt das Framework dem Nutzer die möglichen Werte zur Auswahl vor.
+\end{enumerate}
+
+\textbf{Grenze des Untersuchungsgegenstands}
+
+% NEU (21.10.): Entwurfsentscheidung aus dem Befund vom 07.10. (Entscheidungsfeld des Merkmals liegt in den Stammdaten)
+Die Auswertung eines Merkmals kann auf Daten führen, die außerhalb des Customizing liegen. Im Beispiel wertet das Merkmal ein kundeneigenes Feld der Stammdaten aus. Wer der Regelgruppe der Auszubildenden angehört, entscheidet sich damit in den Stammdaten. Für diesen Fall gibt es zwei Möglichkeiten. Das Framework könnte die Stammdaten mitlesen und die Antwort auf einzelne Beschäftigte ausdehnen. Alternativ benennt es die Grenze und beschränkt die Antwort auf das Customizing. Der Entwurf sieht die zweite Möglichkeit vor, da Stammdaten personenbezogen und nicht Gegenstand der Arbeit sind. Zudem zeigt eine Antwort, die ihre Grenze benennt, dem Beratenden genau die Stelle, an der eine eigene Prüfung erforderlich ist.
 
 \textbf{Kundeneigener Quelltext als Kontext}
 
-% NEU (Textbaustein 11.09.2026, gekürzt) und GEÄNDERT aus Skizze 3.3.6: Entscheidung Lesen statt Generieren
-Kundeneigener ABAP-Code wird herangezogen, wenn eine Customizing-Einstellung ohne die sie verarbeitende Programmlogik nicht erklärbar ist. Eine Erhebung am Zielsystem hat ergeben, dass kundeneigene Tabellen überwiegend keine Fremdschlüsselbeziehungen aufweisen und ihre Feldsemantik zudem überwiegend generisch von den zugrunde liegenden Datenelementen erben. Für solche Objekte verlagern sich die tragfähigen Bezugspunkte daher auf die Verwendung im Quelltext sowie auf die tatsächlich enthaltenen Werte. Der Quelltext wird dabei ausschließlich gelesen. Die Alternative, Programmcode zu erzeugen und auszuführen, um Informationen zu gewinnen, wurde geprüft und verworfen, da erzeugter Code keine Aussage über das System belegt, sondern lediglich eine weitere, selbst zu prüfende Hypothese darstellt.
+% GEÄNDERT (21.10.): Rolle des Quelltexts nach Entscheidung E1 präzisiert (Code bleibt Kontext, um komplexere Customizing-Fragen zu erklären); Grundsätze zum Lesen ergänzt
+Manche Einstellungen lassen sich aus den Tabellen allein nicht erklären. Dies ist etwa der Fall, wenn eine Erweiterung die Standardlogik ergänzt oder ein Programm einen Customizing-Wert auf eigene Weise auswertet. Der Ansatz zieht kundeneigenen ABAP-Code deshalb als zusätzlichen Kontext heran, sobald eine Einstellung ohne die verarbeitende Programmlogik nicht erklärbar ist. Der Code bleibt damit eine ergänzende Quelle für das Verständnis des Customizing und wird nicht für sich analysiert.
+
+Für kundeneigene Objekte ist diese Quelle besonders wichtig. Eine Erhebung am Zielsystem hat ergeben, dass kundeneigene Tabellen überwiegend keine Fremdschlüsselbeziehungen aufweisen und ihre Feldbedeutung überwiegend von generischen Datenelementen übernehmen. Die tragfähigen Bezugspunkte liegen für solche Objekte daher in ihrer Verwendung im Quelltext und in den tatsächlich enthaltenen Werten. Für das Lesen des Quelltexts gelten drei Grundsätze:
+\begin{itemize}
+	\item \textbf{Überblick vor Volltext:} Zu einem Programm wird zunächst eine Strukturübersicht erzeugt, die Routinen, Aufrufe und Tabellenzugriffe mit Zeilennummern ausweist. Erst danach werden die relevanten Stellen gezielt gelesen, sodass der Kontext des Sprachmodells klein bleibt.
+	\item \textbf{Aufrufkette folgen:} Aufgerufene Funktionsbausteine, Methoden und Erweiterungen werden ebenfalls gelesen, wenn sich die Logik erst aus ihnen erschließt. Standard- und Kundencode werden dabei als solche gekennzeichnet.
+	\item \textbf{Nur lesen:} Die Alternative, Programmcode zu erzeugen und auszuführen, um Informationen zu gewinnen, wurde verworfen. Erzeugter Code belegt keine Aussage über das System. Er stellt eine weitere Hypothese dar, die selbst zu prüfen wäre.
+\end{itemize}
 
 \textbf{Dokumentation als Interpretationskontext}
 
-% NEU (R7: Zielentwurf umfasst vorhandene Dokumentation)
-Neben den Metadaten sieht der Zielentwurf vorhandene Dokumentation als weitere Quelle der Interpretation vor. Die Feldhilfe der Datenelemente, die SAP im System selbst mitliefert, geht bereits in den Schemakorpus ein. Die Einbindung weiterer SAP-Dokumentation sowie kundeneigener Dokumentation ist als Erweiterung vorgesehen. Für sämtliche Dokumentationsquellen gilt dabei eine feste Rollenverteilung: Sie dienen dem Auffinden sowie der Deutung, nicht jedoch als Beleg eines Ist-Wertes, da sie den Standard oder einen früheren Planungsstand beschreiben und nicht den im System gepflegten Zustand.
+% GEÄNDERT (21.10.): IMG-Dokumentation als Bestandteil des Entwurfs; Erweiterung um kundeneigene Dokumentation entfernt (E2)
+Neben den Metadaten nutzt der Ansatz die Dokumentation, die SAP im System selbst mitliefert. Dazu zählen die Feldhilfe der Datenelemente, die in den Schemakorpus eingeht, und die Dokumentation der Aktivitäten des Einführungsleitfadens. Für die Dokumentation gilt eine feste Rollenverteilung. Sie dient dem Auffinden und der Deutung, jedoch nicht als Beleg eines Ist-Wertes. Dies liegt darin begründet, dass Dokumentation den Standard beschreibt und nicht den im System gepflegten Zustand.
 
-\textbf{Anbindung des Sprachmodells}
-
-% GEÄNDERT aus Skizze 3.3.4: Aussage "hinter der MCP-Schnittstelle gekapselt" korrigiert, da der Modellzugriff nicht über den Werkzeugserver erfolgt
-Die Einbindung des Sprachmodells und der Einbettungsverfahren erfordert eine
-	Entscheidung über die genutzte Bereitstellungsplattform. Als Alternativen
-	stehen der direkte Zugriff auf ein Modell und die Nutzung des von SAP
-	bereitgestellten Generative AI Hub gegenüber. Die Wahl fällt auf den Generative AI Hub, da er sich konsistent in die vorgegebene Plattform einfügt und Sprachmodell sowie Embedding-Modell über denselben Zugang bereitstellt. Der konkrete Modellzugriff wird dabei über eine einzige Stelle im Orchestrator gekapselt, sodass das Modell austauschbar bleibt (NFA2).
+% NEU (21.10.): verbleibende Fehlerart mit Bezug zur Evaluation
+Als Fehlerart bleibt in diesem Schritt vor allem die fehlerhafte Schlüsselauflösung, bei der ein existierender Schlüssel einem existierenden, aber nicht zugehörigen Klartext zugeordnet wird (F8). Hinzu kommen plausible Deutungen, die nicht durch die gelesenen Daten gedeckt sind (F5). Diese fängt der folgende Schritt ab.
 
 \subsection{Aussagen an Systemdaten absichern}
 \label{subsec:ta-absichern}
-% GEÄNDERT: vorher "Grounding und kalibrierte Enthaltung" (Skizze), ausformuliert (R12)
 
-Die Absicherung der erzeugten Aussagen gegen Halluzinationen bildet die
-	entscheidende Abgrenzung des Ansatzes von einer reinen
-	Retrieval-Augmented-Generation (RAG). Es wird dargelegt, weshalb die
-	Verifikation regelbasiert und die Belegpflicht im Programmcode statt im
-	Prompt verankert wird und in welchen Fällen sich das System begründet
-	enthält, anstatt eine nicht gedeckte Aussage zu erzeugen. % GEÄNDERT: Satz 2 und 3 im Folgenden ausformuliert (vorher Ankündigung)
+% GEÄNDERT (21.10.): Ankündigungsabsatz entfernt; Einstieg über das Beispiel; übernommene Prinzipien als Aufzählung
+Im Beispiel muss jede genannte Abwesenheitsart auf die Tabellenzeile zurückführbar sein, aus der sie stammt. Allgemein bindet der dritte Schritt jede Aussage an die Systemdaten und beantwortet damit die Teilfrage~TF3. Diese Bindung grenzt den Ansatz von einer generischen Retrieval-Augmented Generation (RAG) ab, bei der die abgerufenen Daten zwar in die Antwort eingehen, deren Aussagen jedoch nicht an sie gebunden werden. Der Ansatz übernimmt dafür aus Abschnitt~\ref{subsec:rw-verifikation} drei Prinzipien:
+\begin{itemize}
+	\item die Ausgabe der konkreten Belegabfrage, die ein fachkundiger Nutzer nachprüfen kann \cite{theologitis_thucy_2026},
+	\item die Prüfung einer Aussage gegen die Quelle vor ihrer Ausgabe \cite{allemang_increasing_2025},
+	\item die Enthaltung bei unzureichender Evidenz \cite{somov_confidence_2025}.
+\end{itemize}
 
-% NEU (R12)
-Der dritte Teilaspekt beantwortet die Teilfrage~TF3. Er übernimmt aus Abschnitt~\ref{subsec:rw-verifikation} drei Prinzipien: die Ausgabe der konkreten Belegabfrage, die ein fachkundiger Nutzer nachprüfen kann \cite{theologitis_thucy_2026}, die Prüfung einer Aussage gegen die Quelle vor ihrer Ausgabe \cite{allemang_increasing_2025} sowie die Enthaltung bei unzureichender Evidenz \cite{somov_confidence_2025}. Die Erweiterung besteht in der Festlegung der Belegeinheit. Eine Aussage über eine Customizing-Einstellung gilt als belegt, wenn sie auf die Tabelle, den Schlüssel, das Feld sowie den Wert verweist, aus denen sie stammt, und die Abfrage mitführt, mit der dieser Wert gelesen wurde. Da diese Einheit jederzeit erneut abgefragt werden kann, ist eine Aussage über die Konfiguration exakt und nicht nur näherungsweise entscheidbar.
+\textbf{Belegeinheit}
+
+% GEÄNDERT (21.10.): Belegeinheit für Aussagen über Quelltext ergänzt (E1)
+Die Erweiterung besteht in der Festlegung der Belegeinheit. Eine Aussage über eine Customizing-Einstellung gilt als belegt, wenn sie auf Tabelle, Schlüssel, Feld und Wert verweist, aus denen sie stammt, und die Abfrage mitführt, mit der dieser Wert gelesen wurde. Da sich diese Einheit jederzeit erneut abfragen lässt, ist eine Aussage über die Konfiguration exakt entscheidbar. Für Aussagen über Programmlogik tritt an die Stelle der Tabellenzeile die Fundstelle im Quelltext, also das Objekt, das Include oder die Methode und die Zeile.
 
 \textbf{Prüfung im Programmcode statt im Prompt}
 
-% NEU (Textbaustein 11.09.2026): Entwurfsentscheidung
-Für die Umsetzung der Prüfung bestehen zwei Wege. Sie kann dem Sprachmodell über die Gestaltung des Prompts auferlegt werden, oder sie kann außerhalb des Modells als ablaufsteuernde Struktur realisiert werden. Die Entscheidung fällt zugunsten der zweiten Variante, da eine im Prompt formulierte Prüfpflicht von derselben Instanz erfüllt werden müsste, deren Ausgaben sie absichern soll, und damit genau dann entfallen kann, wenn sie benötigt wird. Dieses Prinzip, Prüfungen im Code zu verankern und das Sprachmodell nur an einer austauschbaren Stelle formulieren zu lassen, wird für prüfpflichtige Unternehmensanwendungen ausdrücklich empfohlen \cite{ahn_prompts_2026}. Gestützt wird die Entscheidung zudem durch den Befund, dass aktuelle Modelle einzelne Werkzeugaufrufe zuverlässig ausführen, bei der Planung mehrstufiger Aufrufketten jedoch deutlich zurückbleiben \cite{wang_mcp-bench_2025}. Die Prüfung ist deshalb als Zustandsautomat modelliert, dessen Zustände sowie Übergänge den Prüfweg unabhängig von der Entscheidung des Modells festlegen.
+% GEÄNDERT (21.10.): Satzbau vereinfacht
+Für die Umsetzung der Prüfung bestehen zwei Wege. Sie kann dem Sprachmodell über den Prompt auferlegt werden, oder sie erfolgt außerhalb des Modells als fest vorgegebener Ablauf. Der Entwurf sieht die zweite Variante vor. Eine im Prompt formulierte Prüfpflicht müsste von derselben Instanz erfüllt werden, deren Ausgaben sie absichern soll. Sie kann damit genau dann entfallen, wenn sie benötigt wird. Für prüfpflichtige Unternehmensanwendungen wird ausdrücklich empfohlen, Prüfungen im Code zu verankern und das Sprachmodell nur an einer austauschbaren Stelle formulieren zu lassen \cite{ahn_prompts_2026}. % [BIB-EINTRAG FEHLT: ahn_prompts_2026 ist weder in Literaturverzeichnis.bib noch in manual-refs.bib enthalten]
+Gestützt wird die Entscheidung zudem durch den Befund, dass aktuelle Modelle einzelne Werkzeugaufrufe zuverlässig ausführen, bei der Planung mehrstufiger Aufrufketten jedoch deutlich zurückbleiben \cite{wang_mcp-bench_2025}. Die Prüfung ist deshalb als Ablauf mit festen Zuständen und Übergängen modelliert, der den Prüfweg unabhängig von der Entscheidung des Modells festlegt.
 
 \textbf{Stufen der Prüfung}
 
-% NEU (Textbaustein 11.09.2026; Stufenzählung vereinheitlicht)
-Die Prüfung erfolgt in drei Stufen. Zunächst wird die formulierte Antwort in einzelne, prüfbare Aussagen zerlegt. Im Anschluss wird für jede Aussage geprüft, ob die genannten Tabellen sowie Felder im System existieren, und erst danach wird der behauptete Wert gegen den tatsächlich gelesenen Wert abgeglichen. Diese Reihenfolge folgt zwei Überlegungen: Ein nicht existierender Bezeichner macht jede darauf aufbauende Wertaussage gegenstandslos, und die Existenzprüfung kommt ohne zusätzlichen Zugriff auf Tabelleninhalte aus. Die Kette bricht somit an der frühestmöglichen sowie günstigsten Stelle ab. Aussagen, die auf einer als Interpretation gekennzeichneten Zuordnung beruhen, werden in der Antwort getrennt von den belegten Aussagen ausgewiesen.
+% GEÄNDERT (21.10.): Stufen als nummerierte Aufzählung
+Die Prüfung erfolgt in drei Stufen:
+\begin{enumerate}
+	\item \textbf{Zerlegung:} Die formulierte Antwort wird in einzelne, prüfbare Aussagen zerlegt.
+	\item \textbf{Existenzprüfung:} Für jede Aussage wird geprüft, ob die genannten Tabellen, Felder und Objekte im System existieren.
+	\item \textbf{Wertprüfung:} Der behauptete Wert wird gegen den tatsächlich gelesenen Wert abgeglichen.
+\end{enumerate}
+Diese Reihenfolge folgt zwei Überlegungen. Ein nicht existierender Bezeichner macht jede darauf aufbauende Wertaussage gegenstandslos. Zudem kommt die Existenzprüfung ohne zusätzlichen Zugriff auf Tabelleninhalte aus. Die Prüfung bricht somit an der frühesten und günstigsten Stelle ab. Aussagen, die auf einer als Interpretation gekennzeichneten Zuordnung beruhen, werden in der Antwort getrennt von den belegten Aussagen ausgewiesen.
 
 \textbf{Enthaltung als regulärer Endzustand}
 
-% NEU (Textbaustein 11.09.2026)
-Reicht die Evidenz für eine Aussage nicht aus, so wird die Aussage nicht erzeugt. Die Enthaltung ist dabei als regulärer Endzustand des Ablaufs modelliert und nicht als Fehlerfall. Dies liegt darin begründet, dass im betrachteten Anwendungskontext die Kosten einer unerkannt falschen Aussage über ein produktiv genutztes System die Kosten einer ausbleibenden Aussage übersteigen. Im durchgängigen Beispiel führt eine nicht eindeutig bestimmbare Regelgruppe deshalb zu einer Rückfrage an den Nutzer, welche der möglichen Regelgruppen gemeint ist, statt zu einer Liste von Abwesenheitsarten, die möglicherweise einer anderen Gruppe gelten.
+Reicht die Evidenz für eine Aussage nicht aus, so wird die Aussage nicht erzeugt. Die Enthaltung ist dabei als regulärer Endzustand des Ablaufs modelliert und nicht als Fehlerfall. Dies liegt darin begründet, dass im betrachteten Anwendungskontext eine unerkannt falsche Aussage über ein produktiv genutztes System schwerer wiegt als eine ausbleibende Aussage. Im Beispiel führt eine nicht eindeutig bestimmbare Regelgruppe deshalb zu einer Rückfrage an den Nutzer, welche der möglichen Regelgruppen gemeint ist. Eine Liste von Abwesenheitsarten, die möglicherweise einer anderen Gruppe gelten, wird nicht ausgegeben. % GEÄNDERT (21.10.): "Kosten ... übersteigen die Kosten" vereinfacht; letzter Satz geteilt
 
 \textbf{Verworfene Alternativen}
 
-% VERSCHOBEN aus 3.4 "Abgrenzung des Entwurfs" (aufgelöst, Betreueranmerkung S3); nur die für diesen Teilaspekt relevanten Alternativen, ausformuliert nach Textbaustein 10.09.2026
-Zwei naheliegende Alternativen wurden geprüft und verworfen, da sie die Absicherung auf anderem Weg versprechen. Das sogenannte Constrained Decoding schließt erfundene Bezeichner bereits bei der Erzeugung aus, setzt jedoch Zugriff auf die Tokenverteilung des Modells voraus, den der Zugang über den Generative AI Hub nicht bietet. Der Dienst SAP Document Grounding liegt im genutzten Technologiestapel vor, beruht jedoch auf einer Ähnlichkeitssuche über Dokumente, die für die Ermittlung exakter Customizing-Werte die falsche Abrufsemantik darstellt. % [BELEG ERFORDERLICH: SAP-Dokumentation Document Grounding, Repository-Typen]
+% GEÄNDERT (21.10.): als Aufzählung
+Zwei weitere Wege zur Absicherung wurden geprüft und verworfen:
+\begin{itemize}
+	\item \textbf{Constrained Decoding:} Es schließt erfundene Bezeichner bereits bei der Erzeugung aus. Dafür ist jedoch Zugriff auf die Tokenverteilung des Modells nötig, den der Zugang über den Generative AI Hub nicht bietet.
+	\item \textbf{SAP Document Grounding:} Der Dienst liegt im genutzten Technologiestapel vor. Er beruht jedoch auf einer Ähnlichkeitssuche über Dokumente und eignet sich daher nicht, um exakte Customizing-Werte zu ermitteln. % [BELEG ERFORDERLICH: SAP-Dokumentation Document Grounding, Repository-Typen]
+\end{itemize}
+
+% NEU (21.10.): verbleibende Fehlerarten mit Bezug zur Evaluation
+In diesem Schritt bleiben vier Fehlerarten zu messen: erfundene Bezeichner (F3), Widersprüche zwischen Aussage und gelesenem Wert (F4), unbelegte Interpretationen (F5) und fehlende Enthaltungen (F6).
 
 \subsection{Abweichung vom Standard ausweisen}
 \label{subsec:ta-abweichung}
-% GEÄNDERT: vorher "Operationalisierung der Abweichung vom Standard" (Skizze mit TODO), ausformuliert als Zielentwurf (R12)
 
-Die Bestimmung dessen, was eine Abweichung vom SAP-Standard ausmacht,
-	stellt die konzeptionell anspruchsvollste Entwurfsentscheidung dar, da eine
-	Abweichung stets eine Referenz voraussetzt, gegen die sie definiert wird. Der vierte Teilaspekt beantwortet die Teilfrage~TF4 und legt diese Referenz fest. Für die Operationalisierung des Begriffs Standard konnte keine einschlägige Primärquelle identifiziert werden, sodass die Festlegung als eigener Beitrag der Arbeit zu begründen ist. Tabelle~\ref{tab:referenz-standard} stellt die in Betracht kommenden Referenzen gegenüber. % GEÄNDERT: Ankündigungssätze durch Inhalt ersetzt
+% GEÄNDERT (21.10.): Einstieg über das Beispiel; Herleitung aus 3.1 (Sekatzek, Customizing-Abgleich) übernommen; Quellenschlüssel sap_customizing_abgleich (nicht in der .bib) durch sap_customizing_nodate ersetzt
+Im Beispiel sind die Regelgruppe der Auszubildenden und das Feld, nach dem das Merkmal entscheidet, Ergänzungen des Kunden. Der vierte Schritt macht solche Abweichungen sichtbar und beantwortet damit die Teilfrage~TF4. Eine Abweichung setzt stets eine Referenz voraus, gegen die sie festgestellt wird. Der Ansatz übernimmt dafür den Auslieferungszustand als Referenz, an der auch die Messung der Standardnähe ansetzt \cite{sekatzek_messung_2009}. Zudem übernimmt er den Vergleich von Customizing-Tabellen je Eintrag, wie ihn die Werkzeuge zum Customizing-Abgleich bereits leisten \cite{sap_customizing_nodate}. Für die Festlegung, was als Standard gilt, konnte keine einschlägige Primärquelle identifiziert werden. Sie ist daher als eigener Beitrag der Arbeit zu begründen. Tabelle~\ref{tab:referenz-standard} stellt die in Betracht kommenden Referenzen gegenüber.
 
 \begin{table}[htbp]
 \centering
@@ -316,7 +344,7 @@ Die Bestimmung dessen, was eine Abweichung vom SAP-Standard ausmacht,
 \toprule
 \textbf{Referenz} & \textbf{Erkennt} & \textbf{Einordnung} \\
 \midrule
-Namensraum der Objekte & kundeneigene Tabellen und Programme & geeignet für Objekte, erkennt jedoch keine veränderten Werte in Standardtabellen \\
+Namensraum der Objekte & kundeneigene Tabellen, Felder und Programme & geeignet für Objekte, erkennt jedoch keine veränderten Werte in Standardtabellen \\
 Auslieferungsklasse & Tabellen, die Customizing tragen & verworfen als Abweichungskriterium, da sie die Bestimmung einer Tabelle beschreibt und nicht, ob deren Inhalt vom Standard abweicht; dient ausschließlich der Eingrenzung in Abschnitt~\ref{subsec:ta-erschliessen} \\
 Ausgelieferter Referenzinhalt & veränderte, ergänzte und gelöschte Einträge in Standardtabellen & geeignet für Werte, setzt einen lesbaren Referenzbestand voraus \\
 SAP-Dokumentation & beschriebenes Standardverhalten & geeignet zur Deutung, nicht zum Nachweis einer Abweichung \\
@@ -324,24 +352,56 @@ SAP-Dokumentation & beschriebenes Standardverhalten & geeignet zur Deutung, nich
 \end{tabular}
 \end{table}
 
-% NEU (R12): Zielentwurf der Abweichungslogik
-Der Zielentwurf kombiniert drei dieser Referenzen, die jeweils eine eigene Aufgabe übernehmen. Eine Abweichung eines Objekts wird über den Namensraum bestimmt, sodass kundeneigene Tabellen sowie Programme als solche ausgewiesen werden. Eine Abweichung eines Wertes wird durch den Abgleich der Einträge einer Standardtabelle mit dem vom Hersteller ausgelieferten Referenzinhalt bestimmt, wie ihn die Werkzeuge zum Customizing-Abgleich bereits tabellarisch leisten \cite{sap_customizing_abgleich}. % [BELEG ERFORDERLICH: Auslieferungsmandant bzw. BC-Sets als Träger des ausgelieferten Customizing-Inhalts]
-Die SAP-Dokumentation dient schließlich dazu, die fachliche Bedeutung des Standardverhaltens zu beschreiben, gegen das eine Abweichung gedeutet wird. Die Erweiterung gegenüber dem tabellarischen Abgleich besteht damit nicht in der Erkennung der Abweichung, sondern in ihrer belegten fachlichen Deutung. Jede ausgewiesene Abweichung trägt dieselbe Belegeinheit wie eine Aussage über den Ist-Zustand, ergänzt um den Referenzeintrag, gegen den sie festgestellt wurde.
+% GEÄNDERT (21.10.): Arten der Abweichung als Aufzählung mit Bezug zum Beispiel
+Der Entwurf kombiniert drei dieser Referenzen, die jeweils eine eigene Aufgabe übernehmen:
+\begin{itemize}
+	\item \textbf{Abweichende Objekte:} Kundeneigene Tabellen, Felder und Programme werden über ihren Namensraum erkannt. Im Beispiel trifft dies auf das Entscheidungsfeld des Merkmals zu.
+	\item \textbf{Abweichende Werte:} Die Einträge einer Standardtabelle werden mit dem vom Hersteller ausgelieferten Referenzinhalt abgeglichen. Dadurch werden veränderte, ergänzte und gelöschte Einträge erkannt, im Beispiel die ergänzte Regelgruppe. % [BELEG ERFORDERLICH: Auslieferungsmandant bzw. BC-Sets als Träger des ausgelieferten Customizing-Inhalts]
+	\item \textbf{Deutung:} Die SAP-Dokumentation beschreibt das Standardverhalten, vor dessen Hintergrund eine Abweichung fachlich gedeutet wird.
+\end{itemize}
+Die Erweiterung gegenüber dem tabellarischen Abgleich liegt damit in der belegten fachlichen Deutung der Abweichung. Jede ausgewiesene Abweichung trägt dieselbe Belegeinheit wie eine Aussage über den Ist-Zustand, ergänzt um den Referenzeintrag, gegen den sie festgestellt wurde.
 % OFFEN (Umsetzung): Ob der Referenzinhalt über die ADT-Datenvorschau mandantenübergreifend lesbar ist, ist am Zielsystem zu prüfen, bevor Kap. 4 die Umsetzung beschreibt.
+
+\textbf{Widersprüche zwischen Quelltext und Customizing}
+
+% NEU (21.10.): Abgleich von Code-Werten mit dem Customizing (in Abb. 3.2 bereits enthalten, im Text bisher nicht beschrieben)
+Ergänzend weist dieser Schritt Widersprüche innerhalb der individuellen Entwicklungen aus. Fragt kundeneigener Code einen Schlüsselwert ab, wird dieser Wert gegen die Tabelle geprüft, die ihn definiert. Fehlt der Wert dort, greift die Logik im System nicht, obwohl Code und Customizing für sich genommen fehlerfrei wirken. Ein solcher Widerspruch ist keine Abweichung vom Standard im engeren Sinne. Er wird dennoch in diesem Schritt behandelt, da er auf demselben Abgleich mit einer Referenztabelle beruht und für die fachliche Einordnung ebenso bedeutsam ist.
+
+% NEU (21.10.): verbleibende Fehlerart mit Bezug zur Evaluation
+Als Fehler bleiben in diesem Schritt nicht erkannte und fälschlich ausgewiesene Abweichungen. Die Evaluation misst dafür den Anteil korrekt ausgewiesener Abweichungen gegenüber der Referenzantwort (Tabelle~\ref{tab:eval-ziele}).
 
 \section{Zusammenfassung}
 \label{sec:ansatz-zusammenfassung}
 
-% GEÄNDERT: Rückbezug auf die Teilfragen und Verweis auf die Evaluation ergänzt; "Abgrenzung des Entwurfs" entfällt als eigener Abschnitt (Betreueranmerkung S3, Meeting-Notiz M9)
-Die in diesem Kapitel vorgestellten Teilaspekte bilden gemeinsam den Zielentwurf des Analyseframeworks. Jeder Teilaspekt adressiert eine Teilfrage der Forschungsfrage, übernimmt ein im Stand der Forschung belegtes Verfahren und erweitert es um das, was die Customizing-Ebene zusätzlich erfordert. Die Entwurfsentscheidungen folgen dabei durchgängig demselben Prinzip, wonach Entscheidungen, die sich deterministisch aus den Metadaten des Systems ableiten lassen, dort verankert werden, wo sie nachprüfbar bleiben, und nicht dem Sprachmodell überlassen werden. Das folgende Kapitel~\ref{Implementierung} beschreibt die prototypische Umsetzung dieser Teilaspekte, bevor Kapitel~\ref{Evaluation} prüft, in welchem Grad sie die Teilfragen beantworten.
+% GEÄNDERT (21.10.): Übersicht Entwurfsentscheidungen -> Anforderungen -> Messung in Kap. 5 als Brücke zur Evaluation ergänzt
+Die vier Verarbeitungsschritte bilden gemeinsam den Entwurf des Analyseframeworks. Jeder Schritt beantwortet eine Teilfrage, übernimmt Verfahren aus dem Stand der Forschung und erweitert sie um das, was die Customizing-Ebene zusätzlich erfordert. Die Entwurfsentscheidungen folgen dabei einem gemeinsamen Prinzip. Was sich deterministisch aus den Metadaten des Systems ableiten lässt, wird außerhalb des Sprachmodells ausgeführt, sodass es nachprüfbar bleibt. Tabelle~\ref{tab:entwurf-evaluation} fasst zusammen, welche Entscheidungen jeder Schritt trifft und woran die Evaluation ihn misst.
+
+\begin{table}[htbp]
+\centering
+\caption{Entwurfsentscheidungen je Verarbeitungsschritt und ihre Messung in der Evaluation}
+\label{tab:entwurf-evaluation}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{3.4cm}}
+\toprule
+\textbf{Schritt} & \textbf{Zentrale Entwurfs\-entscheidungen} & \textbf{Anforde\-rungen} & \textbf{Messung in Kapitel~\ref{Evaluation}} \\
+\midrule
+Erschließen (TF1) & drei Einstiege; Korpus auf Feldebene; Filter beim Korpusaufbau; exakte Suche & FA2, FA3, NFA3, NFA4, NFA5 & Trefferquote der Soll-Tabellen; F1, F2 \\
+Interpretieren (TF2) & Schlüssel und Merkmale deterministisch auflösen; Stammdaten als Grenze; Quelltext nur lesen & FA3, FA4, NFA4, NFA5 & Anteil korrekter Aussagen; F5, F8 \\
+Absichern (TF3) & Belegeinheit; Prüfung außerhalb des Modells; Enthaltung als Endzustand & FA5, FA6, NFA1 & Auflösbarkeit der Belege, Wertübereinstimmung, Enthaltungen; F3 bis F6 \\
+Abweichung (TF4) & Namensraum und Referenzinhalt als Referenz; Abgleich von Code-Werten & FA7 & Anteil korrekt ausgewiesener Abweichungen \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Das folgende Kapitel~\ref{Implementierung} beschreibt die prototypische Umsetzung dieser Verarbeitungsschritte, bevor Kapitel~\ref{Evaluation} prüft, in welchem Grad sie die Teilfragen beantworten.
 
 % ===========================================================================
-% NOTIZ ZUR PARALLELITÄT KAPITEL 3 <-> KAPITEL 4 (aktualisiert):
-%   3.3  Architekturüberblick                -> 4.1 Systemumgebung und Datenbasis
-%   3.4.1 Relevante Konfiguration erschließen -> 4.2 (Korpus, Filter, FAISS, search_schema)
-%   3.4.2 Semantisch interpretieren           -> 4.3 (Agent, GenAI Hub, Klartext-/Merkmalsauflösung, read_source)
-%   3.4.3 Aussagen an Systemdaten absichern   -> 4.4 (Belegführung, Prüfschleife, Enthaltung)
-%   3.4.4 Abweichung vom Standard ausweisen   -> 4.5 (abhängig von der Umsetzbarkeit des Referenzabgleichs)
+% NOTIZ ZUR PARALLELITÄT KAPITEL 3 <-> KAPITEL 4 (aktualisiert 21.10.):
+%   3.3  Architekturüberblick                 -> 4.1 Systemumgebung und Datenbasis
+%   3.4.1 Relevante Konfiguration erschließen  -> 4.2 (Korpus, Filter, FAISS, IMG-Index, lookup_term, explain_relations/connection_path)
+%   3.4.2 Semantisch interpretieren            -> 4.3 (Agent, GenAI Hub, code_texts, decode_feature/resolve_feature_term, Code-Werkzeuge)
+%   3.4.3 Aussagen an Systemdaten absichern    -> 4.4 (Belegführung, Beleg-Gate, Prüfstufen, Enthaltung)
+%   3.4.4 Abweichung vom Standard ausweisen    -> 4.5 (Namensraum, Referenzabgleich, Konsistenz Code/Customizing)
 % Eine Kapitel-4-Überschrift OHNE Gegenstück hier weist auf eine fehlende
 % Entwurfsentscheidung hin.
 % ===========================================================================
