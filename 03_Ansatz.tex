@@ -45,12 +45,15 @@ Jede Anfrage durchläuft vier Verarbeitungsschritte, die jeweils einer Teilfrage
 \end{enumerate}
 Reicht die Evidenz für eine Aussage nicht aus, so enthält sich das Framework begründet, anstatt eine nicht gedeckte Aussage zu erzeugen. Da jeder Verarbeitungsschritt eine eigene Leistung erbringt, weist er auch eigene Fehlerarten auf. Ein fehlerhaftes Ergebnis lässt sich in der Evaluation daher dem Verarbeitungsschritt zuordnen, in dem es entstanden ist.
 
-% VERSCHOBEN (21.10.) vom Ende des Abschnitts direkt hinter den Ablauf und GEÄNDERT: Aufzählung je Verarbeitungsschritt, einheitliche Benennung (vorher Bestandteil/Schritt/Abschnitt/Teil gemischt); Inhalt wie Fassung 19.10.
+% VERSCHOBEN (21.10.) vom Ende des Abschnitts direkt hinter den Ablauf und GEÄNDERT: Aufzählung je Verarbeitungsschritt, einheitliche Benennung (vorher Bestandteil/Schritt/Abschnitt/Teil gemischt); Inhalt wie Fassung 19.10. Pfeile zwischen den Schritten über \schrittpfeil (Thesis.tex).
 Das durchgängige Beispiel zeigt, wie eine Anfrage diese Schritte durchläuft. Gefragt wird, welche Abwesenheitsarten Auszubildende im Mitarbeiter-Self-Service beantragen dürfen:
 \begin{enumerate}
 	\item Der Fachbegriff der Regelgruppe führt zu einer Customizing-Tabelle, die je Regelgruppe festlegt, welche Abwesenheitsarten beantragbar sind. Zusätzlich wird ein Merkmal gefunden, das die Beschäftigten einer Regelgruppe zuordnet.
+	\schrittpfeil
 	\item Der Begriff \glqq Auszubildende\grqq{} wird über den gepflegten Bezeichnungstext einer kundeneigenen Regelgruppe zugeordnet. Die Schlüsselwerte der Abwesenheitsarten werden über die Texttabelle in ihre Bezeichnungen überführt. Die Auswertung des Merkmals zeigt zudem, dass die Zuordnung einzelner Beschäftigter über ein kundeneigenes Feld in den Stammdaten erfolgt.
+	\schrittpfeil
 	\item Jede genannte Abwesenheitsart ist mit der Tabellenzeile belegt, aus der sie stammt. Die Antwort benennt außerdem, dass die Zuordnung der Beschäftigten in den Stammdaten liegt, anstatt darüber eine Annahme zu treffen.
+	\schrittpfeil
 	\item Die Antwort weist aus, dass die Regelgruppe und das Entscheidungsfeld des Merkmals Ergänzungen des Auslieferungszustands sind.
 \end{enumerate}
 
