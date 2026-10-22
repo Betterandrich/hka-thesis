@@ -71,56 +71,14 @@ Jede Teilfrage greift einen Bestandteil der Forschungsfrage auf. TF1 bezieht sic
 \section{Stand der Forschung und Einordnung}
 \label{sec:einordnung}
 
-% GEÄNDERT: Verweis präzisiert (Vertiefung liegt nun in Abschnitt 2.3)
-Zur Einordnung der im vorherigen Abschnitt formulierten
-Forschungsfrage werden die relevanten Forschungsthemen im Folgenden vorgreifend
-zusammengefasst, wobei die vertiefte Betrachtung in Abschnitt~\ref{sec:stand-forschung}
-erfolgt.
+% GEÄNDERT (22.10.): von acht auf vier Absätze gekürzt (Plan 13.10.); Ankündigungssatz und doppelte Fokus-Begründung entfernt; Satzbau vereinfacht
+Strukturbasierte Verfahren erschließen Wissen aus bestehenden Systemen, ohne es fachlich zu deuten. Die Business Rule Extraction (BRE) gewinnt Geschäftsregeln durch statische Analyse aus dem Quellcode \cite{paradauskas_business_2006}. Die Architecture-Driven Modernization stellt mit dem Knowledge Discovery Metamodel (KDM, ISO/IEC~19506) ein werkzeugunabhängiges Metamodell für Systemartefakte bereit \cite{perez-castillo_knowledge_2011}. Im SAP-Kontext leitet das Reverse Business Engineering (RBE) ein Modell der aktiv genutzten Systemelemente ab \cite{nuttgens_reverse_1999}. Darauf baut eine kennzahlenbasierte Methodik zur Messung der Standardnähe auf \cite{sekatzek_messung_2009}. Alle diese Verfahren liefern formale, quantitative oder modellorientierte Ergebnisse. Ihre fachliche Einordnung bleibt dem Analysten überlassen.
 
-Strukturbasierte Extraktionsverfahren erschließen Wissen aus bestehenden Systemen:
-Die Business Rule Extraction (BRE) gewinnt Geschäftsregeln mittels statischer Analyse
-aus dem Quellcode~\cite{paradauskas_business_2006}, während die Architecture-Driven
-Modernization mit dem Knowledge Discovery Metamodel (KDM, ISO/IEC~19506) ein
-werkzeugunabhängiges Metamodell für Systemartefakte bereitstellt~\cite{perez-castillo_knowledge_2011}.
-Diese Verfahren liefern formale Repräsentationen, deren fachliche Einordnung dem
-Analysten obliegt, sodass die semantische Interpretation außerhalb ihres
-Betrachtungsbereichs verbleibt.
+Sprachmodelle eröffnen einen anderen Zugang, da sie Artefakte natürlichsprachlich beschreiben können. Sie erfassen die Syntax von Programmen zuverlässig, zeigen bei tieferer Semantik jedoch Schwächen \cite{ma_exploring_2026}. Diese Schwächen verstärken sich in unzureichend dokumentierten Altsystemen \cite{sabetto_impact_2025}. Untersuchungen an MUMPS- und Assembler-Beständen zeigen dennoch, dass die sprachmodellgestützte Dokumentation verwertbare Ergebnisse liefert \cite{diggs_leveraging_2024}. Im SAP-Kontext beschränken sich wissenschaftliche Arbeiten bislang auf die Erzeugung von ABAP-Quelltext \cite{wallraven_benchmarking_2026}. Die Deutung des Customizings wurde dort nicht untersucht.
 
-Im SAP-Kontext leitet das Reverse Business Engineering (RBE) ein Modell der aktiv
-genutzten Systemelemente ab~\cite{nuttgens_reverse_1999}, worauf eine
-kennzahlenbasierte Methodik zur Quantifizierung der Standardnähe
-aufbaut~\cite{sekatzek_messung_2009}. Diese Ansätze berücksichtigen SAP-spezifische
-Strukturen, erzeugen jedoch quantitative sowie modellorientierte Repräsentationen,
-wobei eine natürlichsprachliche Deutung der ermittelten Abweichungen nicht erfolgt.
+Für die Anbindung von Sprachmodellen an externe Systeme besteht mit dem Model Context Protocol (MCP) ein offener Standard \cite{noauthor_introducing_nodate}. Zu seiner Sicherheit und Reife bestehen noch offene Fragen \cite{hou_model_2025}. Erste Praxisberichte beschreiben agentenbasierte Werkzeugketten für Migrations- und Bewertungsaufgaben in SAP-Systemen \cite{dorairaj_deepa_sap_nodate}. Für die Umstellung auf SAP S/4HANA stellt SAP zudem eine Prüfung der Eigenentwicklungen im ABAP Test Cockpit (ATC) bereit. Sie gleicht den Quelltext mit der Simplification Database ab, die alle in SAP S/4HANA vereinfachten Objekte verzeichnet. Die Prüfung weist die Stellen aus, an denen eine Eigenentwicklung auf ein solches Objekt zugreift \cite{sap_ccm_atc}. Das Ergebnis ist ein technischer Kompatibilitätsabgleich des Quelltexts. Welche fachliche Bedeutung eine Anpassung für den Ist-Zustand hat, bleibt dabei offen.
 
-Large Language Models (LLMs) erfassen Programmsyntax zuverlässig, weisen bei tieferer
-Semantik jedoch Schwächen auf~\cite{ma_exploring_2026}, die sich in unzureichend
-dokumentierten Legacy-Kontexten verstärken~\cite{sabetto_impact_2025}. Die
-LLM-gestützte Dokumentationsgenerierung liefert dennoch verwertbare Ergebnisse, wie % GEÄNDERT: Stil (Review 08.10.)
-Untersuchungen an MUMPS- sowie Assembler-Systemen zeigen~\cite{diggs_leveraging_2024}. % GEÄNDERT: Semikolon-Anschluss in eigenen Satz aufgelöst % GEÄNDERT: Stil (Review 08.10.)
-Ein Transfer auf den SAP-Kontext steht bislang aus. SAP-bezogene Arbeiten beschränken
-sich zudem auf die ABAP-Codegenerierung~\cite{wallraven_benchmarking_2026}, sodass die
-Interpretation der Customizing-Ebene unberücksichtigt bleibt.
-
-Mit dem Model Context Protocol (MCP) besteht ein Standard zur Anbindung von
-LLM-Agenten an externe Systeme~\cite{noauthor_introducing_nodate}, zu dem offene
-Sicherheits- sowie Reifefragen fortbestehen~\cite{hou_model_2025}. Erste
-praxisorientierte Ansätze wenden dieses Muster bereits auf SAP-Systeme an, indem
-agentenbasierte Werkzeugketten Migrations- sowie
-Bewertungsaufgaben bearbeiten~\cite{dorairaj_deepa_sap_nodate}. Diese Ansätze zielen % GEÄNDERT: Stil (Review 08.10.)
-jedoch auf migrations- sowie bewertungsbezogene Aufgabenstellungen, nicht auf eine
-semantische Ist-Dokumentation des funktionalen Zustands.
-
-Auf Ebene der verfügbaren Werkzeuge stellt SAP für die Umstellung auf SAP S/4HANA eine Analyse der Eigenentwicklungen bereit, die das ABAP Test Cockpit (ATC) gegen die sogenannte Simplification Database ausführt. Diese Datenbank verzeichnet sämtliche Objekte, die in SAP S/4HANA vereinfacht wurden, sodass die Prüfung jene Stellen im Quelltext ausweist, an denen eine Eigenentwicklung auf ein solches Objekt zugreift und daher anzupassen ist~\cite{sap_ccm_atc}. Das Ergebnis ist ein technischer Kompatibilitätsabgleich, der sich auf den Quelltext richtet. Welche fachliche Bedeutung eine Anpassung für den funktionalen Ist-Zustand trägt, bleibt dabei unberücksichtigt.
-
-% GEÄNDERT: Verweis auf Abschnitt 2.4 statt Kapitel 2; Beleg-Kommentar aufgelöst (Beleg nun in 1.1)
-Nach dem in Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand besteht die Forschungslücke folglich nicht im Fehlen agentenbasierter SAP-Analyseansätze, sondern darin, dass die semantische Interpretation der Customizing-Ebene zu einer fachlich belastbaren Ist-Dokumentation bislang unbesetzt bleibt. Demgegenüber zielen verfügbare Ansätze primär auf Eigenentwicklungen sowie deren migrationsbedingte Anpassung. Dies liegt darin begründet, dass Customizing eine tabellengesteuerte Konfiguration der Standardlogik darstellt, deren fachliche Bedeutung sich der codezentrierten, an Compiler- sowie Prüfwerkzeugen verankerten Analyse entzieht. % GEÄNDERT: Stil (Review 08.10.)
-
-% GEÄNDERT: "Abschnitt" -> "Kapitel"; RAG durch Grounding ersetzt, da Kap. 2 Grounding als nachweisbare Bindung von RAG abgrenzt (einheitliche Terminologie)
-Die in diesem Abschnitt umrissenen Forschungslinien bilden die Grundlage für den in
-Kapitel~\ref{Ansatz} beschriebenen Lösungsansatz, der die strukturierte
-Extraktion mit einer semantischen Interpretation verbindet und deren Aussagen durch
-Grounding an den abgerufenen Systemdaten absichert.
+Agentenbasierte Ansätze für SAP-Systeme existieren also bereits. Sie zielen jedoch primär auf Eigenentwicklungen und deren migrationsbedingte Anpassung. Offen ist dagegen die semantische Interpretation der Customizing-Ebene zu einer belegten Ist-Dokumentation (vgl. Abschnitt~\ref{sec:forschungsluecke}). Der in Kapitel~\ref{Ansatz} beschriebene Ansatz verbindet deshalb die strukturierte Extraktion mit einer semantischen Interpretation. Er sichert deren Aussagen durch Grounding an den abgerufenen Systemdaten ab.
 
 \section{Ansatz und Forschungsmethodik}
 \label{sec:ansatz-methodik}
