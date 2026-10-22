@@ -83,36 +83,22 @@ Agentenbasierte Ansätze für SAP-Systeme existieren also bereits. Sie zielen je
 \section{Ansatz und Forschungsmethodik}
 \label{sec:ansatz-methodik}
 
-% GEÄNDERT: Vorabform gestrafft (Dopplung mit 3.1 reduziert), Teilaspekte vorab genannt, RAG-Formulierung ersetzt, Umsetzungsstand nicht vorweggenommen
-Zur Beantwortung der Forschungsfrage wird ein agentenbasiertes Analyseframework
-entworfen sowie prototypisch umgesetzt, das den Ist-Zustand des Customizings eines
-gewachsenen SAP-Systems ausgehend von natürlichsprachlichen Anfragen erschließt.
-Das Framework gliedert sich in vier Verarbeitungsschritte, die den vier Teilfragen entsprechen: % GEÄNDERT (21.10.): "Teilaspekte" -> "Verarbeitungsschritte" (einheitlich mit Kap. 3)
-Es erschließt zunächst die zu einer Anfrage relevanten Konfigurationstabellen, interpretiert
-deren Werte anschließend mithilfe eines Large Language Model (LLM) semantisch, sichert
-jede daraus formulierte Aussage durch Grounding an den abgerufenen Systemdaten ab und
-weist schließlich die Abweichungen vom Herstellerstandard aus. Reicht die Evidenz für eine
-Aussage nicht aus, so enthält sich das Framework begründet, anstatt eine nicht gedeckte
-Aussage zu erzeugen. Der Zugriff auf das Zielsystem erfolgt ausschließlich lesend über eine
-standardisierte Werkzeugschnittstelle, und die Erschließung erfolgt dialogbasiert, sodass
-einzelne Konfigurationsbereiche gezielt in natürlicher Sprache exploriert werden können,
-ohne diese manuell im System nachzuverfolgen. Das Ergebnis besteht aus einer
-natürlichsprachlichen Dokumentation, die den Beratenden einen belegten
-Überblick über den Konfigurationszustand eines ihnen zunächst unbekannten
-Systems ermöglicht.
+% GEÄNDERT (22.10.): Satzbau vereinfacht (Satz mit 52 Wörtern aufgeteilt); Ergebnis als Summe belegter Antworten bestimmt
+Zur Beantwortung der Forschungsfrage wird ein agentenbasiertes Analyseframework entworfen und prototypisch umgesetzt. Es erschließt den Ist-Zustand des Customizings eines gewachsenen SAP-Systems ausgehend von natürlichsprachlichen Anfragen. Das Framework gliedert sich in vier Verarbeitungsschritte, die den vier Teilfragen entsprechen. Zunächst bestimmt es die für eine Anfrage relevanten Konfigurationstabellen. Ein Sprachmodell deutet anschließend deren Werte. Jede daraus formulierte Aussage wird durch Grounding an die abgerufenen Systemdaten gebunden. Abschließend weist das Framework die Abweichungen vom Herstellerstandard aus. Reicht die Evidenz für eine Aussage nicht aus, enthält sich das Framework. Der Zugriff auf das Zielsystem erfolgt ausschließlich lesend über eine standardisierte Werkzeugschnittstelle.
 
-% GEÄNDERT: DSR-Beleg ergänzt (Hevner et al.), Kandidaten-Kommentar aufgelöst
-Methodisch folgt die Arbeit dem Paradigma der gestaltungsorientierten Forschung
-(Design Science Research, DSR), das die Konstruktion sowie die Evaluation eines
-neuartigen Artefakts zur Lösung eines praktisch relevanten Problems in den
-Mittelpunkt stellt \cite{hevner_design_2004}.
-Das zu gestaltende Artefakt besteht in dem beschriebenen Analyseframework, dessen
-Nutzen sich an der Qualität der erzeugten Ist-Dokumentation bemisst. Die Wahl
-dieser Methodik liegt darin begründet, dass die Arbeit nicht auf die Bestätigung
-einer vorab formulierten Hypothese, sondern auf die Konzeption, die Umsetzung
-sowie die Bewertung eines Lösungsartefakts zielt.
+Die Erschließung erfolgt im Dialog. Beratende können einzelne Konfigurationsbereiche dadurch gezielt in natürlicher Sprache erkunden, ohne sie manuell im System nachzuverfolgen. Jede Antwort besteht aus einzeln belegten Aussagen. Die Antworten zu einem Konfigurationsbereich bilden zusammen die Ist-Dokumentation. Sie gibt den Beratenden einen belegten Überblick über ein ihnen zunächst unbekanntes System.
 
-Die Evaluation erfolgt qualitativ, indem mehrere SAP-Beratende die erzeugten Beschreibungen anhand definierter Kriterien unabhängig voneinander bewerten. Ergänzend werden die Ergebnisse mit und ohne Grounding an den strukturierten Systemdaten verglichen. Die einzelnen Kapitel werden im folgenden Abschnitt näher dargestellt.
+% GEÄNDERT (22.10.): Abgrenzung Ansatz, Prototyp und Artefakt ergänzt; Satzbau vereinfacht
+Methodisch folgt die Arbeit der gestaltungsorientierten Forschung (Design Science Research, DSR). Dieses Paradigma stellt die Konstruktion und die Evaluation eines neuartigen Artefakts zur Lösung eines praktisch relevanten Problems in den Mittelpunkt \cite{hevner_design_2004}. Die Wahl liegt darin begründet, dass die Arbeit keine vorab formulierte Hypothese prüft. Sie zielt auf die Konzeption, Umsetzung und Bewertung eines Lösungsartefakts. Das Artefakt umfasst dabei zwei Ebenen. Der Ansatz bezeichnet den Entwurf des Frameworks in Kapitel~\ref{Ansatz}, der Prototyp dessen Umsetzung in Kapitel~\ref{Implementierung}. Der Nutzen des Artefakts bemisst sich an der Qualität der erzeugten Ist-Dokumentation.
+
+% GEÄNDERT (22.10.): Evaluation an Kap. 5 angeglichen (vorher Exposé-Fassung); Ergebnisvorgriff als Platzhalter (Betreueranmerkung 13.10.)
+Die Evaluation verbindet zwei Zugänge. Zunächst wird der Prototyp an [N] Testfragen mit einer am System geprüften Referenzantwort wiederholt ausgeführt. Dabei wird eine Variante mit Belegpflicht und Prüfung einer Variante gegenübergestellt, die zwar auf die Systemdaten zugreift, ihre Aussagen jedoch nicht absichert. Anschließend setzen [N] Beratende der mmmake GmbH das Werkzeug für eigene Fragen ein und bewerten die erhaltenen Antworten.
+% PLATZHALTER: Werte nach der Evaluation einsetzen, nicht zutreffende Schlussvariante streichen
+Der Ansatz findet die einschlägigen Customizing-Tabellen in [X] von [Y] Fällen. [X]\,\% der Aussagen stimmen mit der Referenzantwort überein. Auf eine Tabellenzeile rückführbar sind [X]\,\% der Aussagen. Gegenüber der Variante ohne Absicherung sinkt der Anteil unbelegter Aussagen von [X]\,\% auf [Y]\,\%.
+% Variante 1 (günstig):
+Dies lässt vermuten, dass die Bindung an erneut abfragbare Systemdaten die Belegbarkeit der Aussagen wesentlich verbessert. Die Grenze des Ansatzes liegt bei [fachlich mehrdeutigen Begriffen].
+% Variante 2 (ungünstig):
+Dies lässt vermuten, dass die Absicherung die Belegbarkeit der Aussagen gewährleistet. Die Qualität der Antworten hängt jedoch maßgeblich davon ab, ob die einschlägigen Tabellen gefunden werden. Die Erschließung bildet damit den Engpass des Ansatzes.
 
 \section{Aufbau der Arbeit}
 \label{sec:aufbau}
