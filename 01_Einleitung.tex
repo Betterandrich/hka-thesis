@@ -43,8 +43,12 @@ Individuelle Anpassungen erhöhen zudem den Wartungsaufwand, da sie die Prozessl
 % GEÄNDERT (22.10.): Untersuchungsgegenstand C4T und Auswahlkriterium des Beispiels (Entscheidungen E1/E2 vom 13.10.)
 Diese Anforderung stellt sich in besonderem Maße für externe Beratende, die ein Kundensystem ohne den Erfahrungsvorsprung einer internen IT-Abteilung rekonstruieren müssen. Hinzu kommt der Zeitdruck eines Projekts. Die vorliegende Arbeit untersucht diese Anforderung am SAP-System C4T der mmmake GmbH. Dabei handelt es sich um ein Test- und Demonstrationssystem, das über mehrere Jahre aus verschiedenen Projekten zusammengeführt wurde. Das Beispiel verbindet ausgeliefertes Customizing mit einer kundeneigenen Regelgruppe und einem kundeneigenen Stammdatenfeld. Es veranschaulicht mehrere der im Folgenden behandelten Teilfragen. Daher wird es als durchgängiges Beispiel in der Arbeit verwendet, um die Inhalte anschaulich zu erläutern und das Verständnis zu erleichtern. 
 
-% GEÄNDERT: Überleitung zur FF auf den Titelbegriff "individuelle Entwicklungen" ausgerichtet (Titel bleibt verbindlich)
-An diesen Bedarf knüpft die vorliegende Arbeit an, indem sie einen Ansatz untersucht, der die individuellen Entwicklungen eines fremden Systems über natürlichsprachliche Anfragen erschließbar macht und dadurch die manuelle Exploration sowie die Rückfrage beim Fachbereich verringert. Als individuelle Entwicklungen werden dabei sämtliche betriebsspezifischen Ausprägungen eines Systems verstanden, die über den Auslieferungszustand des Herstellers hinausgehen, also sowohl das Customizing als auch die Eigenentwicklungen. Die Arbeit konzentriert sich innerhalb dieser Menge auf das Customizing. Dies liegt darin begründet, dass das Customizing einen wesentlichen Teil der unternehmensindividuellen Prozesslogik tabellengesteuert abbildet und seine fachliche Bedeutung sich einer codezentrierten Analyse entzieht, während für Eigenentwicklungen bereits Werkzeuge der Code-Analyse existieren (vgl. Abschnitt~\ref{sec:forschungsluecke}). Eigenentwicklungen werden daher nur dort herangezogen, wo sie zur Erklärung einer Customizing-Einstellung erforderlich sind. Für diese Deutung bieten sich Sprachmodelle an, da sie schwer verständliche Artefakte natürlichsprachlich beschreiben können \cite{latreche_llm-assisted_2026}. Zugleich erzeugen sie inhaltlich falsche Aussagen, die sprachlich plausibel wirken \cite{ji_survey_2023}. Für die Analyse eines produktiv genutzten Systems ist eine Aussage jedoch nur dann verwertbar, wenn sie sich am Systemzustand überprüfen lässt. Daraus ergibt sich die folgende Forschungsfrage:
+% GEÄNDERT (22.10.): Überleitung neu, da der Bezug "An diesen Bedarf" nach der Umstellung fehlt; Anaphernbruch "Für diese Deutung" behoben; Brücke individuelle Entwicklung = Abweichung (Herleitung TF4); Satzbau vereinfacht
+Die vorliegende Arbeit untersucht einen Ansatz, der die individuellen Entwicklungen eines fremden Systems über natürlichsprachliche Anfragen erschließbar macht. Er soll die manuelle Exploration und die Rückfrage beim Fachbereich verringern. Als individuelle Entwicklungen gelten dabei alle betriebsspezifischen Ausprägungen eines Systems, die über den Auslieferungszustand des Herstellers hinausgehen. Dazu zählen das Customizing und die Eigenentwicklungen. Jede individuelle Entwicklung stellt damit eine Abweichung vom Herstellerstandard dar.
+
+Innerhalb dieser Menge konzentriert sich die Arbeit auf das Customizing. Es bildet einen wesentlichen Teil der unternehmensindividuellen Prozesslogik über Tabellen ab. Seine fachliche Bedeutung lässt sich deshalb durch eine Analyse des Quelltexts allein nicht erschließen. Für Eigenentwicklungen existieren dagegen bereits Werkzeuge der Code-Analyse (vgl. Abschnitt~\ref{sec:forschungsluecke}). Eigenentwicklungen werden daher nur herangezogen, wenn sie zur Erklärung einer Customizing-Einstellung erforderlich sind.
+
+Für die fachliche Deutung des Customizings bieten sich Sprachmodelle an, da sie schwer verständliche Artefakte natürlichsprachlich beschreiben können \cite{latreche_llm-assisted_2026}. Zugleich erzeugen sie inhaltlich falsche Aussagen, die sprachlich plausibel wirken \cite{ji_survey_2023}. Für die Analyse eines produktiv genutzten Systems ist eine Aussage jedoch nur verwertbar, wenn sie sich am Systemzustand überprüfen lässt. Daraus ergibt sich die folgende Forschungsfrage:
 
 % GEÄNDERT: Forschungsfrage an den verbindlichen Titel angepasst (individuelle Entwicklungen, Customizing als Schwerpunkt, belegte Ist-Dokumentation); Anführungszeichen korrigiert (vorher Kompilierfehler)
 \begin{quote}
@@ -53,104 +57,48 @@ An diesen Bedarf knüpft die vorliegende Arbeit an, indem sie einen Ansatz unter
 % Alternative Variante: 
 % „Inwieweit kann ein agentenbasierter LLM-Ansatz die individuellen Entwicklungen eines gewachsenen SAP-Systems semantisch interpretieren, sodass die erzeugten Aussagen zugleich fachlich verständlich und an den Systemdaten belegt sind?“
 
-% NEU: Zerlegung der FF in Teilfragen, damit die Evaluation den Grad der Beantwortung je Teilfrage bestimmen kann (Betreueranmerkung zu 5.1.1)
-Das Wort \glqq inwieweit\grqq{} verdeutlicht, dass die Forschungsfrage nicht mit ja oder nein, sondern graduell beantwortet wird. Um diesen Grad bestimmbar zu machen, wird sie in vier Teilfragen zerlegt, die jeweils einem Bestandteil der Forschungsfrage entsprechen:
+% GEÄNDERT (22.10.): Zuordnung der Teilfragen zum Wortlaut der FF ergänzt; TF3 ohne ", und" gefasst; "Bestandteil des Ansatzes" -> "Verarbeitungsschritt"
+Das Wort \glqq inwieweit\grqq{} verdeutlicht, dass die Forschungsfrage graduell beantwortet wird. Um diesen Grad bestimmbar zu machen, wird sie in vier Teilfragen zerlegt:
 \begin{enumerate}
 	\item[\textbf{TF1}] \textbf{Erschließen:} Inwieweit findet der Ansatz zu einer natürlichsprachlichen Anfrage die fachlich einschlägigen Customizing-Tabellen?
 	\item[\textbf{TF2}] \textbf{Interpretieren:} Inwieweit stimmt die fachliche Deutung der gelesenen Werte mit der am System geprüften Referenzantwort überein?
-	\item[\textbf{TF3}] \textbf{Belegen:} Inwieweit ist jede Aussage auf die zugrunde liegende Tabellenzeile rückführbar, und inwieweit enthält sich der Ansatz, wenn die Evidenz nicht ausreicht?
+	\item[\textbf{TF3}] \textbf{Belegen:} Inwieweit ist jede Aussage auf die zugrunde liegende Tabellenzeile rückführbar und enthält sich der Ansatz bei unzureichender Evidenz?
 	\item[\textbf{TF4}] \textbf{Abweichung ausweisen:} Inwieweit weist die Dokumentation die Abweichungen vom Herstellerstandard nachvollziehbar aus?
 \end{enumerate}
-Die Teilfragen strukturieren die Arbeit durchgängig, da jeder Bestandteil des in Kapitel~\ref{Ansatz} entworfenen Ansatzes einer Teilfrage zugeordnet ist und die Evaluation in Kapitel~\ref{Evaluation} deren Beantwortung einzeln misst.
+Jede Teilfrage greift einen Bestandteil der Forschungsfrage auf. TF1 bezieht sich auf die Erschließung auf natürlichsprachliche Anfragen hin, TF2 auf die fachliche Bedeutung und TF3 auf die Belegbarkeit. TF4 folgt aus dem Begriff der individuellen Entwicklung, da jede individuelle Entwicklung eine Abweichung vom Herstellerstandard darstellt. Zudem entspricht jede Teilfrage einem Verarbeitungsschritt des in Kapitel~\ref{Ansatz} entworfenen Ansatzes. Die Evaluation in Kapitel~\ref{Evaluation} misst die Beantwortung jeder Teilfrage einzeln.
 % VERSCHOBEN: Absatz zum Vergleich zweier Systeminstanzen -> Kap. 6, Abschnitt Ausblick (Entscheidung R5)
 
 \section{Stand der Forschung und Einordnung}
 \label{sec:einordnung}
 
-% GEÄNDERT: Verweis präzisiert (Vertiefung liegt nun in Abschnitt 2.3)
-Zur Einordnung der im vorherigen Abschnitt formulierten
-Forschungsfrage werden die relevanten Forschungsthemen im Folgenden vorgreifend
-zusammengefasst, wobei die vertiefte Betrachtung in Abschnitt~\ref{sec:stand-forschung}
-erfolgt.
+% GEÄNDERT (22.10.): von acht auf vier Absätze gekürzt (Plan 13.10.); Ankündigungssatz und doppelte Fokus-Begründung entfernt; Satzbau vereinfacht
+Strukturbasierte Verfahren erschließen Wissen aus bestehenden Systemen, ohne es fachlich zu deuten. Die Business Rule Extraction (BRE) gewinnt Geschäftsregeln durch statische Analyse aus dem Quellcode \cite{paradauskas_business_2006}. Die Architecture-Driven Modernization stellt mit dem Knowledge Discovery Metamodel (KDM, ISO/IEC~19506) ein werkzeugunabhängiges Metamodell für Systemartefakte bereit \cite{perez-castillo_knowledge_2011}. Im SAP-Kontext leitet das Reverse Business Engineering (RBE) ein Modell der aktiv genutzten Systemelemente ab \cite{nuttgens_reverse_1999}. Darauf baut eine kennzahlenbasierte Methodik zur Messung der Standardnähe auf \cite{sekatzek_messung_2009}. Alle diese Verfahren liefern formale, quantitative oder modellorientierte Ergebnisse. Ihre fachliche Einordnung bleibt dem Analysten überlassen.
 
-Strukturbasierte Extraktionsverfahren erschließen Wissen aus bestehenden Systemen:
-Die Business Rule Extraction (BRE) gewinnt Geschäftsregeln mittels statischer Analyse
-aus dem Quellcode~\cite{paradauskas_business_2006}, während die Architecture-Driven
-Modernization mit dem Knowledge Discovery Metamodel (KDM, ISO/IEC~19506) ein
-werkzeugunabhängiges Metamodell für Systemartefakte bereitstellt~\cite{perez-castillo_knowledge_2011}.
-Diese Verfahren liefern formale Repräsentationen, deren fachliche Einordnung dem
-Analysten obliegt, sodass die semantische Interpretation außerhalb ihres
-Betrachtungsbereichs verbleibt.
+Sprachmodelle eröffnen einen anderen Zugang, da sie Artefakte natürlichsprachlich beschreiben können. Sie erfassen die Syntax von Programmen zuverlässig, zeigen bei tieferer Semantik jedoch Schwächen \cite{ma_exploring_2026}. Diese Schwächen verstärken sich in unzureichend dokumentierten Altsystemen \cite{sabetto_impact_2025}. Untersuchungen an MUMPS- und Assembler-Beständen zeigen dennoch, dass die sprachmodellgestützte Dokumentation verwertbare Ergebnisse liefert \cite{diggs_leveraging_2024}. Im SAP-Kontext beschränken sich wissenschaftliche Arbeiten bislang auf die Erzeugung von ABAP-Quelltext \cite{wallraven_benchmarking_2026}. Die Deutung des Customizings wurde dort nicht untersucht.
 
-Im SAP-Kontext leitet das Reverse Business Engineering (RBE) ein Modell der aktiv
-genutzten Systemelemente ab~\cite{nuttgens_reverse_1999}, worauf eine
-kennzahlenbasierte Methodik zur Quantifizierung der Standardnähe
-aufbaut~\cite{sekatzek_messung_2009}. Diese Ansätze berücksichtigen SAP-spezifische
-Strukturen, erzeugen jedoch quantitative sowie modellorientierte Repräsentationen,
-wobei eine natürlichsprachliche Deutung der ermittelten Abweichungen nicht erfolgt.
+Für die Anbindung von Sprachmodellen an externe Systeme besteht mit dem Model Context Protocol (MCP) ein offener Standard \cite{noauthor_introducing_nodate}. Zu seiner Sicherheit und Reife bestehen noch offene Fragen \cite{hou_model_2025}. Erste Praxisberichte beschreiben agentenbasierte Werkzeugketten für Migrations- und Bewertungsaufgaben in SAP-Systemen \cite{dorairaj_deepa_sap_nodate}. Für die Umstellung auf SAP S/4HANA stellt SAP zudem eine Prüfung der Eigenentwicklungen im ABAP Test Cockpit (ATC) bereit. Sie gleicht den Quelltext mit der Simplification Database ab, die alle in SAP S/4HANA vereinfachten Objekte verzeichnet. Die Prüfung weist die Stellen aus, an denen eine Eigenentwicklung auf ein solches Objekt zugreift \cite{sap_ccm_atc}. Das Ergebnis ist ein technischer Kompatibilitätsabgleich des Quelltexts. Welche fachliche Bedeutung eine Anpassung für den Ist-Zustand hat, bleibt dabei offen.
 
-Large Language Models (LLMs) erfassen Programmsyntax zuverlässig, weisen bei tieferer
-Semantik jedoch Schwächen auf~\cite{ma_exploring_2026}, die sich in unzureichend
-dokumentierten Legacy-Kontexten verstärken~\cite{sabetto_impact_2025}. Die
-LLM-gestützte Dokumentationsgenerierung liefert dennoch verwertbare Ergebnisse, wie % GEÄNDERT: Stil (Review 08.10.)
-Untersuchungen an MUMPS- sowie Assembler-Systemen zeigen~\cite{diggs_leveraging_2024}. % GEÄNDERT: Semikolon-Anschluss in eigenen Satz aufgelöst % GEÄNDERT: Stil (Review 08.10.)
-Ein Transfer auf den SAP-Kontext steht bislang aus. SAP-bezogene Arbeiten beschränken
-sich zudem auf die ABAP-Codegenerierung~\cite{wallraven_benchmarking_2026}, sodass die
-Interpretation der Customizing-Ebene unberücksichtigt bleibt.
-
-Mit dem Model Context Protocol (MCP) besteht ein Standard zur Anbindung von
-LLM-Agenten an externe Systeme~\cite{noauthor_introducing_nodate}, zu dem offene
-Sicherheits- sowie Reifefragen fortbestehen~\cite{hou_model_2025}. Erste
-praxisorientierte Ansätze wenden dieses Muster bereits auf SAP-Systeme an, indem
-agentenbasierte Werkzeugketten Migrations- sowie
-Bewertungsaufgaben bearbeiten~\cite{dorairaj_deepa_sap_nodate}. Diese Ansätze zielen % GEÄNDERT: Stil (Review 08.10.)
-jedoch auf migrations- sowie bewertungsbezogene Aufgabenstellungen, nicht auf eine
-semantische Ist-Dokumentation des funktionalen Zustands.
-
-Auf Ebene der verfügbaren Werkzeuge stellt SAP für die Umstellung auf SAP S/4HANA eine Analyse der Eigenentwicklungen bereit, die das ABAP Test Cockpit (ATC) gegen die sogenannte Simplification Database ausführt. Diese Datenbank verzeichnet sämtliche Objekte, die in SAP S/4HANA vereinfacht wurden, sodass die Prüfung jene Stellen im Quelltext ausweist, an denen eine Eigenentwicklung auf ein solches Objekt zugreift und daher anzupassen ist~\cite{sap_ccm_atc}. Das Ergebnis ist ein technischer Kompatibilitätsabgleich, der sich auf den Quelltext richtet. Welche fachliche Bedeutung eine Anpassung für den funktionalen Ist-Zustand trägt, bleibt dabei unberücksichtigt.
-
-% GEÄNDERT: Verweis auf Abschnitt 2.4 statt Kapitel 2; Beleg-Kommentar aufgelöst (Beleg nun in 1.1)
-Nach dem in Abschnitt~\ref{sec:forschungsluecke} dargelegten Kenntnisstand besteht die Forschungslücke folglich nicht im Fehlen agentenbasierter SAP-Analyseansätze, sondern darin, dass die semantische Interpretation der Customizing-Ebene zu einer fachlich belastbaren Ist-Dokumentation bislang unbesetzt bleibt. Demgegenüber zielen verfügbare Ansätze primär auf Eigenentwicklungen sowie deren migrationsbedingte Anpassung. Dies liegt darin begründet, dass Customizing eine tabellengesteuerte Konfiguration der Standardlogik darstellt, deren fachliche Bedeutung sich der codezentrierten, an Compiler- sowie Prüfwerkzeugen verankerten Analyse entzieht. % GEÄNDERT: Stil (Review 08.10.)
-
-% GEÄNDERT: "Abschnitt" -> "Kapitel"; RAG durch Grounding ersetzt, da Kap. 2 Grounding als nachweisbare Bindung von RAG abgrenzt (einheitliche Terminologie)
-Die in diesem Abschnitt umrissenen Forschungslinien bilden die Grundlage für den in
-Kapitel~\ref{Ansatz} beschriebenen Lösungsansatz, der die strukturierte
-Extraktion mit einer semantischen Interpretation verbindet und deren Aussagen durch
-Grounding an den abgerufenen Systemdaten absichert.
+Agentenbasierte Ansätze für SAP-Systeme existieren also bereits. Sie zielen jedoch primär auf Eigenentwicklungen und deren migrationsbedingte Anpassung. Offen ist dagegen die semantische Interpretation der Customizing-Ebene zu einer belegten Ist-Dokumentation (vgl. Abschnitt~\ref{sec:forschungsluecke}). Der in Kapitel~\ref{Ansatz} beschriebene Ansatz verbindet deshalb die strukturierte Extraktion mit einer semantischen Interpretation. Er sichert deren Aussagen durch Grounding an den abgerufenen Systemdaten ab.
 
 \section{Ansatz und Forschungsmethodik}
 \label{sec:ansatz-methodik}
 
-% GEÄNDERT: Vorabform gestrafft (Dopplung mit 3.1 reduziert), Teilaspekte vorab genannt, RAG-Formulierung ersetzt, Umsetzungsstand nicht vorweggenommen
-Zur Beantwortung der Forschungsfrage wird ein agentenbasiertes Analyseframework
-entworfen sowie prototypisch umgesetzt, das den Ist-Zustand des Customizings eines
-gewachsenen SAP-Systems ausgehend von natürlichsprachlichen Anfragen erschließt.
-Das Framework gliedert sich in vier Verarbeitungsschritte, die den vier Teilfragen entsprechen: % GEÄNDERT (21.10.): "Teilaspekte" -> "Verarbeitungsschritte" (einheitlich mit Kap. 3)
-Es erschließt zunächst die zu einer Anfrage relevanten Konfigurationstabellen, interpretiert
-deren Werte anschließend mithilfe eines Large Language Model (LLM) semantisch, sichert
-jede daraus formulierte Aussage durch Grounding an den abgerufenen Systemdaten ab und
-weist schließlich die Abweichungen vom Herstellerstandard aus. Reicht die Evidenz für eine
-Aussage nicht aus, so enthält sich das Framework begründet, anstatt eine nicht gedeckte
-Aussage zu erzeugen. Der Zugriff auf das Zielsystem erfolgt ausschließlich lesend über eine
-standardisierte Werkzeugschnittstelle, und die Erschließung erfolgt dialogbasiert, sodass
-einzelne Konfigurationsbereiche gezielt in natürlicher Sprache exploriert werden können,
-ohne diese manuell im System nachzuverfolgen. Das Ergebnis besteht aus einer
-natürlichsprachlichen Dokumentation, die den Beratenden einen belegten
-Überblick über den Konfigurationszustand eines ihnen zunächst unbekannten
-Systems ermöglicht.
+% GEÄNDERT (22.10.): Satzbau vereinfacht (Satz mit 52 Wörtern aufgeteilt); Ergebnis als Summe belegter Antworten bestimmt
+Zur Beantwortung der Forschungsfrage wird ein agentenbasiertes Analyseframework entworfen und prototypisch umgesetzt. Es erschließt den Ist-Zustand des Customizings eines gewachsenen SAP-Systems ausgehend von natürlichsprachlichen Anfragen. Das Framework gliedert sich in vier Verarbeitungsschritte, die den vier Teilfragen entsprechen. Zunächst bestimmt es die für eine Anfrage relevanten Konfigurationstabellen. Ein Sprachmodell deutet anschließend deren Werte. Jede daraus formulierte Aussage wird durch Grounding an die abgerufenen Systemdaten gebunden. Abschließend weist das Framework die Abweichungen vom Herstellerstandard aus. Reicht die Evidenz für eine Aussage nicht aus, enthält sich das Framework. Der Zugriff auf das Zielsystem erfolgt ausschließlich lesend über eine standardisierte Werkzeugschnittstelle.
 
-% GEÄNDERT: DSR-Beleg ergänzt (Hevner et al.), Kandidaten-Kommentar aufgelöst
-Methodisch folgt die Arbeit dem Paradigma der gestaltungsorientierten Forschung
-(Design Science Research, DSR), das die Konstruktion sowie die Evaluation eines
-neuartigen Artefakts zur Lösung eines praktisch relevanten Problems in den
-Mittelpunkt stellt \cite{hevner_design_2004}.
-Das zu gestaltende Artefakt besteht in dem beschriebenen Analyseframework, dessen
-Nutzen sich an der Qualität der erzeugten Ist-Dokumentation bemisst. Die Wahl
-dieser Methodik liegt darin begründet, dass die Arbeit nicht auf die Bestätigung
-einer vorab formulierten Hypothese, sondern auf die Konzeption, die Umsetzung
-sowie die Bewertung eines Lösungsartefakts zielt.
+Die Erschließung erfolgt im Dialog. Beratende können einzelne Konfigurationsbereiche dadurch gezielt in natürlicher Sprache erkunden, ohne sie manuell im System nachzuverfolgen. Jede Antwort besteht aus einzeln belegten Aussagen. Die Antworten zu einem Konfigurationsbereich bilden zusammen die Ist-Dokumentation. Sie gibt den Beratenden einen belegten Überblick über ein ihnen zunächst unbekanntes System.
 
-Die Evaluation erfolgt qualitativ, indem mehrere SAP-Beratende die erzeugten Beschreibungen anhand definierter Kriterien unabhängig voneinander bewerten. Ergänzend werden die Ergebnisse mit und ohne Grounding an den strukturierten Systemdaten verglichen. Die einzelnen Kapitel werden im folgenden Abschnitt näher dargestellt.
+% GEÄNDERT (22.10.): Abgrenzung Ansatz, Prototyp und Artefakt ergänzt; Satzbau vereinfacht
+Methodisch folgt die Arbeit der gestaltungsorientierten Forschung (Design Science Research, DSR). Dieses Paradigma stellt die Konstruktion und die Evaluation eines neuartigen Artefakts zur Lösung eines praktisch relevanten Problems in den Mittelpunkt \cite{hevner_design_2004}. Die Wahl liegt darin begründet, dass die Arbeit keine vorab formulierte Hypothese prüft. Sie zielt auf die Konzeption, Umsetzung und Bewertung eines Lösungsartefakts. Das Artefakt umfasst dabei zwei Ebenen. Der Ansatz bezeichnet den Entwurf des Frameworks in Kapitel~\ref{Ansatz}, der Prototyp dessen Umsetzung in Kapitel~\ref{Implementierung}. Der Nutzen des Artefakts bemisst sich an der Qualität der erzeugten Ist-Dokumentation.
+
+% GEÄNDERT (22.10.): Evaluation an Kap. 5 angeglichen (vorher Exposé-Fassung); Ergebnisvorgriff als Platzhalter (Betreueranmerkung 13.10.)
+Die Evaluation verbindet zwei Zugänge. Zunächst wird der Prototyp an [N] Testfragen mit einer am System geprüften Referenzantwort wiederholt ausgeführt. Dabei wird eine Variante mit Belegpflicht und Prüfung einer Variante gegenübergestellt, die zwar auf die Systemdaten zugreift, ihre Aussagen jedoch nicht absichert. Anschließend setzen [N] Beratende der mmmake GmbH das Werkzeug für eigene Fragen ein und bewerten die erhaltenen Antworten.
+% PLATZHALTER: Werte nach der Evaluation einsetzen, nicht zutreffende Schlussvariante streichen
+Der Ansatz findet die einschlägigen Customizing-Tabellen in [X] von [Y] Fällen. [X]\,\% der Aussagen stimmen mit der Referenzantwort überein. Auf eine Tabellenzeile rückführbar sind [X]\,\% der Aussagen. Gegenüber der Variante ohne Absicherung sinkt der Anteil unbelegter Aussagen von [X]\,\% auf [Y]\,\%.
+% Variante 1 (günstig):
+Dies lässt vermuten, dass die Bindung an erneut abfragbare Systemdaten die Belegbarkeit der Aussagen wesentlich verbessert. Die Grenze des Ansatzes liegt bei [fachlich mehrdeutigen Begriffen].
+% Variante 2 (ungünstig):
+Dies lässt vermuten, dass die Absicherung die Belegbarkeit der Aussagen gewährleistet. Die Qualität der Antworten hängt jedoch maßgeblich davon ab, ob die einschlägigen Tabellen gefunden werden. Die Erschließung bildet damit den Engpass des Ansatzes.
 
 \section{Aufbau der Arbeit}
 \label{sec:aufbau}
