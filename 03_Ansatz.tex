@@ -205,27 +205,12 @@ Als Ähnlichkeitsmaß dient das Skalarprodukt normalisierter Vektoren. Auf Vekto
 \textbf{Exakte Suche und Skalierung}
 
 % GEÄNDERT (21.10.): Satzbau vereinfacht
-Die Suche vergleicht die Anfrage mit jedem Dokument des Korpus, anstatt die nächsten Nachbarn nur näherungsweise zu bestimmen. Für einen abgegrenzten Systemausschnitt ist dieser vollständige Vergleich mit vertretbarem Aufwand möglich. Ein durch Näherung verursachter Trefferverlust würde dagegen die nachgelagerte Prüfung unterlaufen, da eine nicht gefundene Tabelle auch nicht geprüft werden kann. Diese Abwägung ist an die Größe des Korpus gebunden. Angestrebt ist eine Größenordnung von mehreren Tausend Customizing-Tabellen (NFA3). Dafür kommen vier Varianten in Betracht, die Tabelle~\ref{tab:skalierung} gegenüberstellt.
+Die Suche vergleicht die Anfrage mit jedem Dokument des Korpus, anstatt die nächsten Nachbarn nur näherungsweise zu bestimmen. Für einen abgegrenzten Systemausschnitt ist dieser vollständige Vergleich mit vertretbarem Aufwand möglich. Ein durch Näherung verursachter Trefferverlust würde dagegen die nachgelagerte Prüfung unterlaufen, da eine nicht gefundene Tabelle auch nicht geprüft werden kann. 
 
-\begin{table}[htbp]
-\centering
-\caption{Varianten zur Skalierung der Erschließung}
-\label{tab:skalierung}
-\small
-\begin{tabular}{p{2.8cm}p{3.8cm}p{2.9cm}p{2.9cm}}
-\toprule
-\textbf{Variante} & \textbf{Prinzip} & \textbf{Stärke} & \textbf{Schwäche} \\
-\midrule
-V1 Vollständiger Vektorindex & alle Beschreibungen einmalig einbetten & einheitliches Verfahren & Trefferqualität durch Beschreibungsqualität begrenzt \\
-V2 Deterministische Vorfilterung & Eingrenzung über Auslieferungsklasse und Tabellenart vor der Einbettung & schließt fachfremde Kandidaten strukturell aus & Filterkriterien sind selbst begründungspflichtig \\
-V3 Iterative Exploration & Anker suchen, Metadaten gezielt nachladen, Kandidatenmenge schrittweise erweitern \cite{wang_autolink_2026} & kein vollständiger Vorabindex nötig & mehr Werkzeugaufrufe, höhere Antwortzeit \\
-V4 Pfadfindung auf dem DDIC-Graphen & Fremdschlüssel und Prüftabellen als Graph \cite{safdarian_schemagraphsql_2026} & Beziehungen per Konstruktion nicht halluzinierbar & bei kundeneigenen Tabellen ohne gepflegte Fremdschlüssel wirkungslos \\
-\bottomrule
-\end{tabular}
-\end{table}
+% GEÄNDERT (22.10.): Tabelle tab:skalierung durch Fließtext ersetzt
+Diese Abwägung ist an die Größe des Korpus gebunden. Angestrebt ist eine Größenordnung von mehreren Tausend Customizing-Tabellen (NFA3). Dafür kommen vier Varianten in Betracht. Die erste bettet alle Beschreibungen einmalig in einen vollständigen Vektorindex ein. Sie ist einfach, ihre Trefferqualität bleibt jedoch durch die Qualität der Beschreibungstexte begrenzt. Die zweite grenzt den Bestand vor der Einbettung über Auslieferungsklasse und Tabellenart ein und schließt fachfremde Tabellen damit strukturell aus. Die Filterkriterien müssen dafür allerdings selbst begründet werden. Die dritte Variante erschließt das Schema iterativ, indem sie von einem gefundenen Anker aus Metadaten gezielt nachlädt und die Kandidatenmenge schrittweise erweitert \cite{wang_autolink_2026}. Sie kommt ohne vollständigen Index aus, benötigt aber mehr Werkzeugaufrufe und damit mehr Zeit. Die vierte Variante sucht Pfade auf einem Graphen aus Fremdschlüsseln und Prüftabellen \cite{safdarian_schemagraphsql_2026}. Die gefundenen Beziehungen sind dabei per Konstruktion korrekt, bei kundeneigenen Tabellen ohne gepflegte Fremdschlüssel bleibt das Verfahren jedoch wirkungslos.
 
-% GEÄNDERT (21.10.): V4 auf die Struktur- und Beziehungsabfrage bezogen
-Der Ansatz kombiniert die Varianten V2 und V3. Die Vorfilterung schließt Tabellen aus, die sich deterministisch als fachfremd erkennen lassen. Die iterative Exploration erschließt den verbleibenden Bestand gezielt, ohne ihn vollständig in den Kontext zu laden. Die Variante V4 wird nicht als eigenes Suchverfahren eingesetzt, da kundeneigene Tabellen nach einer Erhebung am Zielsystem überwiegend keine Fremdschlüsselbeziehungen aufweisen. Sie geht jedoch in die Struktur- und Beziehungsabfrage ein, die zu einer gefundenen Tabelle die Prüftabellen und Verbindungswege liefert. Ob die exakte Suche bei dieser Größenordnung beibehalten werden kann, wird in Kapitel~\ref{Implementierung} geprüft.
+Der Ansatz kombiniert die Vorfilterung mit der iterativen Exploration. Die Vorfilterung schließt Tabellen aus, die sich deterministisch als fachfremd erkennen lassen. Die iterative Exploration erschließt den verbleibenden Bestand gezielt, ohne ihn vollständig in den Kontext zu laden. Die Pfadsuche auf dem Graphen wird nicht als eigenes Suchverfahren eingesetzt, da kundeneigene Tabellen nach einer Erhebung am Zielsystem überwiegend keine Fremdschlüsselbeziehungen aufweisen. Sie geht jedoch in die Struktur- und Beziehungsabfrage ein, die zu einer gefundenen Tabelle die Prüftabellen und Verbindungswege liefert. Ob die exakte Suche bei dieser Größenordnung beibehalten werden kann, wird in Kapitel~\ref{Implementierung} geprüft.
 
 % NEU (21.10.): verbleibende Fehlerart mit Bezug zur Evaluation
 Als Fehlerart bleibt in diesem Schritt, dass eine fachfremde Tabelle als relevant eingestuft oder eine einschlägige Tabelle nicht gefunden wird. Die Evaluation erfasst beide Fälle getrennt als Fehlerklassen F1 und F2 (Tabelle~\ref{tab:fehlerklassen}).
